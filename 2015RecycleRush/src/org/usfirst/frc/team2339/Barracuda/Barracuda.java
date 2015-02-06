@@ -46,6 +46,11 @@ public class Barracuda extends IterativeRobot {
     private final Talon m_frontRight= new Talon(1);
     private final Talon shooterMotorA = new Talon(2);
     private final Talon shooterMotorB = new Talon(3);
+    private final Talon e = new Talon(4);
+    private final Talon d = new Talon(5);
+    private final Talon c = new Talon(6);
+    private final Talon a = new Talon(7);
+    private final Talon b = new Talon(0);
     private final Joystick shooterJoystick = operatorStick;
     private final int shooterWinchMotorLoadButton = 7;
     DigitalInput shooterStopSwitch = new DigitalInput(2);
