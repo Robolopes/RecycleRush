@@ -1,8 +1,7 @@
 package org.usfirst.frc.team2339.Barracuda;
 
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+ * Add a swerve mode to RobotDrive
  * Code from Chief Delphi: http://www.chiefdelphi.com/forums/showthread.php?t=117099
  */
 
@@ -15,9 +14,9 @@ import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.PIDController;
 import edu.wpi.first.wpilibj.PIDOutput;
 import edu.wpi.first.wpilibj.PIDSource;
+import edu.wpi.first.wpilibj.RobotDrive;
 import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj.Talon;
-import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 
@@ -25,29 +24,41 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  *
  * 
  */
-public class Swerve extends Subsystem {
+public class SwerveDrive extends RobotDrive {
     //declare the steering pods and shifter valve
 
+    protected SpeedController m_frontLeftSteeringMotor;
+    protected SpeedController m_frontRightSteeringMotor;
+    protected SpeedController m_rearLeftSteeringMotor;
+    protected SpeedController m_rearRightSteeringMotor;
     private Pod frontLeft, frontRight, rearLeft, rearRight;
     private DoubleSolenoid shift;
 
-    public Swerve() {
+    public SwerveDrive() {
+    	super(SwerveMap.PWM.DRIVE_FRONT_LEFT, 
+    		  SwerveMap.PWM.DRIVE_REAR_LEFT, 
+    		  SwerveMap.PWM.DRIVE_FRONT_RIGHT, 
+    		  SwerveMap.PWM.DRIVE_REAR_RIGHT);
+        m_frontLeftSteeringMotor = new Talon(SwerveMap.PWM.DRIVE_FRONT_LEFT_STEERING);
+        m_rearLeftSteeringMotor = new Talon(SwerveMap.PWM.DRIVE_REAR_LEFT_STEERING);
+        m_frontRightSteeringMotor = new Talon(SwerveMap.PWM.DRIVE_FRONT_RIGHT_STEERING);
+        m_rearRightSteeringMotor = new Talon(SwerveMap.PWM.DRIVE_REAR_RIGHT_STEERING);
         //set up the steering pods with the correct sensors and controllers
         shift = new DoubleSolenoid(SwerveMap.Solenoid.DRIVE_SHIFT_HIGH, SwerveMap.Solenoid.DRIVE_SHIFT_LOW);
-        frontLeft = new Pod(SwerveMap.PWM.DRIVE_FRONT_LEFT,
-                SwerveMap.PWM.DRIVE_FRONT_LEFT_STEERING,
+        frontLeft = new Pod(m_frontLeftMotor,
+        		m_frontLeftSteeringMotor,
                 SwerveMap.DIO.DRIVE_FRONT_LEFT_ENC_A,
                 SwerveMap.DIO.DRIVE_FRONT_LEFT_ENC_B, 1);
-        frontRight = new Pod(SwerveMap.PWM.DRIVE_FRONT_RIGHT,
-                SwerveMap.PWM.DRIVE_FRONT_RIGHT_STEERING,
+        frontRight = new Pod(m_frontRightMotor,
+        		m_frontRightSteeringMotor,
                 SwerveMap.DIO.DRIVE_FRONT_RIGHT_ENC_A,
                 SwerveMap.DIO.DRIVE_FRONT_RIGHT_ENC_B, 2);
-        rearLeft = new Pod(SwerveMap.PWM.DRIVE_REAR_LEFT,
-                SwerveMap.PWM.DRIVE_REAR_LEFT_STEERING,
+        rearLeft = new Pod(m_rearLeftMotor,
+        		m_rearLeftSteeringMotor,
                 SwerveMap.DIO.DRIVE_REAR_LEFT_ENC_A,
                 SwerveMap.DIO.DRIVE_REAR_LEFT_ENC_B, 3);
-        rearRight = new Pod(SwerveMap.PWM.DRIVE_REAR_RIGHT,
-                SwerveMap.PWM.DRIVE_REAR_RIGHT_STEERING,
+        rearRight = new Pod(m_rearRightMotor,
+        		m_rearRightSteeringMotor,
                 SwerveMap.DIO.DRIVE_REAR_RIGHT_ENC_A,
                 SwerveMap.DIO.DRIVE_REAR_RIGHT_ENC_B, 4);
     }
@@ -123,12 +134,12 @@ public class Swerve extends Subsystem {
         private SpeedController steer;
         private PIDController pid;
 
-        public Pod(int drivePWM, int steeringPWM, int steeringEncA,
+        public Pod(SpeedController driveController, SpeedController steeringController, int steeringEncA,
                 int steeringEncB, int podNumber) {
             steeringEnc = new Encoder(steeringEncA, steeringEncB);
             steeringEnc.setDistancePerPulse(SwerveMap.Constants.STEERING_ENC_REVOLUTIONS_PER_PULSE);
-            drive = new Talon(drivePWM);
-            steer = new Talon(steeringPWM);
+            drive = driveController;
+            steer = steeringController;
             pid = new PIDController(SwerveMap.Constants.STEERING_PID_P,
                     SwerveMap.Constants.STEERING_PID_I,
                     SwerveMap.Constants.STEERING_PID_D, this, this);
