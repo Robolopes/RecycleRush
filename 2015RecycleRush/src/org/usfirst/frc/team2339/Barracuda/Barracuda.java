@@ -50,7 +50,7 @@ public class Barracuda extends IterativeRobot {
     private final Talon d = new Talon(5);
     private final Talon c = new Talon(6);
     private final Talon a = new Talon(7);
-    private final Talon b = new Talon(0);
+    private final Talon Liftwinch = new Talon(0);
     private final Joystick shooterJoystick = operatorStick;
     private final int shooterWinchMotorLoadButton = 7;
     DigitalInput shooterStopSwitch = new DigitalInput(2);
@@ -150,7 +150,7 @@ public class Barracuda extends IterativeRobot {
            */
           double throttleLeft = driveStickLeft.getRawAxis(1);
           double throttleRight = driveStickRight.getRawAxis(1);
-          
+      
           
           /*
            * Set shooter winch motors
