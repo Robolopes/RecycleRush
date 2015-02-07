@@ -7,8 +7,10 @@ package org.usfirst.frc.team2339.Barracuda;
 
 
 import org.usfirst.frc.team2339.Barracuda.RobotMap.SwerveMap;
+
 //import com.sun.squawk.util.MathUtils;
 import java.lang.Math;
+
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.PIDController;
@@ -63,15 +65,15 @@ public class SwerveDrive extends RobotDrive {
                 SwerveMap.DIO.DRIVE_REAR_RIGHT_ENC_B, 4);
     }
 
-    public void teleopDrive() {
-        //get values from joysticks
-        double x, y, rotate;
-        boolean isLowGear, isHighGear;
-        x = SwerveMap.Control.DRIVE_STICK.getRawAxis(SwerveMap.Control.DRIVE_AXIS_FORWARD_BACK);
-        y = -SwerveMap.Control.DRIVE_STICK.getRawAxis(SwerveMap.Control.DRIVE_AXIS_SIDEWAYS);
-        rotate = SwerveMap.Control.DRIVE_STICK.getRawAxis(SwerveMap.Control.DRIVE_AXIS_ROTATE);
-        isLowGear = SwerveMap.Control.DRIVE_STICK.getRawButton(SwerveMap.Control.DRIVE_CONTROLLER_SHIFT_LOW);
-        isHighGear = SwerveMap.Control.DRIVE_STICK.getRawButton(SwerveMap.Control.DRIVE_CONTROLLER_SHIFT_HIGH);
+    /**
+     * Drive swerve with a given speed, rotation, and shift values
+     * @param x forward speed between -1.0 and 1.0
+     * @param y side speed between -1.0 and 1.0
+     * @param rotate rotation between -1.0 and 1.0
+     * @param isLowGear true if need to shift to low
+     * @param isHighGear true if need to shift to high
+     */
+    public void swerveDrive(double x, double y, double rotate, boolean isLowGear, boolean isHighGear) {
         //calculate angle/speed setpoints using 28 by 38 inch robot 
         double L = 28, W = 38;
         double R = Math.sqrt((L * L) + (W * W));
@@ -79,54 +81,54 @@ public class SwerveDrive extends RobotDrive {
         double B = x + rotate * (L / R);
         double C = y - rotate * (W / R);
         double D = y + rotate * (W / R);
-        //find wheel speeds
-        double frontRightWheelSpeed = Math.sqrt((B * B) + (C * C));
-        double frontLeftWheelSpeed = Math.sqrt((B * B) + (D * D));
-        double rearLeftWheelSpeed = Math.sqrt((A * A) + (D * D));
-        double rearRightWheelSpeed = Math.sqrt((A * A) + (C * C));
-        //normalize wheel speeds
-        double max = frontRightWheelSpeed;
-        if (frontLeftWheelSpeed > max) {
-            max = frontLeftWheelSpeed;
-        }
-        if (rearLeftWheelSpeed > max) {
-            max = rearLeftWheelSpeed;
-        }
-        if (rearRightWheelSpeed > max) {
-            max = rearRightWheelSpeed;
-        }
-        if (max > 1) { 
-            // Added if based on comment by Ether
-            // Max is more than 1.0, so normalize.
-            frontRightWheelSpeed /= max;
-            frontLeftWheelSpeed /= max;
-            rearLeftWheelSpeed /= max;
-            rearRightWheelSpeed /= max;
-        }
-        //find steering angles
+        
+        // Find wheel speeds
+        double wheelSpeeds[] = new double[kMaxNumberOfMotors];
+        wheelSpeeds[MotorType.kFrontLeft.value] = Math.sqrt((B * B) + (D * D));
+        wheelSpeeds[MotorType.kFrontRight.value] = Math.sqrt((B * B) + (C * C));
+        wheelSpeeds[MotorType.kRearLeft.value] = Math.sqrt((A * A) + (D * D));
+        wheelSpeeds[MotorType.kRearRight.value] = Math.sqrt((A * A) + (C * C));
+        
+        normalize(wheelSpeeds);
+        
+        // Find steering angles
         double frontRightSteeringAngle = Math.atan2(B, C)*180/Math.PI;
         double frontLeftSteeringAngle = Math.atan2(B, D)*180/Math.PI;
         double rearLeftSteeringAngle = Math.atan2(A, D)*180/Math.PI;
         double rearRightSteeringAngle = Math.atan2(A, C)*180/Math.PI;
-        //set shifter
+        
+        // Set shifter
         if(isLowGear){
             shift.set(DoubleSolenoid.Value.kForward);
         }
         if(isHighGear){
             shift.set(DoubleSolenoid.Value.kReverse);
         }
-        //set pods
+        
+        // Set pods
         frontRight.setSteeringAngle(frontRightSteeringAngle);
-        frontRight.setWheelSpeed(frontRightWheelSpeed);
+        frontRight.setWheelSpeed(wheelSpeeds[MotorType.kFrontRight.value]);
         frontLeft.setSteeringAngle(frontLeftSteeringAngle);
-        frontLeft.setWheelSpeed(frontLeftWheelSpeed);
+        frontLeft.setWheelSpeed(wheelSpeeds[MotorType.kFrontLeft.value]);
         rearLeft.setSteeringAngle(rearLeftSteeringAngle);
-        rearLeft.setWheelSpeed(rearLeftWheelSpeed);
+        rearLeft.setWheelSpeed(wheelSpeeds[MotorType.kRearLeft.value]);
         rearRight.setSteeringAngle(rearRightSteeringAngle);
-        rearRight.setWheelSpeed(rearRightWheelSpeed);
+        rearRight.setWheelSpeed(wheelSpeeds[MotorType.kRearRight.value]);
 
     }
 
+    public void teleopDrive() {
+        // Get values from joysticks
+        double x, y, rotate;
+        boolean isLowGear, isHighGear;
+        x = SwerveMap.Control.DRIVE_STICK.getRawAxis(SwerveMap.Control.DRIVE_AXIS_FORWARD_BACK);
+        y = -SwerveMap.Control.DRIVE_STICK.getRawAxis(SwerveMap.Control.DRIVE_AXIS_SIDEWAYS);
+        rotate = SwerveMap.Control.DRIVE_STICK.getRawAxis(SwerveMap.Control.DRIVE_AXIS_ROTATE);
+        isLowGear = SwerveMap.Control.DRIVE_STICK.getRawButton(SwerveMap.Control.DRIVE_CONTROLLER_SHIFT_LOW);
+        isHighGear = SwerveMap.Control.DRIVE_STICK.getRawButton(SwerveMap.Control.DRIVE_CONTROLLER_SHIFT_HIGH);
+        swerveDrive(x, y, rotate, isLowGear, isHighGear);
+    }
+    
     private class Pod implements PIDOutput, PIDSource {
 
         private Encoder steeringEnc;
