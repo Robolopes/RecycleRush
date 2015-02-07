@@ -117,7 +117,7 @@ public class SwerveDrive extends RobotDrive {
 
     }
 
-    public void teleopDrive() {
+    public void swerveDriveTeleop() {
         // Get values from joysticks
         double x, y, rotate;
         boolean isLowGear, isHighGear;

@@ -56,9 +56,13 @@ public class Barracuda extends IterativeRobot {
     DigitalInput shooterStopSwitch = new DigitalInput(2);
     private boolean currentLoaderMode = false;
     private long shootButtonTime = 0;
-    
-      private final RobotDrive robotDrive = 
-              new RobotDrive(m_frontLeft, m_frontRight);
+
+    /*
+    private final RobotDrive robotDrive = 
+            new RobotDrive(m_frontLeft, m_frontRight);
+    */
+    private final SwerveDrive robotDrive = 
+            new SwerveDrive();
       
    
       /*
@@ -173,7 +177,9 @@ public class Barracuda extends IterativeRobot {
           /*
            * Drive robot based on values from joystick
            */
-          robotDrive.tankDrive(-throttleLeft, -throttleRight);
+          //robotDrive.tankDrive(-throttleLeft, -throttleRight);
+          robotDrive.swerveDriveTeleop();
+          
     }
           /*
            * Set shooter winch motors
