@@ -36,16 +36,20 @@ public class Swerve extends Subsystem {
         shift = new DoubleSolenoid(RobotMap.Solenoid.DRIVE_SHIFT_HIGH, RobotMap.Solenoid.DRIVE_SHIFT_LOW);
         frontLeft = new Pod(RobotMap.PWM.DRIVE_FRONT_LEFT,
                 RobotMap.PWM.DRIVE_FRONT_LEFT_STEERING,
-                RobotMap.DIO.DRIVE_FRONT_LEFT_ENC, 1);
+                RobotMap.DIO.DRIVE_FRONT_LEFT_ENC_A,
+                RobotMap.DIO.DRIVE_FRONT_LEFT_ENC_B, 1);
         frontRight = new Pod(RobotMap.PWM.DRIVE_FRONT_RIGHT,
                 RobotMap.PWM.DRIVE_FRONT_RIGHT_STEERING,
-                RobotMap.DIO.DRIVE_FRONT_RIGHT_ENC, 2);
+                RobotMap.DIO.DRIVE_FRONT_RIGHT_ENC_A,
+                RobotMap.DIO.DRIVE_FRONT_RIGHT_ENC_B, 2);
         rearLeft = new Pod(RobotMap.PWM.DRIVE_REAR_LEFT,
                 RobotMap.PWM.DRIVE_REAR_LEFT_STEERING,
-                RobotMap.DIO.DRIVE_REAR_LEFT_ENC, 3);
+                RobotMap.DIO.DRIVE_REAR_LEFT_ENC_A,
+                RobotMap.DIO.DRIVE_REAR_LEFT_ENC_B, 3);
         rearRight = new Pod(RobotMap.PWM.DRIVE_REAR_RIGHT,
                 RobotMap.PWM.DRIVE_REAR_RIGHT_STEERING,
-                RobotMap.DIO.DRIVE_REAR_RIGHT_ENC, 4);
+                RobotMap.DIO.DRIVE_REAR_RIGHT_ENC_A,
+                RobotMap.DIO.DRIVE_REAR_RIGHT_ENC_B, 4);
     }
 
     public void teleopDrive() {
@@ -119,12 +123,12 @@ public class Swerve extends Subsystem {
         private SpeedController steer;
         private PIDController pid;
 
-        public Pod(Talon drivePWM, Talon steeringPWM, Encoder steeringEnc,
-                   int podNumber) {
-            steeringEnc = steeringEnc;
+        public Pod(int drivePWM, int steeringPWM, int steeringEncA,
+                int steeringEncB, int podNumber) {
+            steeringEnc = new Encoder(steeringEncA, steeringEncB);
             steeringEnc.setDistancePerPulse(RobotMap.Constants.STEERING_ENC_REVOLUTIONS_PER_PULSE);
-            drive = drivePWM;
-            steer = steeringPWM;
+            drive = new Talon(drivePWM);
+            steer = new Talon(steeringPWM);
             pid = new PIDController(RobotMap.Constants.STEERING_PID_P,
                     RobotMap.Constants.STEERING_PID_I,
                     RobotMap.Constants.STEERING_PID_D, this, this);

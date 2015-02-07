@@ -2,8 +2,6 @@ package org.usfirst.frc.team2339.Barracuda;
 
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.Talon;
-import edu.wpi.first.wpilibj.Encoder;
 
 public class RobotMap {
 	
@@ -33,23 +31,27 @@ public class RobotMap {
 	};
 	
 	public static class PWM {
-		public static final Talon DRIVE_FRONT_LEFT = new Talon(0);
-		public static final Talon DRIVE_FRONT_LEFT_STEERING = new Talon(1);
-		public static final Talon DRIVE_FRONT_RIGHT = new Talon(2);
-		public static final Talon DRIVE_FRONT_RIGHT_STEERING = new Talon(3);
-		public static final Talon DRIVE_REAR_LEFT = new Talon(4);
-		public static final Talon DRIVE_REAR_LEFT_STEERING = new Talon(5);
-		public static final Talon DRIVE_REAR_RIGHT = new Talon(6);
-		public static final Talon DRIVE_REAR_RIGHT_STEERING = new Talon(7);
-		public static final Talon LIFT_WINCH = new Talon(8);
+		public static final int DRIVE_FRONT_LEFT = 0;
+		public static final int DRIVE_FRONT_LEFT_STEERING = 1;
+		public static final int DRIVE_FRONT_RIGHT = 2;
+		public static final int DRIVE_FRONT_RIGHT_STEERING = 3;
+		public static final int DRIVE_REAR_LEFT = 4;
+		public static final int DRIVE_REAR_LEFT_STEERING = 5;
+		public static final int DRIVE_REAR_RIGHT = 6;
+		public static final int DRIVE_REAR_RIGHT_STEERING = 7;
+		public static final int LIFT_WINCH = 8;
 		
 	};
 	
 	public static class DIO {
-		public static final Encoder DRIVE_FRONT_LEFT_ENC = new Encoder(0, 1);
-		public static final Encoder DRIVE_FRONT_RIGHT_ENC = new Encoder(2, 3);
-		public static final Encoder DRIVE_REAR_LEFT_ENC = new Encoder(4, 5);
-		public static final Encoder DRIVE_REAR_RIGHT_ENC = new Encoder(6, 7);
+		public static final int DRIVE_FRONT_LEFT_ENC_A = 0;
+		public static final int DRIVE_FRONT_LEFT_ENC_B = 1;
+		public static final int DRIVE_FRONT_RIGHT_ENC_A = 2;
+		public static final int DRIVE_FRONT_RIGHT_ENC_B = 3;
+		public static final int DRIVE_REAR_LEFT_ENC_A = 4;
+		public static final int DRIVE_REAR_LEFT_ENC_B = 5;
+		public static final int DRIVE_REAR_RIGHT_ENC_A = 6;
+		public static final int DRIVE_REAR_RIGHT_ENC_B = 7;
 
 	};
 	
