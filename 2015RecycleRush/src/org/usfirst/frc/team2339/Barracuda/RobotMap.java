@@ -9,8 +9,6 @@ public class RobotMap {
 		public static final Joystick DRIVE_STICK = new Joystick(0);
 		// Joystick for lift control
 		public static final Joystick OPERATOR_STICK = new Joystick(1);
-		public static final int WINCH_CONTROLLER_UP = 1;
-		public static final int WINCH_CONTROLLER_DOWN = 2;
 	};
 	
 	public static class SwerveMap {
