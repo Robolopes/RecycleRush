@@ -15,6 +15,7 @@ public class RobotMap {
 	
 	public static class SwerveMap {
 		public static class Constants {
+			// AndyMark Gearmotor am-2971. See http://www.andymark.com/product-p/am-2971.htm
 			public static final double STEERING_ENC_PULSES_PER_REVOLUTION = 7;
 			public static final double STEERING_PID_P = 0;
 			public static final double STEERING_PID_I = 0;
