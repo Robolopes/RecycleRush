@@ -75,7 +75,8 @@ public class SwerveDrive extends RobotDrive {
      */
     public void swerveDrive(double x, double y, double rotate, boolean isLowGear, boolean isHighGear) {
         //calculate angle/speed setpoints using 28 by 38 inch robot 
-        double L = 28, W = 38;
+        double L = SwerveMap.Constants.WHEEL_BASE_LENGTH;
+        double W = SwerveMap.Constants.WHEEL_BASE_WIDTH;;
         double R = Math.sqrt((L * L) + (W * W));
         double A = x - rotate * (L / R);
         double B = x + rotate * (L / R);

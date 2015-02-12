@@ -15,6 +15,10 @@ public class RobotMap {
 	
 	public static class SwerveMap {
 		public static class Constants {
+			// These should be set to actual robot dimensions. 
+			// I don't think the units matter but looks like the original is in inches
+			public static final double WHEEL_BASE_LENGTH = 28;
+			public static final double WHEEL_BASE_WIDTH = 38;
 			// AndyMark Gearmotor am-2971. See http://www.andymark.com/product-p/am-2971.htm
 			public static final double STEERING_ENC_PULSES_PER_REVOLUTION = 7;
 			public static final double STEERING_PID_P = 0;
