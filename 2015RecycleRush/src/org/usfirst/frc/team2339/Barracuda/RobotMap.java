@@ -15,10 +15,10 @@ public class RobotMap {
 	
 	public static class SwerveMap {
 		public static class Constants {
-			public static final double STEERING_ENC_REVOLUTIONS_PER_PULSE = 2;
-			public static final double STEERING_PID_P = 1;
-			public static final double STEERING_PID_I = 1;
-			public static final double STEERING_PID_D = 1;
+			public static final double STEERING_ENC_PULSES_PER_REVOLUTION = 7;
+			public static final double STEERING_PID_P = 0;
+			public static final double STEERING_PID_I = 0;
+			public static final double STEERING_PID_D = 0;
 		};
 		
 		public static class Control {

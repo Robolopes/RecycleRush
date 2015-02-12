@@ -126,7 +126,7 @@ public class Swerve extends Subsystem {
         public Pod(int drivePWM, int steeringPWM, int steeringEncA,
                 int steeringEncB, int podNumber) {
             steeringEnc = new Encoder(steeringEncA, steeringEncB);
-            steeringEnc.setDistancePerPulse(SwerveMap.Constants.STEERING_ENC_REVOLUTIONS_PER_PULSE);
+            steeringEnc.setDistancePerPulse(SwerveMap.Constants.STEERING_ENC_PULSES_PER_REVOLUTION);
             drive = new Talon(drivePWM);
             steer = new Talon(steeringPWM);
             pid = new PIDController(SwerveMap.Constants.STEERING_PID_P,
