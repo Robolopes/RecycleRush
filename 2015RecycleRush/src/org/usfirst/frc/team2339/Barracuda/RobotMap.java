@@ -18,7 +18,8 @@ public class RobotMap {
 			public static final double WHEEL_BASE_LENGTH = 28;
 			public static final double WHEEL_BASE_WIDTH = 38;
 			// AndyMark Gearmotor am-2971. See http://www.andymark.com/product-p/am-2971.htm
-			public static final double STEERING_ENC_PULSES_PER_REVOLUTION = 7;
+			// 497 = 7 pulse per motor revolution * 71 gear ratio. 
+			public static final double STEERING_ENC_PULSES_PER_REVOLUTION = 497;
 			public static final double STEERING_PID_P = 0;
 			public static final double STEERING_PID_I = 0;
 			public static final double STEERING_PID_D = 0;
@@ -45,14 +46,20 @@ public class RobotMap {
 		};
 		
 		public static class DIO {
-			public static final int DRIVE_FRONT_LEFT_ENC_A = 0;
-			public static final int DRIVE_FRONT_LEFT_ENC_B = 1;
-			public static final int DRIVE_FRONT_RIGHT_ENC_A = 2;
-			public static final int DRIVE_FRONT_RIGHT_ENC_B = 3;
-			public static final int DRIVE_REAR_LEFT_ENC_A = 4;
-			public static final int DRIVE_REAR_LEFT_ENC_B = 5;
-			public static final int DRIVE_REAR_RIGHT_ENC_A = 6;
-			public static final int DRIVE_REAR_RIGHT_ENC_B = 7;
+			/*
+			 * Swapped values because of this note from AndyMark
+			 * Note: Because the encoder is connected to the back of the motor shaft, the rotation is 
+			 * backwards from normal front mounted encoders so you will need compensate for this in software or 
+			 * simply connect Ch. A output to your Ch. B input and Ch. B output to your Ch. A input.
+			 */
+			public static final int DRIVE_FRONT_LEFT_ENC_A = 1;
+			public static final int DRIVE_FRONT_LEFT_ENC_B = 0;
+			public static final int DRIVE_FRONT_RIGHT_ENC_A = 3;
+			public static final int DRIVE_FRONT_RIGHT_ENC_B = 2;
+			public static final int DRIVE_REAR_LEFT_ENC_A = 5;
+			public static final int DRIVE_REAR_LEFT_ENC_B = 4;
+			public static final int DRIVE_REAR_RIGHT_ENC_A = 7;
+			public static final int DRIVE_REAR_RIGHT_ENC_B = 6;
 		};
 
 		public static class Solenoid {
