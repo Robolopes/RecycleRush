@@ -8,6 +8,7 @@ public class RobotMap {
 	public static class Control {
 		// Robot gyro
 		public static final Gyro GYRO = new Gyro(0);
+		public static final int GYRO_BUTTON_RESET = 1;
 		// Joystick for driving
 		public static final Joystick DRIVE_STICK = new Joystick(0);
 		// Joystick for lift control

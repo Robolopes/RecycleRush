@@ -30,24 +30,6 @@ public class Barracuda extends IterativeRobot {
             new SwerveDrive();
       
    
-      /*
-       * This method sets shooter winch motors
-       * 
-       * @param value motor speed
-       */
-      public void setWinchMotor(double value) {
-      //    shooterMotorA.set(value);
-      //    shooterMotorB.set(value);
-          SmartDashboard.putNumber("Winch motor value ", value);
-      }
-      
-       
-
-    /*
-     * Initialize shooter motor data
-     * Numbers are control channels of shooter motors
-     */
-    
     /*
      * Vision class
     */
@@ -58,7 +40,6 @@ public class Barracuda extends IterativeRobot {
      * Initialize values for autonomous control
      */
     private long startTime = 0;
-    private boolean haveImage = false;
     
     /*
      * Time variables to help with timed printouts
@@ -69,6 +50,17 @@ public class Barracuda extends IterativeRobot {
      * CLASS METHODS
      * Methods for this class are below here
     /**********************/
+    
+    /*
+     * This method sets winch motors
+     * 
+     * @param value motor speed
+     */
+    public void setWinchMotor(double value) {
+    //    shooterMotorA.set(value);
+    //    shooterMotorB.set(value);
+        SmartDashboard.putNumber("Winch motor value ", value);
+    }
     
     /**
      * This method is run when the robot is first started up and should be
@@ -121,6 +113,11 @@ public class Barracuda extends IterativeRobot {
 		SmartDashboard.putNumber("Joystick rotate ", RobotMap.Control.DRIVE_STICK.getRawAxis(3));
 		SmartDashboard.putNumber("Gyro angle ", RobotMap.Control.GYRO.getAngle());
           
+    	if(RobotMap.Control.OPERATOR_STICK.getRawButton(RobotMap.Control.GYRO_BUTTON_RESET)) {
+    		// Reset gyro
+    		RobotMap.Control.GYRO.reset();
+    	}
+    	
         /*
          * Set winch motors
          */
@@ -142,10 +139,6 @@ public class Barracuda extends IterativeRobot {
 		robotDrive.swerveDriveTeleop();
           
     }
-          /*
-           * Set shooter winch motors
-           */
-    
  
 
 	/**
