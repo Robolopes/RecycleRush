@@ -83,8 +83,8 @@ public class RobotMap {
 	
 	public static class WinchMap {
 		public static final Joystick WINCH_STICK = RobotMap.Control.OPERATOR_STICK;
-		public static final int WINCH_CONTROLLER_UP = 1;
-		public static final int WINCH_CONTROLLER_DOWN = 2;
+		public static final int WINCH_BUTTON_UP = 1;
+		public static final int WINCH_BUTTON_DOWN = 2;
 		public static final int LIFT_WINCH = 8;
 	}
 }

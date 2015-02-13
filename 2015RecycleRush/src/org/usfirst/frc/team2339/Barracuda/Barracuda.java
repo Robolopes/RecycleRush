@@ -1,17 +1,7 @@
 
 package org.usfirst.frc.team2339.Barracuda;
 
-import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.IterativeRobot;
-import edu.wpi.first.wpilibj.DigitalInput;
-import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.Encoder;
-import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.PIDController;
-import edu.wpi.first.wpilibj.Preferences;
-import edu.wpi.first.wpilibj.Relay;
-import edu.wpi.first.wpilibj.RobotDrive;
-import edu.wpi.first.wpilibj.Talon;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 
@@ -32,31 +22,6 @@ public class Barracuda extends IterativeRobot {
     /**********************/
     
 
-	   /*
-     * Initialize joystck variables.
-     * The (1) and (2) refer hardward channels 1 and 2 on the robot
-     */
-    private final Joystick driveStickLeft = new Joystick(0);
-    // Only need this if using Tank drive
-    private final Joystick driveStickRight = new Joystick(1);
-    // Third joystick for shooter and lift control
-    private final Joystick operatorStick = new Joystick(2);
-
-    private final Talon m_frontLeft = new Talon(8);
-    private final Talon m_frontRight= new Talon(1);
-    private final Talon shooterMotorA = new Talon(2);
-    private final Talon shooterMotorB = new Talon(3);
-    private final Talon e = new Talon(4);
-    private final Talon d = new Talon(5);
-    private final Talon c = new Talon(6);
-    private final Talon a = new Talon(7);
-    private final Talon Liftwinch = new Talon(0);
-    private final Joystick shooterJoystick = operatorStick;
-    private final int shooterWinchMotorLoadButton = 7;
-    DigitalInput shooterStopSwitch = new DigitalInput(2);
-    private boolean currentLoaderMode = false;
-    private long shootButtonTime = 0;
-
     /*
     private final RobotDrive robotDrive = 
             new RobotDrive(m_frontLeft, m_frontRight);
@@ -70,10 +35,10 @@ public class Barracuda extends IterativeRobot {
        * 
        * @param value motor speed
        */
-      public void setShootWinchMotors(double value) {
+      public void setWinchMotor(double value) {
       //    shooterMotorA.set(value);
       //    shooterMotorB.set(value);
-          SmartDashboard.putNumber("Shoot motor value ", value);
+          SmartDashboard.putNumber("Winch motor value ", value);
       }
       
        
@@ -93,14 +58,12 @@ public class Barracuda extends IterativeRobot {
      * Initialize values for autonomous control
      */
     private long startTime = 0;
-    private boolean haveShot = false;
     private boolean haveImage = false;
     
     /*
      * Time variables to help with timed printouts
      */
     private long robotStartTime = 0;
-    private long time0 = 0;
     
     /**********************
      * CLASS METHODS
@@ -150,38 +113,33 @@ public class Barracuda extends IterativeRobot {
 
     public void teleopPeriodic() {
    
+		/*
+		 * Print out siginigicant changes in drive info
+		 */
+		SmartDashboard.putNumber("Joystick forward ", RobotMap.Control.DRIVE_STICK.getRawAxis(1));
+		SmartDashboard.putNumber("Joystick sideways ", RobotMap.Control.DRIVE_STICK.getRawAxis(2));
+		SmartDashboard.putNumber("Joystick rotate ", RobotMap.Control.DRIVE_STICK.getRawAxis(3));
+		SmartDashboard.putNumber("Gyro angle ", RobotMap.Control.GYRO.getAngle());
           
-          /*
-           * Get drive data from joystick
-           * Tank drive
-           */
-          double throttleLeft = driveStickLeft.getRawAxis(1);
-          double throttleRight = driveStickRight.getRawAxis(1);
-      
-          
-          /*
-           * Set shooter winch motors
-           */
-          if(shooterJoystick.getRawButton(shooterWinchMotorLoadButton) && shooterStopSwitch.get()) {
-              // Set shooter motors to load
-              setShootWinchMotors(1.0);
-          } else {
-              // Turn off shooter winch motors
-              setShootWinchMotors(0.0);
-          }
-          
-          /*
-           * Print out siginigicant changes in drive info
-           */
-          SmartDashboard.putNumber("Throttle Left ", throttleLeft);
-          SmartDashboard.putNumber("Throttle Right ", throttleRight);
+        /*
+         * Set winch motors
+         */
+    	if(RobotMap.Control.OPERATOR_STICK.getRawButton(RobotMap.WinchMap.WINCH_BUTTON_UP)) {
+    		// Set winch motors to move up
+    		setWinchMotor(1.0);
+    	} else if(RobotMap.Control.OPERATOR_STICK.getRawButton(RobotMap.WinchMap.WINCH_BUTTON_DOWN)) {
+    		// Set winch motors to move down
+    		setWinchMotor(-1.0);
+    	} else {
+    		// Turn off shooter winch motors
+            setWinchMotor(0.0);
+        }
           
         
-          /*
-           * Drive robot based on values from joystick
-           */
-          //robotDrive.tankDrive(-throttleLeft, -throttleRight);
-          robotDrive.swerveDriveTeleop();
+		/*
+		 * Drive robot based on values from joystick
+		 */
+		robotDrive.swerveDriveTeleop();
           
     }
           /*
