@@ -20,7 +20,6 @@ import edu.wpi.first.wpilibj.RobotDrive;
 import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj.Talon;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj.Gyro;
 
 
 /**
@@ -30,40 +29,118 @@ import edu.wpi.first.wpilibj.Gyro;
 public class SwerveDrive extends RobotDrive {
     //declare the steering pods and shifter valve
 
-    protected SpeedController m_frontLeftSteeringMotor;
-    protected SpeedController m_frontRightSteeringMotor;
-    protected SpeedController m_rearLeftSteeringMotor;
-    protected SpeedController m_rearRightSteeringMotor;
-    private Pod frontLeft, frontRight, rearLeft, rearRight;
+    public static final int frontLeft = MotorType.kFrontLeft.value;
+    public static final int frontRight = MotorType.kFrontRight.value;
+    public static final int rearLeft = MotorType.kRearLeft.value;
+    public static final int rearRight = MotorType.kRearRight.value;
+    
+    protected SpeedController speedControllers[] = new SpeedController[kMaxNumberOfMotors];
+    protected Pod wheelPods[] = new Pod[kMaxNumberOfMotors];
     private DoubleSolenoid shift;
 
+    public class WheelData {
+    	public double wheelSpeeds[] = new double[kMaxNumberOfMotors];
+    	public double wheelAngles[] = new double[kMaxNumberOfMotors];
+    	
+    	public WheelData() {
+    		// Initialize data
+        	for (int iiWheel = 0; iiWheel < kMaxNumberOfMotors; iiWheel++) {
+                wheelSpeeds[iiWheel] = 0;
+                wheelAngles[iiWheel] = 0;
+        	}
+		}
+    }
+    
     public SwerveDrive() {
     	super(SwerveMap.PWM.DRIVE_FRONT_LEFT, 
     		  SwerveMap.PWM.DRIVE_REAR_LEFT, 
     		  SwerveMap.PWM.DRIVE_FRONT_RIGHT, 
     		  SwerveMap.PWM.DRIVE_REAR_RIGHT);
-        m_frontLeftSteeringMotor = new Talon(SwerveMap.PWM.DRIVE_FRONT_LEFT_STEERING);
-        m_rearLeftSteeringMotor = new Talon(SwerveMap.PWM.DRIVE_REAR_LEFT_STEERING);
-        m_frontRightSteeringMotor = new Talon(SwerveMap.PWM.DRIVE_FRONT_RIGHT_STEERING);
-        m_rearRightSteeringMotor = new Talon(SwerveMap.PWM.DRIVE_REAR_RIGHT_STEERING);
+    	speedControllers[frontLeft] = new Talon(SwerveMap.PWM.DRIVE_FRONT_LEFT_STEERING);
+    	speedControllers[frontRight] = new Talon(SwerveMap.PWM.DRIVE_FRONT_RIGHT_STEERING);
+    	speedControllers[rearLeft] = new Talon(SwerveMap.PWM.DRIVE_REAR_LEFT_STEERING);
+    	speedControllers[rearRight] = new Talon(SwerveMap.PWM.DRIVE_REAR_RIGHT_STEERING);
         //set up the steering pods with the correct sensors and controllers
         shift = new DoubleSolenoid(SwerveMap.Solenoid.DRIVE_SHIFT_HIGH, SwerveMap.Solenoid.DRIVE_SHIFT_LOW);
-        frontLeft = new Pod(m_frontLeftMotor,
-        		m_frontLeftSteeringMotor,
+        wheelPods[frontLeft] = new Pod(m_frontLeftMotor,
+        		speedControllers[frontLeft],
                 SwerveMap.DIO.DRIVE_FRONT_LEFT_ENC_A,
                 SwerveMap.DIO.DRIVE_FRONT_LEFT_ENC_B, 1);
-        frontRight = new Pod(m_frontRightMotor,
-        		m_frontRightSteeringMotor,
+        wheelPods[frontRight] = new Pod(m_frontRightMotor,
+        		speedControllers[frontRight],
                 SwerveMap.DIO.DRIVE_FRONT_RIGHT_ENC_A,
                 SwerveMap.DIO.DRIVE_FRONT_RIGHT_ENC_B, 2);
-        rearLeft = new Pod(m_rearLeftMotor,
-        		m_rearLeftSteeringMotor,
+        wheelPods[rearLeft] = new Pod(m_rearLeftMotor,
+        		speedControllers[rearLeft],
                 SwerveMap.DIO.DRIVE_REAR_LEFT_ENC_A,
                 SwerveMap.DIO.DRIVE_REAR_LEFT_ENC_B, 3);
-        rearRight = new Pod(m_rearRightMotor,
-        		m_rearRightSteeringMotor,
+        wheelPods[rearRight] = new Pod(m_rearRightMotor,
+        		speedControllers[rearRight],
                 SwerveMap.DIO.DRIVE_REAR_RIGHT_ENC_A,
                 SwerveMap.DIO.DRIVE_REAR_RIGHT_ENC_B, 4);
+    }
+    
+    /**
+     * Calculate raw speeds and angles for swerve drive.
+     * Wheel speeds are normalized to the range [-1.0, 1.0]. Angles are normalized to the range [-180, 180).
+     * Calculated values are raw in that they have no consideration for current state of drive.
+     * @param x forward speed between -1.0 and 1.0
+     * @param y side speed between -1.0 and 1.0
+     * @param rotate rotation speed between -1.0 and 1.0
+     * @return raw wheel speeds and angles
+     */
+    public WheelData calculateRawWheelData(double x, double y, double rotate) {
+    	
+    	WheelData rawWheelData = new WheelData();
+    	
+        //calculate angle/speed setpoints using wheel dimensions from SwerveMap 
+        double L = SwerveMap.Constants.WHEEL_BASE_LENGTH;
+        double W = SwerveMap.Constants.WHEEL_BASE_WIDTH;;
+        double R = Math.sqrt((L * L) + (W * W));
+        double A = x - rotate * (L / R);
+        double B = x + rotate * (L / R);
+        double C = y - rotate * (W / R);
+        double D = y + rotate * (W / R);
+        
+        // Find wheel speeds
+        rawWheelData.wheelSpeeds[frontLeft] = Math.sqrt((B * B) + (D * D));
+        rawWheelData.wheelSpeeds[frontRight] = Math.sqrt((B * B) + (C * C));
+        rawWheelData.wheelSpeeds[rearLeft] = Math.sqrt((A * A) + (D * D));
+        rawWheelData.wheelSpeeds[rearRight] = Math.sqrt((A * A) + (C * C));
+        
+        normalize(rawWheelData.wheelSpeeds);
+        
+        // Find steering angles
+        rawWheelData.wheelAngles[frontLeft] = Math.toDegrees(Math.atan2(B, D));
+        rawWheelData.wheelAngles[frontRight] = Math.toDegrees(Math.atan2(B, C));
+        rawWheelData.wheelAngles[rearLeft] = Math.toDegrees(Math.atan2(A, D));
+        rawWheelData.wheelAngles[rearRight] = Math.toDegrees(Math.atan2(A, C));
+        
+        return rawWheelData;
+    }
+    
+    /**
+     * Calculate wheel data change (delta) based on current data.
+     * @param rawWheelData Raw wheel change data
+     * @return wheel change data (delta) based on current wheel values
+     */
+    public WheelData calculateDeltaWheelData(WheelData rawWheelData) {
+    	WheelData deltaWheelData = new WheelData();
+    	for (int iiWheel = 0; iiWheel < kMaxNumberOfMotors; iiWheel++) {
+    		// Compute turn angle from encoder value (pidGet) and raw target value
+    		AngleFlip turnAngle = computeTurnAngle(wheelPods[iiWheel].pidGet(), rawWheelData.wheelAngles[iiWheel]);
+            deltaWheelData.wheelAngles[iiWheel] = turnAngle.getAngle();
+            deltaWheelData.wheelSpeeds[iiWheel] = driveScale(turnAngle) * rawWheelData.wheelSpeeds[iiWheel];
+    	}
+    	return deltaWheelData;
+    }
+    
+    
+    public void setPods(WheelData wheelData) {
+    	for (int iiWheel = 0; iiWheel < kMaxNumberOfMotors; iiWheel++) {
+            wheelPods[iiWheel].setSteeringAngle(wheelData.wheelAngles[iiWheel]);
+            wheelPods[iiWheel].setWheelSpeed(wheelData.wheelSpeeds[iiWheel]);
+    	}
     }
 
     /**
@@ -77,30 +154,11 @@ public class SwerveDrive extends RobotDrive {
      */
     public void swerveDriveRobot(double x, double y, double rotate, 
     		boolean isLowGear, boolean isHighGear) {
-        //calculate angle/speed setpoints using 28 by 38 inch robot 
-        double L = SwerveMap.Constants.WHEEL_BASE_LENGTH;
-        double W = SwerveMap.Constants.WHEEL_BASE_WIDTH;;
-        double R = Math.sqrt((L * L) + (W * W));
-        double A = x - rotate * (L / R);
-        double B = x + rotate * (L / R);
-        double C = y - rotate * (W / R);
-        double D = y + rotate * (W / R);
-        
-        // Find wheel speeds
-        double wheelSpeeds[] = new double[kMaxNumberOfMotors];
-        wheelSpeeds[MotorType.kFrontLeft.value] = Math.sqrt((B * B) + (D * D));
-        wheelSpeeds[MotorType.kFrontRight.value] = Math.sqrt((B * B) + (C * C));
-        wheelSpeeds[MotorType.kRearLeft.value] = Math.sqrt((A * A) + (D * D));
-        wheelSpeeds[MotorType.kRearRight.value] = Math.sqrt((A * A) + (C * C));
-        
-        normalize(wheelSpeeds);
-        
-        // Find steering angles
-        double frontRightSteeringAngle = Math.toDegrees(Math.atan2(B, C));
-        double frontLeftSteeringAngle = Math.toDegrees(Math.atan2(B, D));
-        double rearLeftSteeringAngle = Math.toDegrees(Math.atan2(A, D));
-        double rearRightSteeringAngle = Math.toDegrees(Math.atan2(A, C));
-        
+    	
+    	WheelData rawWheelData = calculateRawWheelData(x, y, rotate);
+    	
+    	WheelData deltaWheelData = calculateDeltaWheelData(rawWheelData);
+    	
         // Set shifter
         if(isLowGear){
             shift.set(DoubleSolenoid.Value.kForward);
@@ -110,14 +168,7 @@ public class SwerveDrive extends RobotDrive {
         }
         
         // Set pods
-        frontRight.setSteeringAngle(frontRightSteeringAngle);
-        frontRight.setWheelSpeed(wheelSpeeds[MotorType.kFrontRight.value]);
-        frontLeft.setSteeringAngle(frontLeftSteeringAngle);
-        frontLeft.setWheelSpeed(wheelSpeeds[MotorType.kFrontLeft.value]);
-        rearLeft.setSteeringAngle(rearLeftSteeringAngle);
-        rearLeft.setWheelSpeed(wheelSpeeds[MotorType.kRearLeft.value]);
-        rearRight.setSteeringAngle(rearRightSteeringAngle);
-        rearRight.setWheelSpeed(wheelSpeeds[MotorType.kRearRight.value]);
+        setPods(deltaWheelData);
 
     }
 
@@ -253,6 +304,24 @@ public class SwerveDrive extends RobotDrive {
      */
     public double computeChangeAngle(double currentAngle, double targetAngle) {
     	return computeTurnAngle(currentAngle, targetAngle).getAngle();
+    }
+    
+    /**
+     * Scale drive speed based on how far wheel needs to turn
+     * @param turnAngle Angle wheel needs to turn (with flip value)
+     * @return speed scale factor in range [0, 1]
+     */
+    public double driveScale(AngleFlip turnAngle) {
+    	double scale = 0;
+    	if (Math.abs(turnAngle.getAngle()) < 45) {
+    		scale = Math.cos(turnAngle.getAngle());
+    	} else {
+    		scale = 0;
+    	}
+    	if (turnAngle.isFlip()) {
+    		scale = -scale;
+    	}
+    	return scale;
     }
     
     private class Pod implements PIDOutput, PIDSource {
