@@ -130,6 +130,93 @@ public class SwerveDrive extends RobotDrive {
         swerveDrive(x, y, rotate, isLowGear, isHighGear);
     }
     
+    /**
+     * Class to store angle and flip together
+     * @author emiller
+     *
+     */
+    public class AngleFlip {
+    	private double angle;
+    	private boolean flip;
+    	
+    	public AngleFlip() {
+    		setAngle(0);
+    		setFlip(false);
+    	}
+    	public AngleFlip(double angle) {
+    		this.setAngle(angle);
+    		setFlip(false);
+    	}
+    	public AngleFlip(double angle, boolean flip) {
+    		this.setAngle(angle);
+    		flip = false;
+    	}
+		/**
+		 * @return the angle
+		 */
+		public double getAngle() {
+			return angle;
+		}
+		/**
+		 * @param angle the angle to set
+		 */
+		public void setAngle(double angle) {
+			this.angle = angle;
+		}
+		/**
+		 * @return the flip
+		 */
+		public boolean isFlip() {
+			return flip;
+		}
+		/**
+		 * @param flip the flip to set
+		 */
+		public void setFlip(boolean flip) {
+			this.flip = flip;
+		}
+    };
+    
+    /** 
+     * Normalizes an angle in degrees to (-180, 180].
+     * @param theta Angle to normalize
+     * @return Normalized angle
+     */
+    public double normalizeAngle(double theta) {
+    	while (theta > 180) {
+    		theta -= 360;
+    	}
+    	while (theta < -180) {
+    		theta += 360;
+    	}
+    	return theta;
+    }
+
+    /**
+     * Compute angle needed to turn and whether or not flip is needed
+     * @param currentAngle
+     * @param targetAngle
+     * @return new angle with flip
+     */
+    public AngleFlip computeTurnAngle(double currentAngle, double targetAngle) {
+    	AngleFlip turnAngle = new AngleFlip(targetAngle - currentAngle, false);
+    	if (Math.abs(turnAngle.getAngle()) > 90) {
+    		turnAngle.setAngle(normalizeAngle(turnAngle.getAngle() + 180));
+    		turnAngle.setFlip(true);
+    	}
+    	return turnAngle;
+    }
+    
+    /**
+     * Compute change angle to get from current to target angle.
+     * @param currentAngle Current angle
+     * @param targetAngle New angle to change to
+     * @return change angle
+     */
+    public double computeChangeAngle(double currentAngle, double targetAngle) {
+    	return computeTurnAngle(currentAngle, targetAngle).getAngle();
+    }
+    
     private class Pod implements PIDOutput, PIDSource {
 
         private Encoder steeringEnc;
