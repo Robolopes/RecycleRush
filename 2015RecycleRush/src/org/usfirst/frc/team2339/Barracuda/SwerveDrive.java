@@ -66,14 +66,16 @@ public class SwerveDrive extends RobotDrive {
     }
 
     /**
-     * Drive swerve with a given speed, rotation, and shift values
+     * Drive in swerve mode with a given speed, rotation, and shift values.
+     * Driving parameters are assumed to be relative to the current robot angle.
      * @param x forward speed between -1.0 and 1.0
      * @param y side speed between -1.0 and 1.0
-     * @param rotate rotation between -1.0 and 1.0
+     * @param rotate rotation speed between -1.0 and 1.0
      * @param isLowGear true if need to shift to low
      * @param isHighGear true if need to shift to high
      */
-    public void swerveDrive(double x, double y, double rotate, boolean isLowGear, boolean isHighGear) {
+    public void swerveDriveRobot(double x, double y, double rotate, 
+    		boolean isLowGear, boolean isHighGear) {
         //calculate angle/speed setpoints using 28 by 38 inch robot 
         double L = SwerveMap.Constants.WHEEL_BASE_LENGTH;
         double W = SwerveMap.Constants.WHEEL_BASE_WIDTH;;
@@ -93,10 +95,10 @@ public class SwerveDrive extends RobotDrive {
         normalize(wheelSpeeds);
         
         // Find steering angles
-        double frontRightSteeringAngle = Math.atan2(B, C)*180/Math.PI;
-        double frontLeftSteeringAngle = Math.atan2(B, D)*180/Math.PI;
-        double rearLeftSteeringAngle = Math.atan2(A, D)*180/Math.PI;
-        double rearRightSteeringAngle = Math.atan2(A, C)*180/Math.PI;
+        double frontRightSteeringAngle = Math.toDegrees(Math.atan2(B, C));
+        double frontLeftSteeringAngle = Math.toDegrees(Math.atan2(B, D));
+        double rearLeftSteeringAngle = Math.toDegrees(Math.atan2(A, D));
+        double rearRightSteeringAngle = Math.toDegrees(Math.atan2(A, C));
         
         // Set shifter
         if(isLowGear){
@@ -118,6 +120,24 @@ public class SwerveDrive extends RobotDrive {
 
     }
 
+    /**
+     * Drive in swerve mode with a given speed, rotation, and shift values.
+     * Driving parameters are assumed to be absolute based on a fixed angle, e.g. the field.
+     * @param robotAngle Angle (in degrees) of robot relative to fixed angle. This is probably taken from the gyro.
+     * @param x forward speed between -1.0 and 1.0
+     * @param y side speed between -1.0 and 1.0
+     * @param rotate rotation speed between -1.0 and 1.0
+     * @param isLowGear true if need to shift to low
+     * @param isHighGear true if need to shift to high
+     */
+    public void swerveDriveAbsolute(double robotAngle, double x, double y, double rotate,  
+    		boolean isLowGear, boolean isHighGear) {
+    	double robotAngleRad = Math.toRadians(robotAngle);
+    	double xRobot = -x * Math.sin(robotAngleRad) + y * Math.cos(robotAngleRad);
+    	double yRobot = x * Math.cos(robotAngleRad) + y * Math.sin(robotAngleRad);
+    	this.swerveDriveRobot(xRobot, yRobot, rotate, isLowGear, isHighGear);
+    }
+    
     public void swerveDriveTeleop() {
         // Get values from joysticks
         double x, y, rotate;
@@ -127,7 +147,7 @@ public class SwerveDrive extends RobotDrive {
         rotate = SwerveMap.Control.DRIVE_STICK.getRawAxis(SwerveMap.Control.DRIVE_AXIS_ROTATE);
         isLowGear = SwerveMap.Control.DRIVE_STICK.getRawButton(SwerveMap.Control.DRIVE_CONTROLLER_SHIFT_LOW);
         isHighGear = SwerveMap.Control.DRIVE_STICK.getRawButton(SwerveMap.Control.DRIVE_CONTROLLER_SHIFT_HIGH);
-        swerveDrive(x, y, rotate, isLowGear, isHighGear);
+        swerveDriveRobot(x, y, rotate, isLowGear, isHighGear);
     }
     
     /**
