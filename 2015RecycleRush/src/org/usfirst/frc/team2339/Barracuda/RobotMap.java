@@ -1,10 +1,13 @@
 package org.usfirst.frc.team2339.Barracuda;
 
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.Gyro;
 
 public class RobotMap {
 	
 	public static class Control {
+		// Robot gyro
+		public static final Gyro GYRO = new Gyro(0);
 		// Joystick for driving
 		public static final Joystick DRIVE_STICK = new Joystick(0);
 		// Joystick for lift control
@@ -31,6 +34,7 @@ public class RobotMap {
 		};
 		
 		public static class Control {
+			public static final Gyro GYRO = RobotMap.Control.GYRO;
 			public static final Joystick DRIVE_STICK = RobotMap.Control.DRIVE_STICK;
 			public static final int DRIVE_AXIS_FORWARD_BACK = 1;
 			public static final int DRIVE_AXIS_SIDEWAYS = 2;
@@ -66,11 +70,15 @@ public class RobotMap {
 			public static final int DRIVE_REAR_RIGHT_ENC_A = 7;
 			public static final int DRIVE_REAR_RIGHT_ENC_B = 6;
 		};
+		
+		public static class Analog {
+			public static final int GYRO_CHANNEL = 0;
+		};
 
 		public static class Solenoid {
 			public static final int DRIVE_SHIFT_HIGH = 1;
 			public static final int DRIVE_SHIFT_LOW = 2;
-		}
+		};
 	}
 	
 	public static class WinchMap {

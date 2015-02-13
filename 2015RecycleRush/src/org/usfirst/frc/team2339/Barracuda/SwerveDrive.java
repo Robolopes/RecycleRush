@@ -20,6 +20,7 @@ import edu.wpi.first.wpilibj.RobotDrive;
 import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj.Talon;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.Gyro;
 
 
 /**
@@ -138,8 +139,10 @@ public class SwerveDrive extends RobotDrive {
     	this.swerveDriveRobot(xRobot, yRobot, rotate, isLowGear, isHighGear);
     }
     
+    /**
+     * Control robot relative to itself
+     */
     public void swerveDriveTeleop() {
-        // Get values from joysticks
         double x, y, rotate;
         boolean isLowGear, isHighGear;
         x = SwerveMap.Control.DRIVE_STICK.getRawAxis(SwerveMap.Control.DRIVE_AXIS_FORWARD_BACK);
@@ -148,6 +151,21 @@ public class SwerveDrive extends RobotDrive {
         isLowGear = SwerveMap.Control.DRIVE_STICK.getRawButton(SwerveMap.Control.DRIVE_CONTROLLER_SHIFT_LOW);
         isHighGear = SwerveMap.Control.DRIVE_STICK.getRawButton(SwerveMap.Control.DRIVE_CONTROLLER_SHIFT_HIGH);
         swerveDriveRobot(x, y, rotate, isLowGear, isHighGear);
+    }
+    
+    /**
+     * Control robot relative to a fixed angle using gyro
+     */
+    public void swerveDriveTeleopGyro() {
+        double x, y, rotate;
+        boolean isLowGear, isHighGear;
+        x = SwerveMap.Control.DRIVE_STICK.getRawAxis(SwerveMap.Control.DRIVE_AXIS_FORWARD_BACK);
+        y = -SwerveMap.Control.DRIVE_STICK.getRawAxis(SwerveMap.Control.DRIVE_AXIS_SIDEWAYS);
+        rotate = SwerveMap.Control.DRIVE_STICK.getRawAxis(SwerveMap.Control.DRIVE_AXIS_ROTATE);
+        isLowGear = SwerveMap.Control.DRIVE_STICK.getRawButton(SwerveMap.Control.DRIVE_CONTROLLER_SHIFT_LOW);
+        isHighGear = SwerveMap.Control.DRIVE_STICK.getRawButton(SwerveMap.Control.DRIVE_CONTROLLER_SHIFT_HIGH);
+        double robotAngle = SwerveMap.Control.GYRO.getAngle();
+        swerveDriveAbsolute(robotAngle, x, y, rotate, isLowGear, isHighGear);
     }
     
     /**

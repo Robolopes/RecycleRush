@@ -123,21 +123,24 @@ public class Barracuda extends IterativeRobot {
     }
     
 
+    /**
+     * This method is called at the beginning of autonomous period
+     */
 	public void autonomousPeriodicInit() {
-    	   startTime = System.currentTimeMillis();
-           System.out.println("Autonomous init time: " + startTime);
- 
-       }
-    public void autonomousPeriodic() {
-     
-        /*
-         * This method is called at the beginning of operator control
-         */
+		startTime = System.currentTimeMillis();
+		System.out.println("Autonomous init time: " + startTime);
+       	RobotMap.Control.GYRO.reset();
     }
-     public void teleopInit() {
-       
-            
-        }
+	
+    public void autonomousPeriodic() {
+    }
+    
+    /**
+     * This method is called at the beginning of operator control
+     */
+    public void teleopInit() {
+    	RobotMap.Control.GYRO.reset();
+    }
 
  
 
