@@ -49,6 +49,18 @@ public class SwerveDrive extends RobotDrive {
                 wheelAngles[iiWheel] = 0;
         	}
 		}
+    	
+    	/**
+    	 * Set speed and angle values when joystick in dead band
+    	 */
+    	public void setDeadBandValues() {
+        	for (int iiWheel = 0; iiWheel < kMaxNumberOfMotors; iiWheel++) {
+        		wheelSpeeds[iiWheel] = 0;
+        		wheelAngles[iiWheel] = 45;
+        	}
+        	wheelAngles[frontRight] = -45;
+        	wheelAngles[rearLeft] = -45;
+    	}
     }
     
     public SwerveDrive() {
@@ -155,9 +167,18 @@ public class SwerveDrive extends RobotDrive {
     public void swerveDriveRobot(double x, double y, double rotate, 
     		boolean isLowGear, boolean isHighGear) {
     	
-    	WheelData rawWheelData = calculateRawWheelData(x, y, rotate);
     	
-    	WheelData deltaWheelData = calculateDeltaWheelData(rawWheelData);
+    	WheelData deltaWheelData = null;
+    	if (x > SwerveMap.Control.DRIVE_STICK_DEAD_BAND || y > SwerveMap.Control.DRIVE_STICK_DEAD_BAND || 
+    			rotate > SwerveMap.Control.DRIVE_STICK_DEAD_BAND) {
+    		// Compute new values
+        	WheelData rawWheelData = calculateRawWheelData(x, y, rotate);
+    		deltaWheelData = calculateDeltaWheelData(rawWheelData);
+    	} else {
+    		// Joystick in dead band, set neutral values
+    		deltaWheelData = new WheelData();
+    		deltaWheelData.setDeadBandValues();
+    	}
     	
         // Set shifter
         if(isLowGear){

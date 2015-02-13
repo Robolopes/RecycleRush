@@ -42,6 +42,7 @@ public class RobotMap {
 			public static final int DRIVE_AXIS_ROTATE = 3;
 			public static final int DRIVE_CONTROLLER_SHIFT_LOW = 1;
 			public static final int DRIVE_CONTROLLER_SHIFT_HIGH = 2;
+			public static final double DRIVE_STICK_DEAD_BAND = 0.1;
 		}
 
 		public static class PWM {
