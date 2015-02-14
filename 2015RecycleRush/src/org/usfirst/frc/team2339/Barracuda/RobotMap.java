@@ -23,12 +23,14 @@ public class RobotMap {
 			public static final double WHEEL_BASE_WIDTH = 38;
 			/*
 			 * AndyMark Gearmotor am-2971. See http://www.andymark.com/product-p/am-2971.htm
-			 * This number is encoder pulse per gear box output revolution
+			 * This number is encoder pulse per wheel revolution
 			 * am-2971 has encoder on motor shaft that gives 7 pulses per motor turn
 			 * am-2971 has a 71:1 gear ratio.
-			 * 497 = 7 pulse per motor revolution * 71 gear ratio. 
+			 * 7 pulse per motor revolution * 71 gear ratio ==> 497 pulses per gear box output.
+			 * Gear box output has 22 tooth gear, wheel has 32 tooth gear.
+			 * 341.69 = 497 * 22/32 pulses per wheel revolution 
 			 */
-			public static final double STEERING_ENC_PULSES_PER_REVOLUTION = 497;
+			public static final double STEERING_ENC_PULSES_PER_REVOLUTION = 7.0 * 71.0 * 22.0 / 32.0;
 			public static final double STEERING_PID_P = 0;
 			public static final double STEERING_PID_I = 0;
 			public static final double STEERING_PID_D = 0;
