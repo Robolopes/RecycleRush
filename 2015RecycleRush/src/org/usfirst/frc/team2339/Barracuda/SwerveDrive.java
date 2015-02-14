@@ -190,17 +190,17 @@ public class SwerveDrive extends RobotDrive {
         //calculate angle/speed setpoints using wheel dimensions from SwerveMap 
         double L = SwerveMap.Constants.WHEEL_BASE_LENGTH;
         double W = SwerveMap.Constants.WHEEL_BASE_WIDTH;;
-        double R = Math.sqrt((L * L) + (W * W));
+        double R = Math.hypot(L, W);
         double A = x - rotate * (L / R);
         double B = x + rotate * (L / R);
         double C = y - rotate * (W / R);
         double D = y + rotate * (W / R);
         
         // Find wheel speeds
-        rawWheelData.wheelSpeeds[frontLeft] = Math.sqrt((B * B) + (D * D));
-        rawWheelData.wheelSpeeds[frontRight] = Math.sqrt((B * B) + (C * C));
-        rawWheelData.wheelSpeeds[rearLeft] = Math.sqrt((A * A) + (D * D));
-        rawWheelData.wheelSpeeds[rearRight] = Math.sqrt((A * A) + (C * C));
+        rawWheelData.wheelSpeeds[frontLeft] = Math.hypot(B, D);
+        rawWheelData.wheelSpeeds[frontRight] = Math.hypot(B, C);
+        rawWheelData.wheelSpeeds[rearLeft] = Math.hypot(A, D);
+        rawWheelData.wheelSpeeds[rearRight] = Math.hypot(A, C);
         
         normalize(rawWheelData.wheelSpeeds);
         
