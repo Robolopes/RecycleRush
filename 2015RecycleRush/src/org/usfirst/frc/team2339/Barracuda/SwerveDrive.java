@@ -96,8 +96,8 @@ public class SwerveDrive extends RobotDrive {
      * Calculate raw speeds and angles for swerve drive.
      * Wheel speeds are normalized to the range [-1.0, 1.0]. Angles are normalized to the range [-180, 180).
      * Calculated values are raw in that they have no consideration for current state of drive.
-     * @param x forward speed between -1.0 and 1.0
-     * @param y side speed between -1.0 and 1.0
+     * @param x strafe (sideways) speed between -1.0 and 1.0
+     * @param y forward speed between -1.0 and 1.0
      * @param rotate rotation speed between -1.0 and 1.0
      * @return raw wheel speeds and angles
      */
@@ -158,8 +158,8 @@ public class SwerveDrive extends RobotDrive {
     /**
      * Drive in swerve mode with a given speed, rotation, and shift values.
      * Driving parameters are assumed to be relative to the current robot angle.
-     * @param x forward speed between -1.0 and 1.0
-     * @param y side speed between -1.0 and 1.0
+     * @param x strafe (sideways) speed between -1.0 and 1.0
+     * @param y forward speed between -1.0 and 1.0
      * @param rotate rotation speed between -1.0 and 1.0
      * @param isLowGear true if need to shift to low
      * @param isHighGear true if need to shift to high
@@ -197,8 +197,8 @@ public class SwerveDrive extends RobotDrive {
      * Drive in swerve mode with a given speed, rotation, and shift values.
      * Driving parameters are assumed to be absolute based on a fixed angle, e.g. the field.
      * @param robotAngle Angle (in degrees) of robot relative to fixed angle. This is probably taken from the gyro.
-     * @param x forward speed between -1.0 and 1.0
-     * @param y side speed between -1.0 and 1.0
+     * @param x strafe (sideways) speed between -1.0 and 1.0
+     * @param y forward speed between -1.0 and 1.0
      * @param rotate rotation speed between -1.0 and 1.0
      * @param isLowGear true if need to shift to low
      * @param isHighGear true if need to shift to high

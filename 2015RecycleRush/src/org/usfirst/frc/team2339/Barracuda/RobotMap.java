@@ -39,8 +39,8 @@ public class RobotMap {
 		public static class Control {
 			public static final Gyro GYRO = RobotMap.Control.GYRO;
 			public static final Joystick DRIVE_STICK = RobotMap.Control.DRIVE_STICK;
-			public static final int DRIVE_AXIS_FORWARD_BACK = 1;
-			public static final int DRIVE_AXIS_SIDEWAYS = 2;
+			public static final int DRIVE_AXIS_FORWARD_BACK = 2;
+			public static final int DRIVE_AXIS_SIDEWAYS = 1;
 			public static final int DRIVE_AXIS_ROTATE = 3;
 			public static final int DRIVE_CONTROLLER_SHIFT_LOW = 1;
 			public static final int DRIVE_CONTROLLER_SHIFT_HIGH = 2;
