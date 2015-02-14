@@ -335,7 +335,13 @@ public class SwerveDrive extends RobotDrive {
     public double driveScale(AngleFlip turnAngle) {
     	double scale = 0;
     	if (Math.abs(turnAngle.getAngle()) < 45) {
-    		scale = Math.cos(turnAngle.getAngle());
+    		/*
+    		 * Eric comment: I don't like the discontinuous nature of this scaling.
+    		 * Possible improvements:
+    		 *   1) Use cosine(2 * turnAngle)
+    		 *   2) Scale any angle < 90.
+    		 */
+    		scale = Math.cos(Math.toRadians(turnAngle.getAngle()));
     	} else {
     		scale = 0;
     	}
