@@ -38,6 +38,11 @@ public class SwerveDrive extends RobotDrive {
     protected Pod wheelPods[] = new Pod[kMaxNumberOfMotors];
     private DoubleSolenoid shift;
 
+    public class WheelVelocityVector {
+    	public double wheelSpeed = 0;
+    	public double wheelAngle = 0;
+    }
+    
     public class WheelData {
     	public double wheelSpeeds[] = new double[kMaxNumberOfMotors];
     	public double wheelAngles[] = new double[kMaxNumberOfMotors];
@@ -93,6 +98,30 @@ public class SwerveDrive extends RobotDrive {
     }
     
     /**
+     * Calculate wheel velocity vector given wheel position relative to pivot and desired forward, strafe, and rotational velocities.
+     * Wheel speed are normalized to the range [0, 1.0]. Angles are normalized to the range [-180, 180).
+     * Calculated values are raw in that they have no consideration for current state of drive.
+     * Most swerve code assumes the pivot point for rotation is the center of the wheels (i.e. center of rectangle with wheels as corners)
+     * This calculation is generalized based on pivot being offset from rectangle center.
+     * @param xWheelPosition distance of wheel to right of pivot (left is negative).
+     * @param yWheelPosition distance of wheel in front of pivot (back is negative).
+     * @param maxWheelRadius distance of furtherest wheel from pivot.
+     * @param xVelocity strafe (sideways) velocity. -1.0 = max motor speed left. 1.0 = max motor speed right.
+     * @param yVelocity forward velocity. -1.0 = max motor speed backwards. 1.0 = max motor speed forward.
+     * @param rotateVelocity clockwise rotational velocity. -1.0 = max motor speed counter-clockwise. 1.0 = max motor speed clockwise.
+     * @return wheel vector (speed and angle)
+     */
+    public WheelVelocityVector calculateWheelVelocityVector(double xWheelPosition, double yWheelPosition, double maxWheelRadius, 
+    		double xVelocity, double yVelocity, double rotateVelocity) {
+        double xWheel = xVelocity + rotateVelocity * yWheelPosition / maxWheelRadius; 
+        double yWheel = yVelocity - rotateVelocity * xWheelPosition / maxWheelRadius;
+        WheelVelocityVector wheelVelocity = new WheelVelocityVector();
+        wheelVelocity.wheelSpeed = Math.hypot(xWheel, yWheel);
+        wheelVelocity.wheelAngle = Math.toDegrees(Math.atan2(xWheel, yWheel));
+        return wheelVelocity;
+    }
+    
+    /**
      * Calculate raw wheel speeds and angles for swerve drive based on input robot forward, strafe, and rotational velocities.
      * Wheel speeds are normalized to the range [0, 1.0]. Angles are normalized to the range [-180, 180).
      * Calculated values are raw in that they have no consideration for current state of drive.
@@ -123,39 +152,25 @@ public class SwerveDrive extends RobotDrive {
         double yMax = Math.max(frontDist, rearDist);
         double rMax = Math.hypot(xMax, yMax);
 
-        double xDist = 0;
-        double yDist = 0;
-        double xWheel = 0;
-        double yWheel = 0;
+        WheelVelocityVector wheelVelocity = new WheelVelocityVector();
         
-        xDist = rightDist;
-        yDist = frontDist;
-        xWheel = xVelocity + rotateVelocity * yDist / rMax; 
-        yWheel = yVelocity - rotateVelocity * xDist / rMax;
-        rawWheelData.wheelSpeeds[frontRight] = Math.hypot(xWheel, yWheel);
-        rawWheelData.wheelAngles[frontRight] = Math.toDegrees(Math.atan2(xWheel, yWheel));
+        wheelVelocity = this.calculateWheelVelocityVector(rightDist, frontDist, rMax, xVelocity, yVelocity, rotateVelocity);
+        rawWheelData.wheelSpeeds[frontRight] = wheelVelocity.wheelSpeed;
+        rawWheelData.wheelAngles[frontRight] = wheelVelocity.wheelAngle;
         
-        xDist = leftDist;
-        yDist = frontDist;
-        xWheel = xVelocity + rotateVelocity * yDist / rMax; 
-        yWheel = yVelocity + rotateVelocity * xDist / rMax; 
-        rawWheelData.wheelSpeeds[frontLeft] = Math.hypot(xWheel, yWheel);
-        rawWheelData.wheelAngles[frontLeft] = Math.toDegrees(Math.atan2(xWheel, yWheel));
+        wheelVelocity = this.calculateWheelVelocityVector(-leftDist, frontDist, rMax, xVelocity, yVelocity, rotateVelocity);
+        rawWheelData.wheelSpeeds[frontLeft] = wheelVelocity.wheelSpeed;
+        rawWheelData.wheelAngles[frontLeft] = wheelVelocity.wheelAngle;
         
-        xDist = leftDist;
-        yDist = rearDist;
-        xWheel = xVelocity - rotateVelocity * yDist / rMax; 
-        yWheel = yVelocity + rotateVelocity * xDist / rMax; 
-        rawWheelData.wheelSpeeds[rearLeft] = Math.hypot(xWheel, yWheel);
-        rawWheelData.wheelAngles[rearLeft] = Math.toDegrees(Math.atan2(xWheel, yWheel));
+        wheelVelocity = this.calculateWheelVelocityVector(-leftDist, -rearDist, rMax, xVelocity, yVelocity, rotateVelocity);
+        rawWheelData.wheelSpeeds[rearLeft] = wheelVelocity.wheelSpeed;
+        rawWheelData.wheelAngles[rearLeft] = wheelVelocity.wheelAngle;
         
-        xDist = rightDist;
-        yDist = rearDist;
-        xWheel = xVelocity - rotateVelocity * yDist / rMax; 
-        yWheel = yVelocity - rotateVelocity * xDist / rMax; 
-        rawWheelData.wheelSpeeds[rearRight] = Math.hypot(xWheel, yWheel);
-        rawWheelData.wheelAngles[rearRight] = Math.toDegrees(Math.atan2(xWheel, yWheel));
-        
+        wheelVelocity = this.calculateWheelVelocityVector(rightDist, -rearDist, rMax, xVelocity, yVelocity, rotateVelocity);
+        rawWheelData.wheelSpeeds[rearRight] = wheelVelocity.wheelSpeed;
+        rawWheelData.wheelAngles[rearRight] = wheelVelocity.wheelAngle;
+
+        // Normalize all wheel speeds to be <= 1.0
         normalize(rawWheelData.wheelSpeeds);
         
         return rawWheelData;
