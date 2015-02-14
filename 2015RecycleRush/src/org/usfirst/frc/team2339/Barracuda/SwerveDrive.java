@@ -62,7 +62,7 @@ public class SwerveDrive extends RobotDrive {
         	wheelAngles[rearLeft] = -45;
     	}
     }
-    
+
     public SwerveDrive() {
     	super(SwerveMap.PWM.DRIVE_FRONT_LEFT, 
     		  SwerveMap.PWM.DRIVE_REAR_LEFT, 
@@ -94,7 +94,89 @@ public class SwerveDrive extends RobotDrive {
     
     /**
      * Calculate raw speeds and angles for swerve drive.
-     * Wheel speeds are normalized to the range [-1.0, 1.0]. Angles are normalized to the range [-180, 180).
+     * Wheel speeds are normalized to the range [0, 1.0]. Angles are normalized to the range [-180, 180).
+     * Calculated values are raw in that they have no consideration for current state of drive.
+     * Most swerve code assumes the pivot point for rotation is the center of the wheels (i.e. center of rectangle with wheels as corners)
+     * This calculation is generalized based on pivot being offset from rectangle center.
+     * @param x strafe (sideways) speed between -1.0 and 1.0
+     * @param y forward speed between -1.0 and 1.0
+     * @param rotate rotation speed between -1.0 and 1.0
+     * @param xPivotOffset Amount pivot is offset sideways from center. (Positive toward right, negative toward left)
+     * @param yPivotOffset Amount pivot is offset forward from center. (Positive toward front, negative toward back)
+     * @return raw wheel speeds and angles
+     */
+    public WheelData calculateRawWheelDataGeneral(double x, double y, double rotate, 
+    		double xPivotOffset, double yPivotOffset) {
+    	
+    	WheelData rawWheelData = new WheelData();
+    	
+        double L = SwerveMap.Constants.WHEEL_BASE_LENGTH;
+        double W = SwerveMap.Constants.WHEEL_BASE_WIDTH;
+        double frontDist = L/2 - xPivotOffset; 
+        double rearDist = L/2 + xPivotOffset; 
+        double rightDist = W/2 - yPivotOffset;
+        double leftDist = W/2 + yPivotOffset;
+
+        double xDist = 0;
+        double yDist = 0;
+        double rWheel = 0;
+        double xWheel = 0;
+        double yWheel = 0;
+        
+        xDist = rightDist;
+        yDist = frontDist;
+        rWheel =  Math.hypot(xDist, yDist);
+        xWheel = x + rotate * yDist / rWheel; 
+        yWheel = y - rotate * xDist / rWheel;
+        rawWheelData.wheelSpeeds[frontRight] = Math.hypot(xWheel, yWheel);
+        rawWheelData.wheelAngles[frontRight] = Math.toDegrees(Math.atan2(xWheel, yWheel));
+        
+        xDist = leftDist;
+        yDist = frontDist;
+        rWheel =  Math.hypot(xDist, yDist);
+        xWheel = x + rotate * yDist / rWheel; 
+        yWheel = y + rotate * xDist / rWheel; 
+        rawWheelData.wheelSpeeds[frontLeft] = Math.hypot(xWheel, yWheel);
+        rawWheelData.wheelAngles[frontLeft] = Math.toDegrees(Math.atan2(xWheel, yWheel));
+        
+        xDist = leftDist;
+        yDist = rearDist;
+        rWheel =  Math.hypot(xDist, yDist);
+        xWheel = x - rotate * yDist / rWheel; 
+        yWheel = y + rotate * xDist / rWheel; 
+        rawWheelData.wheelSpeeds[rearLeft] = Math.hypot(xWheel, yWheel);
+        rawWheelData.wheelAngles[rearLeft] = Math.toDegrees(Math.atan2(xWheel, yWheel));
+        
+        xDist = rightDist;
+        yDist = rearDist;
+        rWheel =  Math.hypot(xDist, yDist);
+        xWheel = x - rotate * yDist / rWheel; 
+        yWheel = y - rotate * xDist / rWheel; 
+        rawWheelData.wheelSpeeds[rearRight] = Math.hypot(xWheel, yWheel);
+        rawWheelData.wheelAngles[rearRight] = Math.toDegrees(Math.atan2(xWheel, yWheel));
+        
+        normalize(rawWheelData.wheelSpeeds);
+        
+        return rawWheelData;
+    }
+    
+    /**
+     * NOTE: This should give same result as standard method below.
+     * Calculate raw speeds and angles for swerve drive.
+     * Wheel speeds are normalized to the range [0, 1.0]. Angles are normalized to the range [-180, 180).
+     * Calculated values are raw in that they have no consideration for current state of drive.
+     * @param x strafe (sideways) speed between -1.0 and 1.0
+     * @param y forward speed between -1.0 and 1.0
+     * @param rotate rotation speed between -1.0 and 1.0
+     * @return raw wheel speeds and angles
+     */
+    public WheelData calculateRawWheelData1(double x, double y, double rotate) {
+    	return calculateRawWheelDataGeneral(x, y, rotate, 0.0, 0.0);
+    }
+    
+    /**
+     * Calculate raw speeds and angles for swerve drive.
+     * Wheel speeds are normalized to the range [0, 1.0]. Angles are normalized to the range [-180, 180).
      * Calculated values are raw in that they have no consideration for current state of drive.
      * @param x strafe (sideways) speed between -1.0 and 1.0
      * @param y forward speed between -1.0 and 1.0
