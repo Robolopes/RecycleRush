@@ -93,19 +93,19 @@ public class SwerveDrive extends RobotDrive {
     }
     
     /**
-     * Calculate raw speeds and angles for swerve drive.
+     * Calculate raw wheel speeds and angles for swerve drive based on input robot forward, strafe, and rotational velocities.
      * Wheel speeds are normalized to the range [0, 1.0]. Angles are normalized to the range [-180, 180).
      * Calculated values are raw in that they have no consideration for current state of drive.
      * Most swerve code assumes the pivot point for rotation is the center of the wheels (i.e. center of rectangle with wheels as corners)
      * This calculation is generalized based on pivot being offset from rectangle center.
-     * @param x strafe (sideways) speed between -1.0 and 1.0
-     * @param y forward speed between -1.0 and 1.0
-     * @param rotate rotation speed between -1.0 and 1.0
+     * @param xVelocity strafe (sideways) velocity. -1.0 = max motor speed left. 1.0 = max motor speed right.
+     * @param yVelocity forward velocity. -1.0 = max motor speed backwards. 1.0 = max motor speed forward.
+     * @param rotateVelocity clockwise rotational velocity. -1.0 = max motor speed counter-clockwise. 1.0 = max motor speed clockwise.
      * @param xPivotOffset Amount pivot is offset sideways from center. (Positive toward right, negative toward left)
      * @param yPivotOffset Amount pivot is offset forward from center. (Positive toward front, negative toward back)
      * @return raw wheel speeds and angles
      */
-    public WheelData calculateRawWheelDataGeneral(double x, double y, double rotate, 
+    public WheelData calculateRawWheelDataGeneral(double xVelocity, double yVelocity, double rotateVelocity, 
     		double xPivotOffset, double yPivotOffset) {
     	
     	WheelData rawWheelData = new WheelData();
@@ -126,32 +126,32 @@ public class SwerveDrive extends RobotDrive {
         xDist = rightDist;
         yDist = frontDist;
         rWheel =  Math.hypot(xDist, yDist);
-        xWheel = x + rotate * yDist / rWheel; 
-        yWheel = y - rotate * xDist / rWheel;
+        xWheel = xVelocity + rotateVelocity * yDist / rWheel; 
+        yWheel = yVelocity - rotateVelocity * xDist / rWheel;
         rawWheelData.wheelSpeeds[frontRight] = Math.hypot(xWheel, yWheel);
         rawWheelData.wheelAngles[frontRight] = Math.toDegrees(Math.atan2(xWheel, yWheel));
         
         xDist = leftDist;
         yDist = frontDist;
         rWheel =  Math.hypot(xDist, yDist);
-        xWheel = x + rotate * yDist / rWheel; 
-        yWheel = y + rotate * xDist / rWheel; 
+        xWheel = xVelocity + rotateVelocity * yDist / rWheel; 
+        yWheel = yVelocity + rotateVelocity * xDist / rWheel; 
         rawWheelData.wheelSpeeds[frontLeft] = Math.hypot(xWheel, yWheel);
         rawWheelData.wheelAngles[frontLeft] = Math.toDegrees(Math.atan2(xWheel, yWheel));
         
         xDist = leftDist;
         yDist = rearDist;
         rWheel =  Math.hypot(xDist, yDist);
-        xWheel = x - rotate * yDist / rWheel; 
-        yWheel = y + rotate * xDist / rWheel; 
+        xWheel = xVelocity - rotateVelocity * yDist / rWheel; 
+        yWheel = yVelocity + rotateVelocity * xDist / rWheel; 
         rawWheelData.wheelSpeeds[rearLeft] = Math.hypot(xWheel, yWheel);
         rawWheelData.wheelAngles[rearLeft] = Math.toDegrees(Math.atan2(xWheel, yWheel));
         
         xDist = rightDist;
         yDist = rearDist;
         rWheel =  Math.hypot(xDist, yDist);
-        xWheel = x - rotate * yDist / rWheel; 
-        yWheel = y - rotate * xDist / rWheel; 
+        xWheel = xVelocity - rotateVelocity * yDist / rWheel; 
+        yWheel = yVelocity - rotateVelocity * xDist / rWheel; 
         rawWheelData.wheelSpeeds[rearRight] = Math.hypot(xWheel, yWheel);
         rawWheelData.wheelAngles[rearRight] = Math.toDegrees(Math.atan2(xWheel, yWheel));
         
@@ -162,28 +162,28 @@ public class SwerveDrive extends RobotDrive {
     
     /**
      * NOTE: This should give same result as standard method below.
-     * Calculate raw speeds and angles for swerve drive.
+     * Calculate raw wheel speeds and angles for swerve drive based on input robot forward, strafe, and rotational velocities.
      * Wheel speeds are normalized to the range [0, 1.0]. Angles are normalized to the range [-180, 180).
      * Calculated values are raw in that they have no consideration for current state of drive.
-     * @param x strafe (sideways) speed between -1.0 and 1.0
-     * @param y forward speed between -1.0 and 1.0
-     * @param rotate rotation speed between -1.0 and 1.0
+     * @param xVelocity strafe (sideways) velocity. -1.0 = max motor speed left. 1.0 = max motor speed right.
+     * @param yVelocity forward velocity. -1.0 = max motor speed backwards. 1.0 = max motor speed forward.
+     * @param rotateVelocity clockwise rotational velocity. -1.0 = max motor speed counter-clockwise. 1.0 = max motor speed clockwise.
      * @return raw wheel speeds and angles
      */
-    public WheelData calculateRawWheelData1(double x, double y, double rotate) {
-    	return calculateRawWheelDataGeneral(x, y, rotate, 0.0, 0.0);
+    public WheelData calculateRawWheelData1(double xVelocity, double yVelocity, double rotateVelocity) {
+    	return calculateRawWheelDataGeneral(xVelocity, yVelocity, rotateVelocity, 0.0, 0.0);
     }
     
     /**
-     * Calculate raw speeds and angles for swerve drive.
+     * Calculate raw wheel speeds and angles for swerve drive based on input robot forward, strafe, and rotational velocities.
      * Wheel speeds are normalized to the range [0, 1.0]. Angles are normalized to the range [-180, 180).
      * Calculated values are raw in that they have no consideration for current state of drive.
-     * @param x strafe (sideways) speed between -1.0 and 1.0
-     * @param y forward speed between -1.0 and 1.0
-     * @param rotate rotation speed between -1.0 and 1.0
+     * @param xVelocity strafe (sideways) velocity. -1.0 = max motor speed left. 1.0 = max motor speed right.
+     * @param yVelocity forward velocity. -1.0 = max motor speed backwards. 1.0 = max motor speed forward.
+     * @param rotateVelocity clockwise rotational velocity. -1.0 = max motor speed counter-clockwise. 1.0 = max motor speed clockwise.
      * @return raw wheel speeds and angles
      */
-    public WheelData calculateRawWheelData(double x, double y, double rotate) {
+    public WheelData calculateRawWheelData(double xVelocity, double yVelocity, double rotateVelocity) {
     	
     	WheelData rawWheelData = new WheelData();
     	
@@ -191,10 +191,10 @@ public class SwerveDrive extends RobotDrive {
         double L = SwerveMap.Constants.WHEEL_BASE_LENGTH;
         double W = SwerveMap.Constants.WHEEL_BASE_WIDTH;;
         double R = Math.hypot(L, W);
-        double A = x - rotate * (L / R);
-        double B = x + rotate * (L / R);
-        double C = y - rotate * (W / R);
-        double D = y + rotate * (W / R);
+        double A = xVelocity - rotateVelocity * (L / R);
+        double B = xVelocity + rotateVelocity * (L / R);
+        double C = yVelocity - rotateVelocity * (W / R);
+        double D = yVelocity + rotateVelocity * (W / R);
         
         // Find wheel speeds
         rawWheelData.wheelSpeeds[frontLeft] = Math.hypot(B, D);
@@ -240,21 +240,21 @@ public class SwerveDrive extends RobotDrive {
     /**
      * Drive in swerve mode with a given speed, rotation, and shift values.
      * Driving parameters are assumed to be relative to the current robot angle.
-     * @param x strafe (sideways) speed between -1.0 and 1.0
-     * @param y forward speed between -1.0 and 1.0
-     * @param rotate rotation speed between -1.0 and 1.0
+     * @param xVelocity strafe (sideways) velocity. -1.0 = max motor speed left. 1.0 = max motor speed right.
+     * @param yVelocity forward velocity. -1.0 = max motor speed backwards. 1.0 = max motor speed forward.
+     * @param rotateVelocity clockwise rotational velocity. -1.0 = max motor speed counter-clockwise. 1.0 = max motor speed clockwise.
      * @param isLowGear true if need to shift to low
      * @param isHighGear true if need to shift to high
      */
-    public void swerveDriveRobot(double x, double y, double rotate, 
+    public void swerveDriveRobot(double xVelocity, double yVelocity, double rotateVelocity, 
     		boolean isLowGear, boolean isHighGear) {
     	
     	
     	WheelData deltaWheelData = null;
-    	if (x > SwerveMap.Control.DRIVE_STICK_DEAD_BAND || y > SwerveMap.Control.DRIVE_STICK_DEAD_BAND || 
-    			rotate > SwerveMap.Control.DRIVE_STICK_DEAD_BAND) {
+    	if (xVelocity > SwerveMap.Control.DRIVE_STICK_DEAD_BAND || yVelocity > SwerveMap.Control.DRIVE_STICK_DEAD_BAND || 
+    			rotateVelocity > SwerveMap.Control.DRIVE_STICK_DEAD_BAND) {
     		// Compute new values
-        	WheelData rawWheelData = calculateRawWheelData(x, y, rotate);
+        	WheelData rawWheelData = calculateRawWheelData(xVelocity, yVelocity, rotateVelocity);
     		deltaWheelData = calculateDeltaWheelData(rawWheelData);
     	} else {
     		// Joystick in dead band, set neutral values
@@ -279,47 +279,47 @@ public class SwerveDrive extends RobotDrive {
      * Drive in swerve mode with a given speed, rotation, and shift values.
      * Driving parameters are assumed to be absolute based on a fixed angle, e.g. the field.
      * @param robotAngle Angle (in degrees) of robot relative to fixed angle. This is probably taken from the gyro.
-     * @param x strafe (sideways) speed between -1.0 and 1.0
-     * @param y forward speed between -1.0 and 1.0
-     * @param rotate rotation speed between -1.0 and 1.0
+     * @param xVelocity strafe (sideways) velocity. -1.0 = max motor speed left. 1.0 = max motor speed right.
+     * @param yVelocity forward velocity. -1.0 = max motor speed backwards. 1.0 = max motor speed forward.
+     * @param rotateVelocity clockwise rotational velocity. -1.0 = max motor speed counter-clockwise. 1.0 = max motor speed clockwise.
      * @param isLowGear true if need to shift to low
      * @param isHighGear true if need to shift to high
      */
-    public void swerveDriveAbsolute(double robotAngle, double x, double y, double rotate,  
+    public void swerveDriveAbsolute(double robotAngle, double xVelocity, double yVelocity, double rotateVelocity,  
     		boolean isLowGear, boolean isHighGear) {
     	double robotAngleRad = Math.toRadians(robotAngle);
-    	double xRobot = -x * Math.sin(robotAngleRad) + y * Math.cos(robotAngleRad);
-    	double yRobot = x * Math.cos(robotAngleRad) + y * Math.sin(robotAngleRad);
-    	this.swerveDriveRobot(xRobot, yRobot, rotate, isLowGear, isHighGear);
+    	double xRobot = -xVelocity * Math.sin(robotAngleRad) + yVelocity * Math.cos(robotAngleRad);
+    	double yRobot = xVelocity * Math.cos(robotAngleRad) + yVelocity * Math.sin(robotAngleRad);
+    	this.swerveDriveRobot(xRobot, yRobot, rotateVelocity, isLowGear, isHighGear);
     }
     
     /**
      * Control robot relative to itself
      */
     public void swerveDriveTeleop() {
-        double x, y, rotate;
+        double xVelocity, yVelocity, rotateVelocity;
         boolean isLowGear, isHighGear;
-        x = SwerveMap.Control.DRIVE_STICK.getRawAxis(SwerveMap.Control.DRIVE_AXIS_FORWARD_BACK);
-        y = -SwerveMap.Control.DRIVE_STICK.getRawAxis(SwerveMap.Control.DRIVE_AXIS_SIDEWAYS);
-        rotate = SwerveMap.Control.DRIVE_STICK.getRawAxis(SwerveMap.Control.DRIVE_AXIS_ROTATE);
+        xVelocity = SwerveMap.Control.DRIVE_STICK.getRawAxis(SwerveMap.Control.DRIVE_AXIS_FORWARD_BACK);
+        yVelocity = -SwerveMap.Control.DRIVE_STICK.getRawAxis(SwerveMap.Control.DRIVE_AXIS_SIDEWAYS);
+        rotateVelocity = SwerveMap.Control.DRIVE_STICK.getRawAxis(SwerveMap.Control.DRIVE_AXIS_ROTATE);
         isLowGear = SwerveMap.Control.DRIVE_STICK.getRawButton(SwerveMap.Control.DRIVE_CONTROLLER_SHIFT_LOW);
         isHighGear = SwerveMap.Control.DRIVE_STICK.getRawButton(SwerveMap.Control.DRIVE_CONTROLLER_SHIFT_HIGH);
-        swerveDriveRobot(x, y, rotate, isLowGear, isHighGear);
+        swerveDriveRobot(xVelocity, yVelocity, rotateVelocity, isLowGear, isHighGear);
     }
     
     /**
      * Control robot relative to a fixed angle using gyro
      */
     public void swerveDriveTeleopGyro() {
-        double x, y, rotate;
+        double xVelocity, yVelocity, rotateVelocity;
         boolean isLowGear, isHighGear;
-        x = SwerveMap.Control.DRIVE_STICK.getRawAxis(SwerveMap.Control.DRIVE_AXIS_FORWARD_BACK);
-        y = -SwerveMap.Control.DRIVE_STICK.getRawAxis(SwerveMap.Control.DRIVE_AXIS_SIDEWAYS);
-        rotate = SwerveMap.Control.DRIVE_STICK.getRawAxis(SwerveMap.Control.DRIVE_AXIS_ROTATE);
+        xVelocity = SwerveMap.Control.DRIVE_STICK.getRawAxis(SwerveMap.Control.DRIVE_AXIS_FORWARD_BACK);
+        yVelocity = -SwerveMap.Control.DRIVE_STICK.getRawAxis(SwerveMap.Control.DRIVE_AXIS_SIDEWAYS);
+        rotateVelocity = SwerveMap.Control.DRIVE_STICK.getRawAxis(SwerveMap.Control.DRIVE_AXIS_ROTATE);
         isLowGear = SwerveMap.Control.DRIVE_STICK.getRawButton(SwerveMap.Control.DRIVE_CONTROLLER_SHIFT_LOW);
         isHighGear = SwerveMap.Control.DRIVE_STICK.getRawButton(SwerveMap.Control.DRIVE_CONTROLLER_SHIFT_HIGH);
         double robotAngle = SwerveMap.Control.GYRO.getAngle();
-        swerveDriveAbsolute(robotAngle, x, y, rotate, isLowGear, isHighGear);
+        swerveDriveAbsolute(robotAngle, xVelocity, yVelocity, rotateVelocity, isLowGear, isHighGear);
     }
     
     /**
