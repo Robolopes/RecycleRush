@@ -116,42 +116,43 @@ public class SwerveDrive extends RobotDrive {
         double rearDist = L/2 + xPivotOffset; 
         double rightDist = W/2 - yPivotOffset;
         double leftDist = W/2 + yPivotOffset;
+        
+        // Find maximum wheel distance (radius) from center
+        // Maximum radius is used to normalize rotational velocity so that wheels farthest from center move the fastest.
+        double xMax = Math.max(rightDist, leftDist);
+        double yMax = Math.max(frontDist, rearDist);
+        double rMax = Math.hypot(xMax, yMax);
 
         double xDist = 0;
         double yDist = 0;
-        double rWheel = 0;
         double xWheel = 0;
         double yWheel = 0;
         
         xDist = rightDist;
         yDist = frontDist;
-        rWheel =  Math.hypot(xDist, yDist);
-        xWheel = xVelocity + rotateVelocity * yDist / rWheel; 
-        yWheel = yVelocity - rotateVelocity * xDist / rWheel;
+        xWheel = xVelocity + rotateVelocity * yDist / rMax; 
+        yWheel = yVelocity - rotateVelocity * xDist / rMax;
         rawWheelData.wheelSpeeds[frontRight] = Math.hypot(xWheel, yWheel);
         rawWheelData.wheelAngles[frontRight] = Math.toDegrees(Math.atan2(xWheel, yWheel));
         
         xDist = leftDist;
         yDist = frontDist;
-        rWheel =  Math.hypot(xDist, yDist);
-        xWheel = xVelocity + rotateVelocity * yDist / rWheel; 
-        yWheel = yVelocity + rotateVelocity * xDist / rWheel; 
+        xWheel = xVelocity + rotateVelocity * yDist / rMax; 
+        yWheel = yVelocity + rotateVelocity * xDist / rMax; 
         rawWheelData.wheelSpeeds[frontLeft] = Math.hypot(xWheel, yWheel);
         rawWheelData.wheelAngles[frontLeft] = Math.toDegrees(Math.atan2(xWheel, yWheel));
         
         xDist = leftDist;
         yDist = rearDist;
-        rWheel =  Math.hypot(xDist, yDist);
-        xWheel = xVelocity - rotateVelocity * yDist / rWheel; 
-        yWheel = yVelocity + rotateVelocity * xDist / rWheel; 
+        xWheel = xVelocity - rotateVelocity * yDist / rMax; 
+        yWheel = yVelocity + rotateVelocity * xDist / rMax; 
         rawWheelData.wheelSpeeds[rearLeft] = Math.hypot(xWheel, yWheel);
         rawWheelData.wheelAngles[rearLeft] = Math.toDegrees(Math.atan2(xWheel, yWheel));
         
         xDist = rightDist;
         yDist = rearDist;
-        rWheel =  Math.hypot(xDist, yDist);
-        xWheel = xVelocity - rotateVelocity * yDist / rWheel; 
-        yWheel = yVelocity - rotateVelocity * xDist / rWheel; 
+        xWheel = xVelocity - rotateVelocity * yDist / rMax; 
+        yWheel = yVelocity - rotateVelocity * xDist / rMax; 
         rawWheelData.wheelSpeeds[rearRight] = Math.hypot(xWheel, yWheel);
         rawWheelData.wheelAngles[rearRight] = Math.toDegrees(Math.atan2(xWheel, yWheel));
         
