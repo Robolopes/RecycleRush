@@ -100,9 +100,7 @@ public class SwerveDrive extends RobotDrive {
     /**
      * Calculate wheel velocity vector given wheel position relative to pivot and desired forward, strafe, and rotational velocities.
      * Wheel speed are normalized to the range [0, 1.0]. Angles are normalized to the range [-180, 180).
-     * Calculated values are raw in that they have no consideration for current state of drive.
-     * Most swerve code assumes the pivot point for rotation is the center of the wheels (i.e. center of rectangle with wheels as corners)
-     * This calculation is generalized based on pivot being offset from rectangle center.
+     * @see https://docs.google.com/presentation/d/1J_BajlhCQ236HaSxthEFL2PxywlneCuLNn276MWmdiY/edit?usp=sharing
      * @param xWheelPosition distance of wheel to right of pivot (left is negative).
      * @param yWheelPosition distance of wheel in front of pivot (back is negative).
      * @param maxWheelRadius distance of furtherest wheel from pivot.
