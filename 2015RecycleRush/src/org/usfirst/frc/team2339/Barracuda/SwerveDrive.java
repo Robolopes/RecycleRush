@@ -257,6 +257,17 @@ public class SwerveDrive extends RobotDrive {
     }
 
     
+    /**
+     * Set POD for one wheel
+     * @param wheelNum Number of wheel to test, e.g. SwerveDrive.frontLeft 
+     * @param angle angle of wheel in [-180, 180)
+     * @param speed speed of wheel in [-1.0, 1.0]
+     */
+    public void setWheelPod(int wheelNum, double angle, double speed) {
+    	wheelPods[wheelNum].setSteeringAngle(angle);
+    	wheelPods[wheelNum].setSteeringAngle(speed);
+    }
+    
     public void setPods(WheelData wheelData) {
     	for (int iiWheel = 0; iiWheel < kMaxNumberOfMotors; iiWheel++) {
             wheelPods[iiWheel].setSteeringAngle(wheelData.wheelAngles[iiWheel]);
