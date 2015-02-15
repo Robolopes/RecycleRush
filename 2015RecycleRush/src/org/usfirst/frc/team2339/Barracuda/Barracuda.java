@@ -91,6 +91,7 @@ public class Barracuda extends IterativeRobot {
 		System.out.println("Autonomous init time: " + startTime);
        	RobotMap.Control.GYRO.reset();
         robotDrive.resetPodAngles();
+        robotDrive.enablePids(true);
     }
 	
     public void autonomousPeriodic() {
@@ -102,7 +103,7 @@ public class Barracuda extends IterativeRobot {
     public void teleopInit() {
     	RobotMap.Control.GYRO.reset();
         robotDrive.resetPodAngles();
-        
+        robotDrive.enablePids(true);
     }
 
  

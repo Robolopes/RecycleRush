@@ -250,6 +250,12 @@ public class SwerveDrive extends RobotDrive {
     	}
     }
 
+    public void enablePids(boolean enable) {
+    	for (int iiWheel = 0; iiWheel < kMaxNumberOfMotors; iiWheel++) {
+            wheelPods[iiWheel].pidEnable(enable);
+    	}
+    }
+
     
     public void setPods(WheelData wheelData) {
     	for (int iiWheel = 0; iiWheel < kMaxNumberOfMotors; iiWheel++) {
@@ -457,7 +463,7 @@ public class SwerveDrive extends RobotDrive {
     	return scale;
     }
     
-    private class Pod implements PIDOutput, PIDSource {
+    public class Pod implements PIDOutput, PIDSource {
 
         private Encoder steeringEnc;
         private SpeedController drive;
@@ -478,8 +484,6 @@ public class SwerveDrive extends RobotDrive {
             SmartDashboard.putData("Steering Pod " + podNumber, pid);
             pid.setInputRange(-180, 180);
             pid.setContinuous(true);
-            pid.enable();
-
         }
 
         public void pidWrite(double output) {
@@ -501,6 +505,14 @@ public class SwerveDrive extends RobotDrive {
         
         public void resetAngle() {
         	steeringEnc.reset();
+        }
+        
+        public void pidEnable(boolean enable) {
+        	if (enable) {
+        		pid.enable();
+        	} else {
+        		pid.disable();
+        	}
         }
     }
 
