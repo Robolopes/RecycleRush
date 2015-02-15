@@ -268,7 +268,7 @@ public class SwerveDrive extends RobotDrive {
     	wheelPods[wheelNum].setSteeringAngle(speed);
     }
     
-    public void setPods(WheelData wheelData) {
+    public void setWheelPods(WheelData wheelData) {
     	for (int iiWheel = 0; iiWheel < kMaxNumberOfMotors; iiWheel++) {
             wheelPods[iiWheel].setSteeringAngle(wheelData.wheelAngles[iiWheel]);
             wheelPods[iiWheel].setWheelSpeed(wheelData.wheelSpeeds[iiWheel]);
@@ -312,7 +312,7 @@ public class SwerveDrive extends RobotDrive {
         }
         
         // Set pods
-        setPods(deltaWheelData);
+        setWheelPods(deltaWheelData);
 
     }
 
