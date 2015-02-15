@@ -136,9 +136,10 @@ public class Barracuda extends IterativeRobot {
 		/*
 		 * Drive robot based on values from joystick
 		 */
-		//robotDrive.swerveDriveTeleop();
+		robotDrive.swerveDriveTeleop();
     	
     	// Test a wheel
+    	/*
     	robotDrive.setWheelPod(SwerveDrive.frontLeft, -180 * RobotMap.Control.DRIVE_STICK.getRawAxis(RobotMap.SwerveMap.Control.DRIVE_AXIS_ROTATE), 
     			RobotMap.Control.DRIVE_STICK.getRawAxis(RobotMap.SwerveMap.Control.DRIVE_AXIS_FORWARD_BACK));
     	robotDrive.setWheelPod(SwerveDrive.frontRight, -180 * RobotMap.Control.DRIVE_STICK.getRawAxis(RobotMap.SwerveMap.Control.DRIVE_AXIS_ROTATE), 
@@ -147,6 +148,7 @@ public class Barracuda extends IterativeRobot {
     			RobotMap.Control.DRIVE_STICK.getRawAxis(RobotMap.SwerveMap.Control.DRIVE_AXIS_FORWARD_BACK));
     	robotDrive.setWheelPod(SwerveDrive.rearRight, -180 * RobotMap.Control.DRIVE_STICK.getRawAxis(RobotMap.SwerveMap.Control.DRIVE_AXIS_ROTATE), 
     			RobotMap.Control.DRIVE_STICK.getRawAxis(RobotMap.SwerveMap.Control.DRIVE_AXIS_FORWARD_BACK));
+    			*/
           
     }
  
