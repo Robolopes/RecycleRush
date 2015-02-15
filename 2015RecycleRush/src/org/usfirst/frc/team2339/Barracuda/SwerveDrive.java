@@ -264,8 +264,8 @@ public class SwerveDrive extends RobotDrive {
     	
     	
     	WheelData deltaWheelData = null;
-    	if (xVelocity > SwerveMap.Control.DRIVE_STICK_DEAD_BAND || yVelocity > SwerveMap.Control.DRIVE_STICK_DEAD_BAND || 
-    			rotateVelocity > SwerveMap.Control.DRIVE_STICK_DEAD_BAND) {
+    	if (Math.abs(xVelocity) > SwerveMap.Control.DRIVE_STICK_DEAD_BAND || Math.abs(yVelocity) > SwerveMap.Control.DRIVE_STICK_DEAD_BAND || 
+    			Math.abs(rotateVelocity) > SwerveMap.Control.DRIVE_STICK_DEAD_BAND) {
     		// Compute new values
         	WheelData rawWheelData = calculateRawWheelData(xVelocity, yVelocity, rotateVelocity);
     		deltaWheelData = calculateDeltaWheelData(rawWheelData);
