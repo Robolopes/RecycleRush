@@ -122,8 +122,8 @@ public class Barracuda extends IterativeRobot {
         /*
          * Set winch motors
          */
-   		setWinchMotor(RobotMap.WinchMap.WINCH_STICK.getRawAxis(RobotMap.WinchMap.WINCH_AXIS));
-          
+    	setWinchMotor(.5 * RobotMap.WinchMap.WINCH_STICK.getRawAxis(RobotMap.WinchMap.WINCH_AXIS));
+    	  
         
 		/*
 		 * Drive robot based on values from joystick
