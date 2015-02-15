@@ -264,8 +264,9 @@ public class SwerveDrive extends RobotDrive {
      * @param speed speed of wheel in [-1.0, 1.0]
      */
     public void setWheelPod(int wheelNum, double angle, double speed) {
+		SmartDashboard.putNumber("setWheelPod " + wheelNum + " angle ", angle);
     	wheelPods[wheelNum].setSteeringAngle(angle);
-    	wheelPods[wheelNum].setSteeringAngle(speed);
+    	wheelPods[wheelNum].setWheelSpeed(speed);
     }
     
     public void setWheelPods(WheelData wheelData) {

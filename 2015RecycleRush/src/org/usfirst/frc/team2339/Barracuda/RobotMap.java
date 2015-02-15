@@ -67,14 +67,14 @@ public class RobotMap {
 			 * backwards from normal front mounted encoders so you will need compensate for this in software or 
 			 * simply connect Ch. A output to your Ch. B input and Ch. B output to your Ch. A input.
 			 */
-			public static final int DRIVE_FRONT_LEFT_ENC_A = 1;
-			public static final int DRIVE_FRONT_LEFT_ENC_B = 0;
-			public static final int DRIVE_FRONT_RIGHT_ENC_A = 3;
-			public static final int DRIVE_FRONT_RIGHT_ENC_B = 2;
-			public static final int DRIVE_REAR_LEFT_ENC_A = 5;
-			public static final int DRIVE_REAR_LEFT_ENC_B = 4;
-			public static final int DRIVE_REAR_RIGHT_ENC_A = 7;
-			public static final int DRIVE_REAR_RIGHT_ENC_B = 6;
+			public static final int DRIVE_FRONT_LEFT_ENC_A = 0;
+			public static final int DRIVE_FRONT_LEFT_ENC_B = 1;
+			public static final int DRIVE_FRONT_RIGHT_ENC_A = 2;
+			public static final int DRIVE_FRONT_RIGHT_ENC_B = 3;
+			public static final int DRIVE_REAR_LEFT_ENC_A = 4;
+			public static final int DRIVE_REAR_LEFT_ENC_B = 5;
+			public static final int DRIVE_REAR_RIGHT_ENC_A = 6;
+			public static final int DRIVE_REAR_RIGHT_ENC_B = 7;
 		};
 		
 		public static class Analog {
