@@ -8,6 +8,7 @@ package org.usfirst.frc.team2339.Barracuda;
 
 import org.usfirst.frc.team2339.Barracuda.RobotMap.SwerveMap;
 
+
 //import com.sun.squawk.util.MathUtils;
 import java.lang.Math;
 
@@ -235,6 +236,7 @@ public class SwerveDrive extends RobotDrive {
     	WheelData deltaWheelData = new WheelData();
     	for (int iiWheel = 0; iiWheel < kMaxNumberOfMotors; iiWheel++) {
     		// Compute turn angle from encoder value (pidGet) and raw target value
+    		SmartDashboard.putNumber("Wheel " + iiWheel + " current angle ", wheelPods[iiWheel].pidGet());
     		AngleFlip turnAngle = computeTurnAngle(wheelPods[iiWheel].pidGet(), rawWheelData.wheelAngles[iiWheel]);
             deltaWheelData.wheelAngles[iiWheel] = turnAngle.getAngle();
             deltaWheelData.wheelSpeeds[iiWheel] = driveScale(turnAngle) * rawWheelData.wheelSpeeds[iiWheel];
@@ -268,7 +270,9 @@ public class SwerveDrive extends RobotDrive {
     			Math.abs(rotateVelocity) > SwerveMap.Control.DRIVE_STICK_DEAD_BAND) {
     		// Compute new values
         	WheelData rawWheelData = calculateRawWheelData(xVelocity, yVelocity, rotateVelocity);
+    		SmartDashboard.putNumber("Raw wheel data left front angle", rawWheelData.wheelAngles[frontLeft]);
     		deltaWheelData = calculateDeltaWheelData(rawWheelData);
+    		SmartDashboard.putNumber("Delta wheel data left front angle", deltaWheelData.wheelAngles[frontLeft]);
     	} else {
     		// Joystick in dead band, set neutral values
     		deltaWheelData = new WheelData();
@@ -312,8 +316,8 @@ public class SwerveDrive extends RobotDrive {
     public void swerveDriveTeleop() {
         double xVelocity, yVelocity, rotateVelocity;
         boolean isLowGear, isHighGear;
-        xVelocity = SwerveMap.Control.DRIVE_STICK.getRawAxis(SwerveMap.Control.DRIVE_AXIS_FORWARD_BACK);
-        yVelocity = -SwerveMap.Control.DRIVE_STICK.getRawAxis(SwerveMap.Control.DRIVE_AXIS_SIDEWAYS);
+        yVelocity = SwerveMap.Control.DRIVE_STICK.getRawAxis(SwerveMap.Control.DRIVE_AXIS_FORWARD_BACK);
+        xVelocity = -SwerveMap.Control.DRIVE_STICK.getRawAxis(SwerveMap.Control.DRIVE_AXIS_SIDEWAYS);
         rotateVelocity = SwerveMap.Control.DRIVE_STICK.getRawAxis(SwerveMap.Control.DRIVE_AXIS_ROTATE);
         isLowGear = SwerveMap.Control.DRIVE_STICK.getRawButton(SwerveMap.Control.DRIVE_CONTROLLER_SHIFT_LOW);
         isHighGear = SwerveMap.Control.DRIVE_STICK.getRawButton(SwerveMap.Control.DRIVE_CONTROLLER_SHIFT_HIGH);
@@ -326,8 +330,8 @@ public class SwerveDrive extends RobotDrive {
     public void swerveDriveTeleopGyro() {
         double xVelocity, yVelocity, rotateVelocity;
         boolean isLowGear, isHighGear;
-        xVelocity = SwerveMap.Control.DRIVE_STICK.getRawAxis(SwerveMap.Control.DRIVE_AXIS_FORWARD_BACK);
-        yVelocity = -SwerveMap.Control.DRIVE_STICK.getRawAxis(SwerveMap.Control.DRIVE_AXIS_SIDEWAYS);
+        yVelocity = SwerveMap.Control.DRIVE_STICK.getRawAxis(SwerveMap.Control.DRIVE_AXIS_FORWARD_BACK);
+        xVelocity = -SwerveMap.Control.DRIVE_STICK.getRawAxis(SwerveMap.Control.DRIVE_AXIS_SIDEWAYS);
         rotateVelocity = SwerveMap.Control.DRIVE_STICK.getRawAxis(SwerveMap.Control.DRIVE_AXIS_ROTATE);
         isLowGear = SwerveMap.Control.DRIVE_STICK.getRawButton(SwerveMap.Control.DRIVE_CONTROLLER_SHIFT_LOW);
         isHighGear = SwerveMap.Control.DRIVE_STICK.getRawButton(SwerveMap.Control.DRIVE_CONTROLLER_SHIFT_HIGH);
