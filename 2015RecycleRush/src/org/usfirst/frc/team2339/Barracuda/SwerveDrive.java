@@ -82,19 +82,19 @@ public class SwerveDrive extends RobotDrive {
         wheelPods[frontLeft] = new Pod(m_frontLeftMotor,
         		speedControllers[frontLeft],
                 SwerveMap.DIO.DRIVE_FRONT_LEFT_ENC_A,
-                SwerveMap.DIO.DRIVE_FRONT_LEFT_ENC_B, 1);
+                SwerveMap.DIO.DRIVE_FRONT_LEFT_ENC_B, frontLeft);
         wheelPods[frontRight] = new Pod(m_frontRightMotor,
         		speedControllers[frontRight],
                 SwerveMap.DIO.DRIVE_FRONT_RIGHT_ENC_A,
-                SwerveMap.DIO.DRIVE_FRONT_RIGHT_ENC_B, 2);
+                SwerveMap.DIO.DRIVE_FRONT_RIGHT_ENC_B, frontRight);
         wheelPods[rearLeft] = new Pod(m_rearLeftMotor,
         		speedControllers[rearLeft],
                 SwerveMap.DIO.DRIVE_REAR_LEFT_ENC_A,
-                SwerveMap.DIO.DRIVE_REAR_LEFT_ENC_B, 3);
+                SwerveMap.DIO.DRIVE_REAR_LEFT_ENC_B, rearLeft);
         wheelPods[rearRight] = new Pod(m_rearRightMotor,
         		speedControllers[rearRight],
                 SwerveMap.DIO.DRIVE_REAR_RIGHT_ENC_A,
-                SwerveMap.DIO.DRIVE_REAR_RIGHT_ENC_B, 4);
+                SwerveMap.DIO.DRIVE_REAR_RIGHT_ENC_B, rearRight);
     }
     
     /**
