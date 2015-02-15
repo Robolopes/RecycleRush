@@ -512,7 +512,7 @@ public class SwerveDrive extends RobotDrive {
         }
 
         public void setWheelSpeed(double speed) {
-            drive.set(speed);
+            drive.set(.5 * speed);
         }
         
         public void resetAngle() {
