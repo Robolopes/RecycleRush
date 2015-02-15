@@ -74,6 +74,9 @@ public class Barracuda extends IterativeRobot {
         
         //robotDrive.setInvertedMotor(RobotDrive.MotorType.kFrontLeft, true);
         //robotDrive.setInvertedMotor(RobotDrive.MotorType.kFrontRight, true);
+        
+        robotDrive.resetPodAngles();
+        
         System.out.println("Before init: " + System.currentTimeMillis());
        //* visionControl.visionInit();
         System.out.println("After init: " + System.currentTimeMillis());

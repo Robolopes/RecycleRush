@@ -244,6 +244,12 @@ public class SwerveDrive extends RobotDrive {
     	return deltaWheelData;
     }
     
+    public void resetPodAngles() {
+    	for (int iiWheel = 0; iiWheel < kMaxNumberOfMotors; iiWheel++) {
+            wheelPods[iiWheel].resetAngle();
+    	}
+    }
+
     
     public void setPods(WheelData wheelData) {
     	for (int iiWheel = 0; iiWheel < kMaxNumberOfMotors; iiWheel++) {
@@ -271,7 +277,8 @@ public class SwerveDrive extends RobotDrive {
     		// Compute new values
         	WheelData rawWheelData = calculateRawWheelData(xVelocity, yVelocity, rotateVelocity);
     		SmartDashboard.putNumber("Raw wheel data left front angle", rawWheelData.wheelAngles[frontLeft]);
-    		deltaWheelData = calculateDeltaWheelData(rawWheelData);
+    		//deltaWheelData = calculateDeltaWheelData(rawWheelData);
+    		deltaWheelData = rawWheelData;
     		SmartDashboard.putNumber("Delta wheel data left front angle", deltaWheelData.wheelAngles[frontLeft]);
     	} else {
     		// Joystick in dead band, set neutral values
@@ -456,6 +463,7 @@ public class SwerveDrive extends RobotDrive {
         private SpeedController drive;
         private SpeedController steer;
         private PIDController pid;
+        private int podNumber;
 
         public Pod(SpeedController driveController, SpeedController steeringController, int steeringEncA,
                 int steeringEncB, int podNumber) {
@@ -463,6 +471,7 @@ public class SwerveDrive extends RobotDrive {
             steeringEnc.setDistancePerPulse(SwerveMap.Constants.STEERING_ENC_DEGREES_PER_PULSE);
             drive = driveController;
             steer = steeringController;
+            this.podNumber = podNumber;
             pid = new PIDController(SwerveMap.Constants.STEERING_PID_P,
                     SwerveMap.Constants.STEERING_PID_I,
                     SwerveMap.Constants.STEERING_PID_D, this, this);
@@ -478,6 +487,7 @@ public class SwerveDrive extends RobotDrive {
         }
 
         public double pidGet() {
+        	SmartDashboard.putData("Enc " + this.podNumber + " ", steeringEnc);
             return steeringEnc.getDistance();
         }
 
@@ -487,6 +497,10 @@ public class SwerveDrive extends RobotDrive {
 
         public void setWheelSpeed(double speed) {
             drive.set(speed);
+        }
+        
+        public void resetAngle() {
+        	steeringEnc.reset();
         }
     }
 
