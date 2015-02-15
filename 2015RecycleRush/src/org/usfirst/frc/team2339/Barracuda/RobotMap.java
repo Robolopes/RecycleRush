@@ -19,8 +19,8 @@ public class RobotMap {
 		public static class Constants {
 			// These should be set to actual robot dimensions. 
 			// I don't think the units matter but looks like the original is in inches
-			public static final double WHEEL_BASE_LENGTH = 28;
-			public static final double WHEEL_BASE_WIDTH = 38;
+			public static final double WHEEL_BASE_LENGTH = 28.5;
+			public static final double WHEEL_BASE_WIDTH = 25.0;
 			/*
 			 * AndyMark Gearmotor am-2971. See http://www.andymark.com/product-p/am-2971.htm
 			 * This number is encoder pulse per wheel revolution

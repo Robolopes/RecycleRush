@@ -111,7 +111,7 @@ public class SwerveDrive extends RobotDrive {
      */
     public WheelVelocityVector calculateWheelVelocityVector(double xWheelPosition, double yWheelPosition, double maxWheelRadius, 
     		double xVelocity, double yVelocity, double rotateVelocity) {
-        double xWheel = xVelocity + rotateVelocity * yWheelPosition / maxWheelRadius; 
+        double xWheel = xVelocity - rotateVelocity * yWheelPosition / maxWheelRadius; 
         double yWheel = yVelocity - rotateVelocity * xWheelPosition / maxWheelRadius;
         WheelVelocityVector wheelVelocity = new WheelVelocityVector();
         wheelVelocity.wheelSpeed = Math.hypot(xWheel, yWheel);
@@ -293,9 +293,9 @@ public class SwerveDrive extends RobotDrive {
     	if (Math.abs(xVelocity) > SwerveMap.Control.DRIVE_STICK_DEAD_BAND || Math.abs(yVelocity) > SwerveMap.Control.DRIVE_STICK_DEAD_BAND || 
     			Math.abs(rotateVelocity) > SwerveMap.Control.DRIVE_STICK_DEAD_BAND) {
     		// Compute new values
-        	WheelData rawWheelData = calculateRawWheelData(xVelocity, yVelocity, rotateVelocity);
+        	WheelData rawWheelData = calculateRawWheelData1(xVelocity, yVelocity, rotateVelocity);
     		SmartDashboard.putNumber("Raw wheel data left front angle", rawWheelData.wheelAngles[frontLeft]);
-    		//deltaWheelData = calculateDeltaWheelData(rawWheelData);
+    		deltaWheelData = calculateDeltaWheelData(rawWheelData);
     		deltaWheelData = rawWheelData;
     		SmartDashboard.putNumber("Delta wheel data left front angle", deltaWheelData.wheelAngles[frontLeft]);
     	} else {
@@ -357,7 +357,7 @@ public class SwerveDrive extends RobotDrive {
         boolean isLowGear, isHighGear;
         yVelocity = -SwerveMap.Control.DRIVE_STICK.getRawAxis(SwerveMap.Control.DRIVE_AXIS_FORWARD_BACK);
         xVelocity = SwerveMap.Control.DRIVE_STICK.getRawAxis(SwerveMap.Control.DRIVE_AXIS_SIDEWAYS);
-        rotateVelocity = -SwerveMap.Control.DRIVE_STICK.getRawAxis(SwerveMap.Control.DRIVE_AXIS_ROTATE);
+        rotateVelocity = SwerveMap.Control.DRIVE_STICK.getRawAxis(SwerveMap.Control.DRIVE_AXIS_ROTATE);
         isLowGear = SwerveMap.Control.DRIVE_STICK.getRawButton(SwerveMap.Control.DRIVE_CONTROLLER_SHIFT_LOW);
         isHighGear = SwerveMap.Control.DRIVE_STICK.getRawButton(SwerveMap.Control.DRIVE_CONTROLLER_SHIFT_HIGH);
         double robotAngle = SwerveMap.Control.GYRO.getAngle();
@@ -512,7 +512,8 @@ public class SwerveDrive extends RobotDrive {
         }
 
         public void setWheelSpeed(double speed) {
-            drive.set(speed);
+            //drive.set(speed);
+        	drive.set(0.0);
         }
         
         public void resetAngle() {
