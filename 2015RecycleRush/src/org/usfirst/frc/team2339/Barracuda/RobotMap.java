@@ -28,9 +28,11 @@ public class RobotMap {
 			 * am-2971 has a 71:1 gear ratio.
 			 * 7 pulse per motor revolution * 71 gear ratio ==> 497 pulses per gear box output.
 			 * Gear box output has 22 tooth gear, wheel has 32 tooth gear.
-			 * 341.69 = 497 * 22/32 pulses per wheel revolution 
+			 * 341.69 = 497 * 22/32 pulses per wheel revolution.
+			 * 341.69/360 pulses per degree
+			 * So degrees per pulse 360/341.69 <== (32 * 360) / ( 7 * 71 * 22)
 			 */
-			public static final double STEERING_ENC_PULSES_PER_REVOLUTION = 7.0 * 71.0 * 22.0 / 32.0;
+			public static final double STEERING_ENC_DEGREES_PER_PULSE = (32.0 * 360.0) / (7.0 * 71.0 * 22.0);
 			public static final double STEERING_PID_P = 0;
 			public static final double STEERING_PID_I = 0;
 			public static final double STEERING_PID_D = 0;

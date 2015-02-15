@@ -460,7 +460,7 @@ public class SwerveDrive extends RobotDrive {
         public Pod(SpeedController driveController, SpeedController steeringController, int steeringEncA,
                 int steeringEncB, int podNumber) {
             steeringEnc = new Encoder(steeringEncA, steeringEncB);
-            steeringEnc.setDistancePerPulse(SwerveMap.Constants.STEERING_ENC_PULSES_PER_REVOLUTION);
+            steeringEnc.setDistancePerPulse(SwerveMap.Constants.STEERING_ENC_DEGREES_PER_PULSE);
             drive = driveController;
             steer = steeringController;
             pid = new PIDController(SwerveMap.Constants.STEERING_PID_P,

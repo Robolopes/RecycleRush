@@ -1,6 +1,7 @@
 
 package org.usfirst.frc.team2339.Barracuda;
 
+import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.Talon;
@@ -140,7 +141,8 @@ public class Barracuda extends IterativeRobot {
         long time = System.currentTimeMillis();
         SmartDashboard.putNumber("Test Mode Running Time ", time);
        // long elapsed = System.currentTimeMillis() - startTime;
-
+        Encoder frontLeftEnc = new Encoder(RobotMap.SwerveMap.DIO.DRIVE_FRONT_LEFT_ENC_A, RobotMap.SwerveMap.DIO.DRIVE_FRONT_LEFT_ENC_A);
+        SmartDashboard.putNumber("Front left encoder ", frontLeftEnc.getRaw());
     }
     
 }
