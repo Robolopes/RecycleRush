@@ -63,8 +63,8 @@ public class SwerveDrive extends RobotDrive {
         		wheelSpeeds[iiWheel] = 0;
         		wheelAngles[iiWheel] = 45;
         	}
-        	wheelAngles[frontRight] = -45;
-        	wheelAngles[rearLeft] = -45;
+        	wheelAngles[frontLeft] = -45;
+        	wheelAngles[rearRight] = -45;
     	}
     }
 
@@ -512,8 +512,7 @@ public class SwerveDrive extends RobotDrive {
         }
 
         public void setWheelSpeed(double speed) {
-            //drive.set(speed);
-        	drive.set(0.0);
+            drive.set(speed);
         }
         
         public void resetAngle() {
