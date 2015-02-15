@@ -33,7 +33,7 @@ public class RobotMap {
 			 * So degrees per pulse 360/341.69 <== (32 * 360) / ( 7 * 71 * 22)
 			 */
 			public static final double STEERING_ENC_DEGREES_PER_PULSE = (32.0 * 360.0) / (7.0 * 71.0 * 22.0);
-			public static final double STEERING_PID_P = 0.25;
+			public static final double STEERING_PID_P = 0.02;
 			public static final double STEERING_PID_I = 0;
 			public static final double STEERING_PID_D = 0;
 		};

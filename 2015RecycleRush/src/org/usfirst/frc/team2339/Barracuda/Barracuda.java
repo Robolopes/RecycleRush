@@ -90,6 +90,7 @@ public class Barracuda extends IterativeRobot {
 		startTime = System.currentTimeMillis();
 		System.out.println("Autonomous init time: " + startTime);
        	RobotMap.Control.GYRO.reset();
+        robotDrive.resetPodAngles();
     }
 	
     public void autonomousPeriodic() {
@@ -100,6 +101,8 @@ public class Barracuda extends IterativeRobot {
      */
     public void teleopInit() {
     	RobotMap.Control.GYRO.reset();
+        robotDrive.resetPodAngles();
+        
     }
 
  
@@ -126,7 +129,7 @@ public class Barracuda extends IterativeRobot {
         /*
          * Set winch motors
          */
-    	setWinchMotor(.5 * RobotMap.WinchMap.WINCH_STICK.getRawAxis(RobotMap.WinchMap.WINCH_AXIS));
+    	setWinchMotor(RobotMap.WinchMap.WINCH_STICK.getRawAxis(RobotMap.WinchMap.WINCH_AXIS));
     	  
         
 		/*
