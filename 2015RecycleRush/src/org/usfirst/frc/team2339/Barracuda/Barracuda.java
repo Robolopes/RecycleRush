@@ -3,6 +3,7 @@ package org.usfirst.frc.team2339.Barracuda;
 
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.Talon;
 
 
 /**
@@ -28,6 +29,7 @@ public class Barracuda extends IterativeRobot {
     */
     private final SwerveDrive robotDrive = 
             new SwerveDrive();
+    private final Talon winchMotor = new Talon(RobotMap.WinchMap.LIFT_WINCH);
       
    
     /*
@@ -57,9 +59,8 @@ public class Barracuda extends IterativeRobot {
      * @param value motor speed
      */
     public void setWinchMotor(double value) {
-    //    shooterMotorA.set(value);
-    //    shooterMotorB.set(value);
         SmartDashboard.putNumber("Winch motor value ", value);
+        winchMotor.set(value);
     }
     
     /**
@@ -121,16 +122,7 @@ public class Barracuda extends IterativeRobot {
         /*
          * Set winch motors
          */
-    	if(RobotMap.Control.OPERATOR_STICK.getRawButton(RobotMap.WinchMap.WINCH_BUTTON_UP)) {
-    		// Set winch motors to move up
-    		setWinchMotor(1.0);
-    	} else if(RobotMap.Control.OPERATOR_STICK.getRawButton(RobotMap.WinchMap.WINCH_BUTTON_DOWN)) {
-    		// Set winch motors to move down
-    		setWinchMotor(-1.0);
-    	} else {
-    		// Turn off shooter winch motors
-            setWinchMotor(0.0);
-        }
+   		setWinchMotor(RobotMap.WinchMap.WINCH_STICK.getRawAxis(RobotMap.WinchMap.WINCH_AXIS));
           
         
 		/*
