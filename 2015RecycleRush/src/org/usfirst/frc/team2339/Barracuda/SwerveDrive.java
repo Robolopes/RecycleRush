@@ -297,7 +297,7 @@ public class SwerveDrive extends RobotDrive {
         	WheelData rawWheelData = calculateRawWheelData1(xVelocity, yVelocity, rotateVelocity);
     		SmartDashboard.putNumber("Raw wheel data left front angle", rawWheelData.wheelAngles[frontLeft]);
     		deltaWheelData = calculateDeltaWheelData(rawWheelData);
-    		deltaWheelData = rawWheelData;
+    		//deltaWheelData = rawWheelData;
     		SmartDashboard.putNumber("Delta wheel data left front angle", deltaWheelData.wheelAngles[frontLeft]);
     	} else {
     		// Joystick in dead band, set neutral values
