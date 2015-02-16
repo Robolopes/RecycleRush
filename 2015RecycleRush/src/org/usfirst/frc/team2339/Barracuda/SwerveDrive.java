@@ -27,16 +27,17 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  * 
  */
 public class SwerveDrive extends RobotDrive {
-    //declare the steering pods and shifter valve
 
     public static final int frontLeft = MotorType.kFrontLeft.value;
     public static final int frontRight = MotorType.kFrontRight.value;
     public static final int rearLeft = MotorType.kRearLeft.value;
     public static final int rearRight = MotorType.kRearRight.value;
     
-    protected SpeedController speedControllers[] = new SpeedController[kMaxNumberOfMotors];
-    protected Pod wheelPods[] = new Pod[kMaxNumberOfMotors];
-    private DoubleSolenoid shift;
+    protected final SpeedController speedControllers[] = new SpeedController[kMaxNumberOfMotors];
+    protected final Pod wheelPods[] = new Pod[kMaxNumberOfMotors];
+    
+    protected final double xContainerPivotOffset;
+    protected final double yContainerPivotOffset;
 
     public class WheelVelocityVector {
     	public double wheelSpeed = 0;
@@ -73,11 +74,14 @@ public class SwerveDrive extends RobotDrive {
     		  SwerveMap.PWM.DRIVE_REAR_LEFT, 
     		  SwerveMap.PWM.DRIVE_FRONT_RIGHT, 
     		  SwerveMap.PWM.DRIVE_REAR_RIGHT);
+    	
+    	// Set up steering controllers
     	speedControllers[frontLeft] = new Talon(SwerveMap.PWM.DRIVE_FRONT_LEFT_STEERING);
     	speedControllers[frontRight] = new Talon(SwerveMap.PWM.DRIVE_FRONT_RIGHT_STEERING);
     	speedControllers[rearLeft] = new Talon(SwerveMap.PWM.DRIVE_REAR_LEFT_STEERING);
     	speedControllers[rearRight] = new Talon(SwerveMap.PWM.DRIVE_REAR_RIGHT_STEERING);
-        //set up the steering pods with the correct sensors and controllers
+    	
+        // Set up the steering pods with the correct sensors and controllers
         wheelPods[frontLeft] = new Pod(m_frontLeftMotor,
         		speedControllers[frontLeft],
                 SwerveMap.DIO.DRIVE_FRONT_LEFT_ENC_A,
@@ -94,6 +98,10 @@ public class SwerveDrive extends RobotDrive {
         		speedControllers[rearRight],
                 SwerveMap.DIO.DRIVE_REAR_RIGHT_ENC_A,
                 SwerveMap.DIO.DRIVE_REAR_RIGHT_ENC_B, rearRight);
+        
+        // Set container offset values.
+        xContainerPivotOffset = 0.0;
+        yContainerPivotOffset = SwerveMap.Constants.CONTAINER_CENTER_DISTANCE_FORWARD + 0.5 * SwerveMap.Constants.WHEEL_BASE_LENGTH;
     }
     
     /**
@@ -143,10 +151,10 @@ public class SwerveDrive extends RobotDrive {
     	
         double L = SwerveMap.Constants.WHEEL_BASE_LENGTH;
         double W = SwerveMap.Constants.WHEEL_BASE_WIDTH;
-        double frontDist = L/2 - xPivotOffset; 
-        double rearDist = L/2 + xPivotOffset; 
-        double rightDist = W/2 - yPivotOffset;
-        double leftDist = W/2 + yPivotOffset;
+        double frontDist = L/2 - yPivotOffset; 
+        double rearDist = L/2 + yPivotOffset; 
+        double rightDist = W/2 - xPivotOffset;
+        double leftDist = W/2 + xPivotOffset;
         
         // Find maximum wheel distance (radius) from center
         // Maximum radius is used to normalize rotational velocity so that wheels farthest from center move the fastest.
@@ -176,20 +184,6 @@ public class SwerveDrive extends RobotDrive {
         normalize(rawWheelData.wheelSpeeds);
         
         return rawWheelData;
-    }
-    
-    /**
-     * NOTE: This should give same result as standard method below.
-     * Calculate raw wheel speeds and angles for swerve drive based on input robot forward, strafe, and rotational velocities.
-     * Wheel speeds are normalized to the range [0, 1.0]. Angles are normalized to the range [-180, 180).
-     * Calculated values are raw in that they have no consideration for current state of drive.
-     * @param xVelocity strafe (sideways) velocity. -1.0 = max motor speed left. 1.0 = max motor speed right.
-     * @param yVelocity forward velocity. -1.0 = max motor speed backwards. 1.0 = max motor speed forward.
-     * @param rotateVelocity clockwise rotational velocity. -1.0 = max motor speed counter-clockwise. 1.0 = max motor speed clockwise.
-     * @return raw wheel speeds and angles
-     */
-    public WheelData calculateRawWheelData1(double xVelocity, double yVelocity, double rotateVelocity) {
-    	return calculateRawWheelDataGeneral(xVelocity, yVelocity, rotateVelocity, 0.0, 0.0);
     }
     
     /**
@@ -282,7 +276,7 @@ public class SwerveDrive extends RobotDrive {
     }
 
     /**
-     * Drive in swerve mode with a given speed, rotation, and shift values.
+     * Drive in swerve mode with a given speed and rotation.
      * Driving parameters are assumed to be relative to the current robot angle.
      * @param xVelocity strafe (sideways) velocity. -1.0 = max motor speed left. 1.0 = max motor speed right.
      * @param yVelocity forward velocity. -1.0 = max motor speed backwards. 1.0 = max motor speed forward.
@@ -297,7 +291,12 @@ public class SwerveDrive extends RobotDrive {
     	if (Math.abs(xVelocity) > SwerveMap.Control.DRIVE_STICK_DEAD_BAND || Math.abs(yVelocity) > SwerveMap.Control.DRIVE_STICK_DEAD_BAND || 
     			Math.abs(rotateVelocity) > SwerveMap.Control.DRIVE_STICK_DEAD_BAND) {
     		// Compute new values
-        	WheelData rawWheelData = calculateRawWheelData1(xVelocity, yVelocity, rotateVelocity);
+        	WheelData rawWheelData = null;
+            if(rotateAroundContainer){
+            	rawWheelData = calculateRawWheelDataGeneral(xVelocity, yVelocity, rotateVelocity, xContainerPivotOffset, yContainerPivotOffset);
+            } else {
+            	rawWheelData = calculateRawWheelDataGeneral(xVelocity, yVelocity, rotateVelocity, 0.0, 0.0);
+            }
     		SmartDashboard.putNumber("Raw wheel data left front angle", rawWheelData.wheelAngles[frontLeft]);
     		deltaWheelData = calculateDeltaWheelData(rawWheelData);
     		//deltaWheelData = rawWheelData;
@@ -308,10 +307,6 @@ public class SwerveDrive extends RobotDrive {
     		deltaWheelData.setDeadBandValues();
     	}
     	
-        // Set shifter
-        if(rotateAroundContainer){
-            shift.set(DoubleSolenoid.Value.kForward);
-        }
         
         // Set pods
         setWheelPods(deltaWheelData);
@@ -319,7 +314,7 @@ public class SwerveDrive extends RobotDrive {
     }
 
     /**
-     * Drive in swerve mode with a given speed, rotation, and shift values.
+     * Drive in swerve mode with a given speed and rotation.
      * Driving parameters are assumed to be absolute based on a fixed angle, e.g. the field.
      * @param robotAngle Angle (in degrees) of robot relative to fixed angle. This is probably taken from the gyro.
      * @param xVelocity strafe (sideways) velocity. -1.0 = max motor speed left. 1.0 = max motor speed right.

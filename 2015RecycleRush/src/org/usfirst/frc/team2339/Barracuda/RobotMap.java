@@ -21,6 +21,9 @@ public class RobotMap {
 			// I don't think the units matter but looks like the original is in inches
 			public static final double WHEEL_BASE_LENGTH = 28.5;
 			public static final double WHEEL_BASE_WIDTH = 25.0;
+			// Distance of center of container in front of front wheels. (Negative if behind front wheel line.)
+			public static final double CONTAINER_CENTER_DISTANCE_FORWARD = 0.0;
+			
 			/*
 			 * AndyMark Gearmotor am-2971. See http://www.andymark.com/product-p/am-2971.htm
 			 * This number is encoder pulse per wheel revolution
