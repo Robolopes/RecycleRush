@@ -35,9 +35,6 @@ public class SwerveDrive extends RobotDrive {
     protected final SpeedController speedControllers[] = new SpeedController[kMaxNumberOfMotors];
     protected final Pod wheelPods[] = new Pod[kMaxNumberOfMotors];
     
-    protected final double xContainerPivotOffset;
-    protected final double yContainerPivotOffset;
-
     public class WheelVelocityVector {
     	public double wheelSpeed = 0;
     	public double wheelAngle = 0;
@@ -97,10 +94,6 @@ public class SwerveDrive extends RobotDrive {
         		speedControllers[rearRight],
                 SwerveMap.DIO.DRIVE_REAR_RIGHT_ENC_A,
                 SwerveMap.DIO.DRIVE_REAR_RIGHT_ENC_B, rearRight);
-        
-        // Set container offset values.
-        xContainerPivotOffset = 0.0;
-        yContainerPivotOffset = SwerveMap.Constants.CONTAINER_CENTER_DISTANCE_FORWARD + 0.5 * SwerveMap.Constants.WHEEL_BASE_LENGTH;
     }
     
     /**
@@ -340,8 +333,8 @@ public class SwerveDrive extends RobotDrive {
         double xPivotOffset = 0.0;
         double yPivotOffset = 0.0;
         if (SwerveMap.Control.DRIVE_STICK.getRawButton(SwerveMap.Control.DRIVE_BUTTON_ROTATE_AROUND_CONTAINER)) {
-        	xPivotOffset = xContainerPivotOffset;
-        	yPivotOffset = yContainerPivotOffset;
+        	xPivotOffset = 0.0;
+        	yPivotOffset = SwerveMap.Constants.CONTAINER_CENTER_DISTANCE_FORWARD + 0.5 * SwerveMap.Constants.WHEEL_BASE_LENGTH;
         }
         double robotAngle = 0.0;
         if (SwerveMap.Control.DRIVE_STICK.getRawButton(SwerveMap.Control.DRIVE_BUTTON_ABSOLUTE_GYRO_MODE)) {
