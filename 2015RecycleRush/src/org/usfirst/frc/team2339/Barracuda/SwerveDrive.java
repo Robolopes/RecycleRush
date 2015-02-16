@@ -111,11 +111,16 @@ public class SwerveDrive extends RobotDrive {
      */
     public WheelVelocityVector calculateWheelVelocityVector(double xWheelPosition, double yWheelPosition, double maxWheelRadius, 
     		double xVelocity, double yVelocity, double rotateVelocity) {
-        double xWheel = xVelocity - rotateVelocity * yWheelPosition / maxWheelRadius; 
+        double xWheel = xVelocity + rotateVelocity * yWheelPosition / maxWheelRadius; 
         double yWheel = yVelocity - rotateVelocity * xWheelPosition / maxWheelRadius;
         WheelVelocityVector wheelVelocity = new WheelVelocityVector();
         wheelVelocity.wheelSpeed = Math.hypot(xWheel, yWheel);
-        wheelVelocity.wheelAngle = Math.toDegrees(Math.atan2(xWheel, yWheel));
+        /*
+         * atan2(xWheel, yWheel) gives angle in robot coordinates
+         * However, wheel has positive counter-clockwise angle and zero is on Y axis.
+         * atan2(-yWheel, xWheel) converts to wheel angle system.
+         */
+        wheelVelocity.wheelAngle = Math.toDegrees(Math.atan2(-yWheel, xWheel));
         return wheelVelocity;
     }
     
@@ -343,7 +348,7 @@ public class SwerveDrive extends RobotDrive {
         double xVelocity, yVelocity, rotateVelocity1, rotateVelocity;
         boolean isLowGear, isHighGear;
         yVelocity = -SwerveMap.Control.DRIVE_STICK.getRawAxis(SwerveMap.Control.DRIVE_AXIS_FORWARD_BACK);
-        xVelocity = -SwerveMap.Control.DRIVE_STICK.getRawAxis(SwerveMap.Control.DRIVE_AXIS_SIDEWAYS);
+        xVelocity = SwerveMap.Control.DRIVE_STICK.getRawAxis(SwerveMap.Control.DRIVE_AXIS_SIDEWAYS);
         rotateVelocity1 = SwerveMap.Control.DRIVE_STICK.getRawAxis(SwerveMap.Control.DRIVE_AXIS_ROTATE);
         rotateVelocity = (.5 * rotateVelocity1);
         isLowGear = SwerveMap.Control.DRIVE_STICK.getRawButton(SwerveMap.Control.DRIVE_CONTROLLER_SHIFT_LOW);
@@ -378,7 +383,7 @@ public class SwerveDrive extends RobotDrive {
         double xVelocity, yVelocity, rotateVelocity;
         boolean isLowGear, isHighGear;
         yVelocity = -SwerveMap.Control.DRIVE_STICK.getRawAxis(SwerveMap.Control.DRIVE_AXIS_FORWARD_BACK);
-        xVelocity = -SwerveMap.Control.DRIVE_STICK.getRawAxis(SwerveMap.Control.DRIVE_AXIS_SIDEWAYS);
+        xVelocity = SwerveMap.Control.DRIVE_STICK.getRawAxis(SwerveMap.Control.DRIVE_AXIS_SIDEWAYS);
         rotateVelocity = SwerveMap.Control.DRIVE_STICK.getRawAxis(SwerveMap.Control.DRIVE_AXIS_ROTATE);
         isLowGear = SwerveMap.Control.DRIVE_STICK.getRawButton(SwerveMap.Control.DRIVE_CONTROLLER_SHIFT_LOW);
         isHighGear = SwerveMap.Control.DRIVE_STICK.getRawButton(SwerveMap.Control.DRIVE_CONTROLLER_SHIFT_HIGH);
