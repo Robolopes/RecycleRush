@@ -288,7 +288,7 @@ public class SwerveDrive extends RobotDrive {
     public void swerveDriveRobot(double xVelocity, double yVelocity, double rotateVelocity, 
     		boolean isLowGear, boolean isHighGear) {
     	
-    	
+    	//Tristan Was Here
     	WheelData deltaWheelData = null;
     	if (Math.abs(xVelocity) > SwerveMap.Control.DRIVE_STICK_DEAD_BAND || Math.abs(yVelocity) > SwerveMap.Control.DRIVE_STICK_DEAD_BAND || 
     			Math.abs(rotateVelocity) > SwerveMap.Control.DRIVE_STICK_DEAD_BAND) {
@@ -347,6 +347,25 @@ public class SwerveDrive extends RobotDrive {
         isLowGear = SwerveMap.Control.DRIVE_STICK.getRawButton(SwerveMap.Control.DRIVE_CONTROLLER_SHIFT_LOW);
         isHighGear = SwerveMap.Control.DRIVE_STICK.getRawButton(SwerveMap.Control.DRIVE_CONTROLLER_SHIFT_HIGH);
         swerveDriveRobot(xVelocity, yVelocity, rotateVelocity, isLowGear, isHighGear);
+        
+        if (Math.abs(yVelocity)< .2){
+        	yVelocity = 0;
+        }
+        else{
+        	yVelocity = 1;
+        }
+        if (Math.abs(xVelocity)< .2){
+        	xVelocity = 0;
+        }
+        else{
+        	xVelocity = 1;
+        }
+        if (Math.abs(rotateVelocity)< .2){
+        	rotateVelocity = 0;
+        }
+        else{
+        	rotateVelocity = 1;
+        }
     }
     
     /**
@@ -510,9 +529,10 @@ public class SwerveDrive extends RobotDrive {
         public void setSteeringAngle(double angle) {
             pid.setSetpoint(angle);
         }
-
         public void setWheelSpeed(double speed) {
-            drive.set(.5 * speed);
+            drive.set(speed);
+       // public void setWheelSpeed(double speed) {
+         //   drive.set(.5 * speed);
         }
         
         public void resetAngle() {
