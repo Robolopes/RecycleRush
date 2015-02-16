@@ -339,16 +339,17 @@ public class SwerveDrive extends RobotDrive {
      * Control robot relative to itself
      */
     public void swerveDriveTeleop() {
-        double xVelocity, yVelocity, rotateVelocity;
+        double xVelocity, yVelocity, rotateVelocity1, rotateVelocity;
         boolean isLowGear, isHighGear;
-        yVelocity = SwerveMap.Control.DRIVE_STICK.getRawAxis(SwerveMap.Control.DRIVE_AXIS_FORWARD_BACK);
-        xVelocity = SwerveMap.Control.DRIVE_STICK.getRawAxis(SwerveMap.Control.DRIVE_AXIS_SIDEWAYS);
-        rotateVelocity = -SwerveMap.Control.DRIVE_STICK.getRawAxis(SwerveMap.Control.DRIVE_AXIS_ROTATE);
+        yVelocity = -SwerveMap.Control.DRIVE_STICK.getRawAxis(SwerveMap.Control.DRIVE_AXIS_FORWARD_BACK);
+        xVelocity = -SwerveMap.Control.DRIVE_STICK.getRawAxis(SwerveMap.Control.DRIVE_AXIS_SIDEWAYS);
+        rotateVelocity1 = SwerveMap.Control.DRIVE_STICK.getRawAxis(SwerveMap.Control.DRIVE_AXIS_ROTATE);
+        rotateVelocity = (.5 * rotateVelocity1);
         isLowGear = SwerveMap.Control.DRIVE_STICK.getRawButton(SwerveMap.Control.DRIVE_CONTROLLER_SHIFT_LOW);
         isHighGear = SwerveMap.Control.DRIVE_STICK.getRawButton(SwerveMap.Control.DRIVE_CONTROLLER_SHIFT_HIGH);
         swerveDriveRobot(xVelocity, yVelocity, rotateVelocity, isLowGear, isHighGear);
         
-        if (Math.abs(yVelocity)< .2){
+      /*  if (Math.abs(yVelocity)< .2){
         	yVelocity = 0;
         }
         else{
@@ -366,6 +367,7 @@ public class SwerveDrive extends RobotDrive {
         else{
         	rotateVelocity = 1;
         }
+        */
     }
     
     /**
