@@ -238,7 +238,8 @@ public class SwerveDrive extends RobotDrive {
     		// Compute turn angle from encoder value (pidGet) and raw target value
     		SmartDashboard.putNumber("Wheel " + iiWheel + " current angle ", wheelPods[iiWheel].pidGet());
     		AngleFlip turnAngle = computeTurnAngle(wheelPods[iiWheel].pidGet(), rawWheelData.wheelAngles[iiWheel]);
-            deltaWheelData.wheelAngles[iiWheel] = turnAngle.getAngle();
+    		double targetAngle = normalizeAngle(wheelPods[iiWheel].pidGet() + turnAngle.getAngle()); 
+            deltaWheelData.wheelAngles[iiWheel] = targetAngle;
             deltaWheelData.wheelSpeeds[iiWheel] = driveScale(turnAngle) * rawWheelData.wheelSpeeds[iiWheel];
     	}
     	return deltaWheelData;
@@ -552,4 +553,5 @@ public class SwerveDrive extends RobotDrive {
 
     public void initDefaultCommand() {
     }
+
 }
