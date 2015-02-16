@@ -49,6 +49,7 @@ public class RobotMap {
 			public static final int DRIVE_AXIS_SIDEWAYS = 0;
 			public static final int DRIVE_AXIS_ROTATE = 3;
 			public static final int DRIVE_BUTTON_ROTATE_AROUND_CONTAINER = 1;
+			public static final int DRIVE_BUTTON_ABSOLUTE_GYRO_MODE = 2;
 			public static final double DRIVE_STICK_DEAD_BAND = 0.1;
 		}
 

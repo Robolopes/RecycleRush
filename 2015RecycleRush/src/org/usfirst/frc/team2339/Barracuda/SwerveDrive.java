@@ -12,7 +12,6 @@ import org.usfirst.frc.team2339.Barracuda.RobotMap.SwerveMap;
 //import com.sun.squawk.util.MathUtils;
 import java.lang.Math;
 
-import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.PIDController;
 import edu.wpi.first.wpilibj.PIDOutput;
@@ -281,10 +280,11 @@ public class SwerveDrive extends RobotDrive {
      * @param xVelocity strafe (sideways) velocity. -1.0 = max motor speed left. 1.0 = max motor speed right.
      * @param yVelocity forward velocity. -1.0 = max motor speed backwards. 1.0 = max motor speed forward.
      * @param rotateVelocity clockwise rotational velocity. -1.0 = max motor speed counter-clockwise. 1.0 = max motor speed clockwise.
-     * @param rotateAroundContainer true if rotate around container. False rotates around center. 
+     * @param xPivotOffset Amount pivot is offset sideways from center. (Positive toward right, negative toward left)
+     * @param yPivotOffset Amount pivot is offset forward from center. (Positive toward front, negative toward back)
      */
     public void swerveDriveRobot(double xVelocity, double yVelocity, double rotateVelocity, 
-    		boolean rotateAroundContainer) {
+    		double xPivotOffset, double yPivotOffset) {
     	
     	//Tristan Was Here
     	WheelData deltaWheelData = null;
@@ -292,11 +292,7 @@ public class SwerveDrive extends RobotDrive {
     			Math.abs(rotateVelocity) > SwerveMap.Control.DRIVE_STICK_DEAD_BAND) {
     		// Compute new values
         	WheelData rawWheelData = null;
-            if(rotateAroundContainer){
-            	rawWheelData = calculateRawWheelDataGeneral(xVelocity, yVelocity, rotateVelocity, xContainerPivotOffset, yContainerPivotOffset);
-            } else {
-            	rawWheelData = calculateRawWheelDataGeneral(xVelocity, yVelocity, rotateVelocity, 0.0, 0.0);
-            }
+            rawWheelData = calculateRawWheelDataGeneral(xVelocity, yVelocity, rotateVelocity, xPivotOffset, yPivotOffset);
     		SmartDashboard.putNumber("Raw wheel data left front angle", rawWheelData.wheelAngles[frontLeft]);
     		deltaWheelData = calculateDeltaWheelData(rawWheelData);
     		//deltaWheelData = rawWheelData;
@@ -316,18 +312,20 @@ public class SwerveDrive extends RobotDrive {
     /**
      * Drive in swerve mode with a given speed and rotation.
      * Driving parameters are assumed to be absolute based on a fixed angle, e.g. the field.
-     * @param robotAngle Angle (in degrees) of robot relative to fixed angle. This is probably taken from the gyro.
      * @param xVelocity strafe (sideways) velocity. -1.0 = max motor speed left. 1.0 = max motor speed right.
+     * @param robotAngle Angle (in degrees) of robot relative to fixed angle. Zero degrees means front of robot points in desired direction. 
+     *                   Positive is clockwise, negative counter-clockwise. This is probably taken from the gyro.
      * @param yVelocity forward velocity. -1.0 = max motor speed backwards. 1.0 = max motor speed forward.
      * @param rotateVelocity clockwise rotational velocity. -1.0 = max motor speed counter-clockwise. 1.0 = max motor speed clockwise.
-     * @param rotateAroundContainer true if rotate around container. False rotates around center.
+     * @param xPivotOffset Amount pivot is offset sideways from center. (Positive toward right, negative toward left)
+     * @param yPivotOffset Amount pivot is offset forward from center. (Positive toward front, negative toward back)
      */
-    public void swerveDriveAbsolute(double robotAngle, double xVelocity, double yVelocity, double rotateVelocity,  
-    		boolean rotateAroundContainer) {
+    public void swerveDriveAbsolute(double xVelocity, double yVelocity, double robotAngle, double rotateVelocity,  
+    		double xPivotOffset, double yPivotOffset) {
     	double robotAngleRad = Math.toRadians(robotAngle);
-    	double xRobot = -xVelocity * Math.sin(robotAngleRad) + yVelocity * Math.cos(robotAngleRad);
-    	double yRobot = xVelocity * Math.cos(robotAngleRad) + yVelocity * Math.sin(robotAngleRad);
-    	this.swerveDriveRobot(xRobot, yRobot, rotateVelocity, rotateAroundContainer);
+    	double xRobot = xVelocity * Math.cos(robotAngleRad) - yVelocity * Math.sin(robotAngleRad);
+    	double yRobot = xVelocity * Math.sin(robotAngleRad) + yVelocity * Math.cos(robotAngleRad);
+    	this.swerveDriveRobot(xRobot, yRobot, rotateVelocity, xPivotOffset, yPivotOffset);
     }
     
     /**
@@ -335,13 +333,22 @@ public class SwerveDrive extends RobotDrive {
      */
     public void swerveDriveTeleop() {
         double xVelocity, yVelocity, rotateVelocity1, rotateVelocity;
-        boolean rotateAroundContainer;
         yVelocity = -SwerveMap.Control.DRIVE_STICK.getRawAxis(SwerveMap.Control.DRIVE_AXIS_FORWARD_BACK);
         xVelocity = SwerveMap.Control.DRIVE_STICK.getRawAxis(SwerveMap.Control.DRIVE_AXIS_SIDEWAYS);
         rotateVelocity1 = SwerveMap.Control.DRIVE_STICK.getRawAxis(SwerveMap.Control.DRIVE_AXIS_ROTATE);
         rotateVelocity = (.5 * rotateVelocity1);
-        rotateAroundContainer = SwerveMap.Control.DRIVE_STICK.getRawButton(SwerveMap.Control.DRIVE_BUTTON_ROTATE_AROUND_CONTAINER);
-        swerveDriveRobot(xVelocity, yVelocity, rotateVelocity, rotateAroundContainer);
+        double xPivotOffset = 0.0;
+        double yPivotOffset = 0.0;
+        if (SwerveMap.Control.DRIVE_STICK.getRawButton(SwerveMap.Control.DRIVE_BUTTON_ROTATE_AROUND_CONTAINER)) {
+        	xPivotOffset = xContainerPivotOffset;
+        	yPivotOffset = yContainerPivotOffset;
+        }
+        double robotAngle = 0.0;
+        if (SwerveMap.Control.DRIVE_STICK.getRawButton(SwerveMap.Control.DRIVE_BUTTON_ABSOLUTE_GYRO_MODE)) {
+            robotAngle = SwerveMap.Control.GYRO.getAngle();
+        }
+        
+        swerveDriveAbsolute(xVelocity, yVelocity, robotAngle, rotateVelocity, xPivotOffset, yPivotOffset);
         
       /*  if (Math.abs(yVelocity)< .2){
         	yVelocity = 0;
@@ -362,20 +369,6 @@ public class SwerveDrive extends RobotDrive {
         	rotateVelocity = 1;
         }
         */
-    }
-    
-    /**
-     * Control robot relative to a fixed angle using gyro
-     */
-    public void swerveDriveTeleopGyro() {
-        double xVelocity, yVelocity, rotateVelocity;
-        boolean rotateAroundContainer;
-        yVelocity = -SwerveMap.Control.DRIVE_STICK.getRawAxis(SwerveMap.Control.DRIVE_AXIS_FORWARD_BACK);
-        xVelocity = SwerveMap.Control.DRIVE_STICK.getRawAxis(SwerveMap.Control.DRIVE_AXIS_SIDEWAYS);
-        rotateVelocity = SwerveMap.Control.DRIVE_STICK.getRawAxis(SwerveMap.Control.DRIVE_AXIS_ROTATE);
-        rotateAroundContainer = SwerveMap.Control.DRIVE_STICK.getRawButton(SwerveMap.Control.DRIVE_BUTTON_ROTATE_AROUND_CONTAINER);
-        double robotAngle = SwerveMap.Control.GYRO.getAngle();
-        swerveDriveAbsolute(robotAngle, xVelocity, yVelocity, rotateVelocity, rotateAroundContainer);
     }
     
     /**
