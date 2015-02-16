@@ -78,7 +78,6 @@ public class SwerveDrive extends RobotDrive {
     	speedControllers[rearLeft] = new Talon(SwerveMap.PWM.DRIVE_REAR_LEFT_STEERING);
     	speedControllers[rearRight] = new Talon(SwerveMap.PWM.DRIVE_REAR_RIGHT_STEERING);
         //set up the steering pods with the correct sensors and controllers
-        shift = new DoubleSolenoid(SwerveMap.Solenoid.DRIVE_SHIFT_HIGH, SwerveMap.Solenoid.DRIVE_SHIFT_LOW);
         wheelPods[frontLeft] = new Pod(m_frontLeftMotor,
         		speedControllers[frontLeft],
                 SwerveMap.DIO.DRIVE_FRONT_LEFT_ENC_A,
@@ -288,11 +287,10 @@ public class SwerveDrive extends RobotDrive {
      * @param xVelocity strafe (sideways) velocity. -1.0 = max motor speed left. 1.0 = max motor speed right.
      * @param yVelocity forward velocity. -1.0 = max motor speed backwards. 1.0 = max motor speed forward.
      * @param rotateVelocity clockwise rotational velocity. -1.0 = max motor speed counter-clockwise. 1.0 = max motor speed clockwise.
-     * @param isLowGear true if need to shift to low
-     * @param isHighGear true if need to shift to high
+     * @param rotateAroundContainer true if rotate around container. False rotates around center. 
      */
     public void swerveDriveRobot(double xVelocity, double yVelocity, double rotateVelocity, 
-    		boolean isLowGear, boolean isHighGear) {
+    		boolean rotateAroundContainer) {
     	
     	//Tristan Was Here
     	WheelData deltaWheelData = null;
@@ -311,11 +309,8 @@ public class SwerveDrive extends RobotDrive {
     	}
     	
         // Set shifter
-        if(isLowGear){
+        if(rotateAroundContainer){
             shift.set(DoubleSolenoid.Value.kForward);
-        }
-        if(isHighGear){
-            shift.set(DoubleSolenoid.Value.kReverse);
         }
         
         // Set pods
@@ -330,15 +325,14 @@ public class SwerveDrive extends RobotDrive {
      * @param xVelocity strafe (sideways) velocity. -1.0 = max motor speed left. 1.0 = max motor speed right.
      * @param yVelocity forward velocity. -1.0 = max motor speed backwards. 1.0 = max motor speed forward.
      * @param rotateVelocity clockwise rotational velocity. -1.0 = max motor speed counter-clockwise. 1.0 = max motor speed clockwise.
-     * @param isLowGear true if need to shift to low
-     * @param isHighGear true if need to shift to high
+     * @param rotateAroundContainer true if rotate around container. False rotates around center.
      */
     public void swerveDriveAbsolute(double robotAngle, double xVelocity, double yVelocity, double rotateVelocity,  
-    		boolean isLowGear, boolean isHighGear) {
+    		boolean rotateAroundContainer) {
     	double robotAngleRad = Math.toRadians(robotAngle);
     	double xRobot = -xVelocity * Math.sin(robotAngleRad) + yVelocity * Math.cos(robotAngleRad);
     	double yRobot = xVelocity * Math.cos(robotAngleRad) + yVelocity * Math.sin(robotAngleRad);
-    	this.swerveDriveRobot(xRobot, yRobot, rotateVelocity, isLowGear, isHighGear);
+    	this.swerveDriveRobot(xRobot, yRobot, rotateVelocity, rotateAroundContainer);
     }
     
     /**
@@ -346,14 +340,13 @@ public class SwerveDrive extends RobotDrive {
      */
     public void swerveDriveTeleop() {
         double xVelocity, yVelocity, rotateVelocity1, rotateVelocity;
-        boolean isLowGear, isHighGear;
+        boolean rotateAroundContainer;
         yVelocity = -SwerveMap.Control.DRIVE_STICK.getRawAxis(SwerveMap.Control.DRIVE_AXIS_FORWARD_BACK);
         xVelocity = SwerveMap.Control.DRIVE_STICK.getRawAxis(SwerveMap.Control.DRIVE_AXIS_SIDEWAYS);
         rotateVelocity1 = SwerveMap.Control.DRIVE_STICK.getRawAxis(SwerveMap.Control.DRIVE_AXIS_ROTATE);
         rotateVelocity = (.5 * rotateVelocity1);
-        isLowGear = SwerveMap.Control.DRIVE_STICK.getRawButton(SwerveMap.Control.DRIVE_CONTROLLER_SHIFT_LOW);
-        isHighGear = SwerveMap.Control.DRIVE_STICK.getRawButton(SwerveMap.Control.DRIVE_CONTROLLER_SHIFT_HIGH);
-        swerveDriveRobot(xVelocity, yVelocity, rotateVelocity, isLowGear, isHighGear);
+        rotateAroundContainer = SwerveMap.Control.DRIVE_STICK.getRawButton(SwerveMap.Control.DRIVE_BUTTON_ROTATE_AROUND_CONTAINER);
+        swerveDriveRobot(xVelocity, yVelocity, rotateVelocity, rotateAroundContainer);
         
       /*  if (Math.abs(yVelocity)< .2){
         	yVelocity = 0;
@@ -381,14 +374,13 @@ public class SwerveDrive extends RobotDrive {
      */
     public void swerveDriveTeleopGyro() {
         double xVelocity, yVelocity, rotateVelocity;
-        boolean isLowGear, isHighGear;
+        boolean rotateAroundContainer;
         yVelocity = -SwerveMap.Control.DRIVE_STICK.getRawAxis(SwerveMap.Control.DRIVE_AXIS_FORWARD_BACK);
         xVelocity = SwerveMap.Control.DRIVE_STICK.getRawAxis(SwerveMap.Control.DRIVE_AXIS_SIDEWAYS);
         rotateVelocity = SwerveMap.Control.DRIVE_STICK.getRawAxis(SwerveMap.Control.DRIVE_AXIS_ROTATE);
-        isLowGear = SwerveMap.Control.DRIVE_STICK.getRawButton(SwerveMap.Control.DRIVE_CONTROLLER_SHIFT_LOW);
-        isHighGear = SwerveMap.Control.DRIVE_STICK.getRawButton(SwerveMap.Control.DRIVE_CONTROLLER_SHIFT_HIGH);
+        rotateAroundContainer = SwerveMap.Control.DRIVE_STICK.getRawButton(SwerveMap.Control.DRIVE_BUTTON_ROTATE_AROUND_CONTAINER);
         double robotAngle = SwerveMap.Control.GYRO.getAngle();
-        swerveDriveAbsolute(robotAngle, xVelocity, yVelocity, rotateVelocity, isLowGear, isHighGear);
+        swerveDriveAbsolute(robotAngle, xVelocity, yVelocity, rotateVelocity, rotateAroundContainer);
     }
     
     /**
