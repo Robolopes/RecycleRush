@@ -279,24 +279,16 @@ public class SwerveDrive extends RobotDrive {
     public void swerveDriveRobot(double xVelocity, double yVelocity, double rotateVelocity, 
     		double xPivotOffset, double yPivotOffset) {
     	
-    	//Tristan Was Here
-    	WheelData deltaWheelData = null;
-    	if (Math.abs(xVelocity) > SwerveMap.Control.DRIVE_STICK_DEAD_BAND || Math.abs(yVelocity) > SwerveMap.Control.DRIVE_STICK_DEAD_BAND || 
-    			Math.abs(rotateVelocity) > SwerveMap.Control.DRIVE_STICK_DEAD_BAND) {
-    		// Compute new values
-        	WheelData rawWheelData = null;
-            rawWheelData = calculateRawWheelDataGeneral(xVelocity, yVelocity, rotateVelocity, xPivotOffset, yPivotOffset);
-    		SmartDashboard.putNumber("Raw wheel data left front angle", rawWheelData.wheelAngles[frontLeft]);
-    		deltaWheelData = calculateDeltaWheelData(rawWheelData);
-    		//deltaWheelData = rawWheelData;
-    		SmartDashboard.putNumber("Delta wheel data left front angle", deltaWheelData.wheelAngles[frontLeft]);
-    	} else {
-    		// Joystick in dead band, set neutral values
-    		deltaWheelData = new WheelData();
-    		deltaWheelData.setDeadBandValues();
-    	}
+		// Compute raw wheel values (proper speed and angle for each wheel)
+    	WheelData rawWheelData = null;
+        rawWheelData = calculateRawWheelDataGeneral(xVelocity, yVelocity, rotateVelocity, xPivotOffset, yPivotOffset);
+		SmartDashboard.putNumber("Raw wheel data left front angle", rawWheelData.wheelAngles[frontLeft]);
+		
+		// Compute change (delta) wheel values (best values given current angles of wheels).
+		WheelData deltaWheelData = calculateDeltaWheelData(rawWheelData);
+		//deltaWheelData = rawWheelData;
+		SmartDashboard.putNumber("Delta wheel data left front angle", deltaWheelData.wheelAngles[frontLeft]);
     	
-        
         // Set pods
         setWheelPods(deltaWheelData);
 
@@ -325,49 +317,39 @@ public class SwerveDrive extends RobotDrive {
      * Control robot relative to itself
      */
     public void swerveDriveTeleop() {
-        double xVelocity, yVelocity, rotateVelocity1, rotateVelocity;
+    	
+        double xVelocity, yVelocity, rotateVelocity;
         yVelocity = -SwerveMap.Control.DRIVE_STICK.getRawAxis(SwerveMap.Control.DRIVE_AXIS_FORWARD_BACK);
         xVelocity = SwerveMap.Control.DRIVE_STICK.getRawAxis(SwerveMap.Control.DRIVE_AXIS_SIDEWAYS);
-        rotateVelocity1 = SwerveMap.Control.DRIVE_STICK.getRawAxis(SwerveMap.Control.DRIVE_AXIS_ROTATE);
-        rotateVelocity = (.5 * rotateVelocity1);
-        double xPivotOffset = 0.0;
-        double yPivotOffset = 0.0;
-        if (SwerveMap.Control.DRIVE_STICK.getRawButton(SwerveMap.Control.DRIVE_BUTTON_ROTATE_AROUND_CONTAINER)) {
-        	xPivotOffset = 0.0;
-        	yPivotOffset = SwerveMap.Constants.CONTAINER_CENTER_DISTANCE_FORWARD + 0.5 * SwerveMap.Constants.WHEEL_BASE_LENGTH;
-        }
-        if (SwerveMap.Control.DRIVE_STICK.getRawButton(SwerveMap.Control.DRIVE_BUTTON_SPEED_SHIFT)) {
-          	 rotateVelocity = ( .5 * rotateVelocity );
-          	 xVelocity = ( .5 * xVelocity);
-          	 yVelocity = ( .5 * yVelocity);
-           }
-        double robotAngle = 0.0;
-        if (SwerveMap.Control.DRIVE_STICK.getRawButton(SwerveMap.Control.DRIVE_BUTTON_ABSOLUTE_GYRO_MODE)) {
-            robotAngle = SwerveMap.Control.GYRO.getAngle();
-        }
+        rotateVelocity = SwerveMap.Control.DRIVE_STICK.getRawAxis(SwerveMap.Control.DRIVE_AXIS_ROTATE);
         
-        swerveDriveAbsolute(xVelocity, yVelocity, robotAngle, rotateVelocity, xPivotOffset, yPivotOffset);
-        
-      /*  if (Math.abs(yVelocity)< .2){
-        	yVelocity = 0;
-        }
-        else{
-        	yVelocity = 1;
-        }
-        if (Math.abs(xVelocity)< .2){
-        	xVelocity = 0;
-        }
-        else{
-        	xVelocity = 1;
-        }
-        if (Math.abs(rotateVelocity)< .2){
-        	rotateVelocity = 0;
-        }
-        else{
-        	rotateVelocity = 1;
-        }
-        */
-      
+    	if (Math.abs(xVelocity) > SwerveMap.Control.DRIVE_STICK_DEAD_BAND || Math.abs(yVelocity) > SwerveMap.Control.DRIVE_STICK_DEAD_BAND || 
+    			Math.abs(rotateVelocity) > SwerveMap.Control.DRIVE_STICK_DEAD_BAND) {
+            rotateVelocity = (.5 * rotateVelocity);
+            double xPivotOffset = 0.0;
+            double yPivotOffset = 0.0;
+            if (SwerveMap.Control.DRIVE_STICK.getRawButton(SwerveMap.Control.DRIVE_BUTTON_ROTATE_AROUND_CONTAINER)) {
+            	xPivotOffset = 0.0;
+            	yPivotOffset = SwerveMap.Constants.CONTAINER_CENTER_DISTANCE_FORWARD + 0.5 * SwerveMap.Constants.WHEEL_BASE_LENGTH;
+            }
+            if (SwerveMap.Control.DRIVE_STICK.getRawButton(SwerveMap.Control.DRIVE_BUTTON_SPEED_SHIFT)) {
+              	 rotateVelocity = ( .5 * rotateVelocity );
+              	 xVelocity = ( .5 * xVelocity);
+              	 yVelocity = ( .5 * yVelocity);
+               }
+            double robotAngle = 0.0;
+            if (SwerveMap.Control.DRIVE_STICK.getRawButton(SwerveMap.Control.DRIVE_BUTTON_ABSOLUTE_GYRO_MODE)) {
+                robotAngle = SwerveMap.Control.GYRO.getAngle();
+            }
+            
+            swerveDriveAbsolute(xVelocity, yVelocity, robotAngle, rotateVelocity, xPivotOffset, yPivotOffset);
+    	} else {
+    		// Joystick in dead band, set neutral values
+    		WheelData wheelData = new WheelData();
+    		wheelData.setDeadBandValues();
+            // Set pods
+            setWheelPods(wheelData);
+    	}
     }
     
     /**
