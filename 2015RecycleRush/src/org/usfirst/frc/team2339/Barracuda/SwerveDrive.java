@@ -314,7 +314,7 @@ public class SwerveDrive extends RobotDrive {
     }
     
     /**
-     * Control robot relative to itself
+     * Control robot using joystick inputs
      */
     public void swerveDriveTeleop() {
     	
