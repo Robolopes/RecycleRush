@@ -362,6 +362,11 @@ public class SwerveDrive extends RobotDrive {
         	rotateVelocity = 1;
         }
         */
+        if (SwerveMap.Control.DRIVE_STICK.getRawButton(SwerveMap.Control.DRIVE_BUTTON_SPEED_SHIFT)) {
+       	 rotateVelocity = ( .5 * rotateVelocity );
+       	 xVelocity = ( .5 * xVelocity);
+       	 yVelocity = ( .5 * yVelocity);
+        }
     }
     
     /**

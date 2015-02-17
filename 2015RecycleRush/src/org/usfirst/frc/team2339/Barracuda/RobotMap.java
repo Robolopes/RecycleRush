@@ -14,7 +14,7 @@ public class RobotMap {
 		// Joystick for lift control
 		public static final Joystick OPERATOR_STICK = new Joystick(1);
 	};
-	
+	// put this here to make a diffrence..
 	public static class SwerveMap {
 		public static class Constants {
 			// These should be set to actual robot dimensions. 
@@ -22,7 +22,7 @@ public class RobotMap {
 			public static final double WHEEL_BASE_LENGTH = 28.5;
 			public static final double WHEEL_BASE_WIDTH = 25.0;
 			// Distance of center of container in front of front wheels. (Negative if behind front wheel line.)
-			public static final double CONTAINER_CENTER_DISTANCE_FORWARD = 0.0;
+			public static final double CONTAINER_CENTER_DISTANCE_FORWARD = 2.0;
 			
 			/*
 			 * AndyMark Gearmotor am-2971. See http://www.andymark.com/product-p/am-2971.htm
@@ -48,8 +48,9 @@ public class RobotMap {
 			public static final int DRIVE_AXIS_FORWARD_BACK = 1;
 			public static final int DRIVE_AXIS_SIDEWAYS = 0;
 			public static final int DRIVE_AXIS_ROTATE = 3;
-			public static final int DRIVE_BUTTON_ROTATE_AROUND_CONTAINER = 1;
+			public static final int DRIVE_BUTTON_ROTATE_AROUND_CONTAINER = 8;
 			public static final int DRIVE_BUTTON_ABSOLUTE_GYRO_MODE = 2;
+			public static final int DRIVE_BUTTON_SPEED_SHIFT = 1;
 			public static final double DRIVE_STICK_DEAD_BAND = 0.1;
 		}
 
