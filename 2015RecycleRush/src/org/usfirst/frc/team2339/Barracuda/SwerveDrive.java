@@ -336,6 +336,11 @@ public class SwerveDrive extends RobotDrive {
         	xPivotOffset = 0.0;
         	yPivotOffset = SwerveMap.Constants.CONTAINER_CENTER_DISTANCE_FORWARD + 0.5 * SwerveMap.Constants.WHEEL_BASE_LENGTH;
         }
+        if (SwerveMap.Control.DRIVE_STICK.getRawButton(SwerveMap.Control.DRIVE_BUTTON_SPEED_SHIFT)) {
+          	 rotateVelocity = ( .5 * rotateVelocity );
+          	 xVelocity = ( .5 * xVelocity);
+          	 yVelocity = ( .5 * yVelocity);
+           }
         double robotAngle = 0.0;
         if (SwerveMap.Control.DRIVE_STICK.getRawButton(SwerveMap.Control.DRIVE_BUTTON_ABSOLUTE_GYRO_MODE)) {
             robotAngle = SwerveMap.Control.GYRO.getAngle();
@@ -362,11 +367,7 @@ public class SwerveDrive extends RobotDrive {
         	rotateVelocity = 1;
         }
         */
-        if (SwerveMap.Control.DRIVE_STICK.getRawButton(SwerveMap.Control.DRIVE_BUTTON_SPEED_SHIFT)) {
-       	 rotateVelocity = ( .5 * rotateVelocity );
-       	 xVelocity = ( .5 * xVelocity);
-       	 yVelocity = ( .5 * yVelocity);
-        }
+      
     }
     
     /**
