@@ -12,7 +12,6 @@ import org.usfirst.frc.team2339.Barracuda.RobotMap.SwerveMap;
 //import com.sun.squawk.util.MathUtils;
 import java.lang.Math;
 
-import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.PIDController;
 import edu.wpi.first.wpilibj.PIDOutput;
@@ -27,17 +26,15 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  * 
  */
 public class SwerveDrive extends RobotDrive {
-    //declare the steering pods and shifter valve
 
     public static final int frontLeft = MotorType.kFrontLeft.value;
     public static final int frontRight = MotorType.kFrontRight.value;
     public static final int rearLeft = MotorType.kRearLeft.value;
     public static final int rearRight = MotorType.kRearRight.value;
     
-    protected SpeedController speedControllers[] = new SpeedController[kMaxNumberOfMotors];
-    protected Pod wheelPods[] = new Pod[kMaxNumberOfMotors];
-    private DoubleSolenoid shift;
-
+    protected final SpeedController speedControllers[] = new SpeedController[kMaxNumberOfMotors];
+    protected final Pod wheelPods[] = new Pod[kMaxNumberOfMotors];
+    
     public class WheelVelocityVector {
     	public double wheelSpeed = 0;
     	public double wheelAngle = 0;
@@ -73,12 +70,14 @@ public class SwerveDrive extends RobotDrive {
     		  SwerveMap.PWM.DRIVE_REAR_LEFT, 
     		  SwerveMap.PWM.DRIVE_FRONT_RIGHT, 
     		  SwerveMap.PWM.DRIVE_REAR_RIGHT);
+    	
+    	// Set up steering controllers
     	speedControllers[frontLeft] = new Talon(SwerveMap.PWM.DRIVE_FRONT_LEFT_STEERING);
     	speedControllers[frontRight] = new Talon(SwerveMap.PWM.DRIVE_FRONT_RIGHT_STEERING);
     	speedControllers[rearLeft] = new Talon(SwerveMap.PWM.DRIVE_REAR_LEFT_STEERING);
     	speedControllers[rearRight] = new Talon(SwerveMap.PWM.DRIVE_REAR_RIGHT_STEERING);
-        //set up the steering pods with the correct sensors and controllers
-        shift = new DoubleSolenoid(SwerveMap.Solenoid.DRIVE_SHIFT_HIGH, SwerveMap.Solenoid.DRIVE_SHIFT_LOW);
+    	
+        // Set up the steering pods with the correct sensors and controllers
         wheelPods[frontLeft] = new Pod(m_frontLeftMotor,
         		speedControllers[frontLeft],
                 SwerveMap.DIO.DRIVE_FRONT_LEFT_ENC_A,
@@ -111,11 +110,16 @@ public class SwerveDrive extends RobotDrive {
      */
     public WheelVelocityVector calculateWheelVelocityVector(double xWheelPosition, double yWheelPosition, double maxWheelRadius, 
     		double xVelocity, double yVelocity, double rotateVelocity) {
-        double xWheel = xVelocity - rotateVelocity * yWheelPosition / maxWheelRadius; 
+        double xWheel = xVelocity + rotateVelocity * yWheelPosition / maxWheelRadius; 
         double yWheel = yVelocity - rotateVelocity * xWheelPosition / maxWheelRadius;
         WheelVelocityVector wheelVelocity = new WheelVelocityVector();
         wheelVelocity.wheelSpeed = Math.hypot(xWheel, yWheel);
-        wheelVelocity.wheelAngle = Math.toDegrees(Math.atan2(xWheel, yWheel));
+        /*
+         * atan2(xWheel, yWheel) gives angle in robot coordinates
+         * However, wheel has positive counter-clockwise angle and zero is on Y axis.
+         * atan2(-yWheel, xWheel) converts to wheel angle system.
+         */
+        wheelVelocity.wheelAngle = Math.toDegrees(Math.atan2(-yWheel, xWheel));
         return wheelVelocity;
     }
     
@@ -139,10 +143,10 @@ public class SwerveDrive extends RobotDrive {
     	
         double L = SwerveMap.Constants.WHEEL_BASE_LENGTH;
         double W = SwerveMap.Constants.WHEEL_BASE_WIDTH;
-        double frontDist = L/2 - xPivotOffset; 
-        double rearDist = L/2 + xPivotOffset; 
-        double rightDist = W/2 - yPivotOffset;
-        double leftDist = W/2 + yPivotOffset;
+        double frontDist = L/2 - yPivotOffset; 
+        double rearDist = L/2 + yPivotOffset; 
+        double rightDist = W/2 - xPivotOffset;
+        double leftDist = W/2 + xPivotOffset;
         
         // Find maximum wheel distance (radius) from center
         // Maximum radius is used to normalize rotational velocity so that wheels farthest from center move the fastest.
@@ -172,20 +176,6 @@ public class SwerveDrive extends RobotDrive {
         normalize(rawWheelData.wheelSpeeds);
         
         return rawWheelData;
-    }
-    
-    /**
-     * NOTE: This should give same result as standard method below.
-     * Calculate raw wheel speeds and angles for swerve drive based on input robot forward, strafe, and rotational velocities.
-     * Wheel speeds are normalized to the range [0, 1.0]. Angles are normalized to the range [-180, 180).
-     * Calculated values are raw in that they have no consideration for current state of drive.
-     * @param xVelocity strafe (sideways) velocity. -1.0 = max motor speed left. 1.0 = max motor speed right.
-     * @param yVelocity forward velocity. -1.0 = max motor speed backwards. 1.0 = max motor speed forward.
-     * @param rotateVelocity clockwise rotational velocity. -1.0 = max motor speed counter-clockwise. 1.0 = max motor speed clockwise.
-     * @return raw wheel speeds and angles
-     */
-    public WheelData calculateRawWheelData1(double xVelocity, double yVelocity, double rotateVelocity) {
-    	return calculateRawWheelDataGeneral(xVelocity, yVelocity, rotateVelocity, 0.0, 0.0);
     }
     
     /**
@@ -238,7 +228,8 @@ public class SwerveDrive extends RobotDrive {
     		// Compute turn angle from encoder value (pidGet) and raw target value
     		SmartDashboard.putNumber("Wheel " + iiWheel + " current angle ", wheelPods[iiWheel].pidGet());
     		AngleFlip turnAngle = computeTurnAngle(wheelPods[iiWheel].pidGet(), rawWheelData.wheelAngles[iiWheel]);
-            deltaWheelData.wheelAngles[iiWheel] = turnAngle.getAngle();
+    		double targetAngle = normalizeAngle(wheelPods[iiWheel].pidGet() + turnAngle.getAngle()); 
+            deltaWheelData.wheelAngles[iiWheel] = targetAngle;
             deltaWheelData.wheelSpeeds[iiWheel] = driveScale(turnAngle) * rawWheelData.wheelSpeeds[iiWheel];
     	}
     	return deltaWheelData;
@@ -277,26 +268,27 @@ public class SwerveDrive extends RobotDrive {
     }
 
     /**
-     * Drive in swerve mode with a given speed, rotation, and shift values.
+     * Drive in swerve mode with a given speed and rotation.
      * Driving parameters are assumed to be relative to the current robot angle.
      * @param xVelocity strafe (sideways) velocity. -1.0 = max motor speed left. 1.0 = max motor speed right.
      * @param yVelocity forward velocity. -1.0 = max motor speed backwards. 1.0 = max motor speed forward.
      * @param rotateVelocity clockwise rotational velocity. -1.0 = max motor speed counter-clockwise. 1.0 = max motor speed clockwise.
-     * @param isLowGear true if need to shift to low
-     * @param isHighGear true if need to shift to high
+     * @param xPivotOffset Amount pivot is offset sideways from center. (Positive toward right, negative toward left)
+     * @param yPivotOffset Amount pivot is offset forward from center. (Positive toward front, negative toward back)
      */
     public void swerveDriveRobot(double xVelocity, double yVelocity, double rotateVelocity, 
-    		boolean isLowGear, boolean isHighGear) {
+    		double xPivotOffset, double yPivotOffset) {
     	
     	//Tristan Was Here
     	WheelData deltaWheelData = null;
     	if (Math.abs(xVelocity) > SwerveMap.Control.DRIVE_STICK_DEAD_BAND || Math.abs(yVelocity) > SwerveMap.Control.DRIVE_STICK_DEAD_BAND || 
     			Math.abs(rotateVelocity) > SwerveMap.Control.DRIVE_STICK_DEAD_BAND) {
     		// Compute new values
-        	WheelData rawWheelData = calculateRawWheelData1(xVelocity, yVelocity, rotateVelocity);
+        	WheelData rawWheelData = null;
+            rawWheelData = calculateRawWheelDataGeneral(xVelocity, yVelocity, rotateVelocity, xPivotOffset, yPivotOffset);
     		SmartDashboard.putNumber("Raw wheel data left front angle", rawWheelData.wheelAngles[frontLeft]);
     		deltaWheelData = calculateDeltaWheelData(rawWheelData);
-    		deltaWheelData = rawWheelData;
+    		//deltaWheelData = rawWheelData;
     		SmartDashboard.putNumber("Delta wheel data left front angle", deltaWheelData.wheelAngles[frontLeft]);
     	} else {
     		// Joystick in dead band, set neutral values
@@ -304,13 +296,6 @@ public class SwerveDrive extends RobotDrive {
     		deltaWheelData.setDeadBandValues();
     	}
     	
-        // Set shifter
-        if(isLowGear){
-            shift.set(DoubleSolenoid.Value.kForward);
-        }
-        if(isHighGear){
-            shift.set(DoubleSolenoid.Value.kReverse);
-        }
         
         // Set pods
         setWheelPods(deltaWheelData);
@@ -318,21 +303,22 @@ public class SwerveDrive extends RobotDrive {
     }
 
     /**
-     * Drive in swerve mode with a given speed, rotation, and shift values.
+     * Drive in swerve mode with a given speed and rotation.
      * Driving parameters are assumed to be absolute based on a fixed angle, e.g. the field.
-     * @param robotAngle Angle (in degrees) of robot relative to fixed angle. This is probably taken from the gyro.
      * @param xVelocity strafe (sideways) velocity. -1.0 = max motor speed left. 1.0 = max motor speed right.
+     * @param robotAngle Angle (in degrees) of robot relative to fixed angle. Zero degrees means front of robot points in desired direction. 
+     *                   Positive is clockwise, negative counter-clockwise. This is probably taken from the gyro.
      * @param yVelocity forward velocity. -1.0 = max motor speed backwards. 1.0 = max motor speed forward.
      * @param rotateVelocity clockwise rotational velocity. -1.0 = max motor speed counter-clockwise. 1.0 = max motor speed clockwise.
-     * @param isLowGear true if need to shift to low
-     * @param isHighGear true if need to shift to high
+     * @param xPivotOffset Amount pivot is offset sideways from center. (Positive toward right, negative toward left)
+     * @param yPivotOffset Amount pivot is offset forward from center. (Positive toward front, negative toward back)
      */
-    public void swerveDriveAbsolute(double robotAngle, double xVelocity, double yVelocity, double rotateVelocity,  
-    		boolean isLowGear, boolean isHighGear) {
+    public void swerveDriveAbsolute(double xVelocity, double yVelocity, double robotAngle, double rotateVelocity,  
+    		double xPivotOffset, double yPivotOffset) {
     	double robotAngleRad = Math.toRadians(robotAngle);
-    	double xRobot = -xVelocity * Math.sin(robotAngleRad) + yVelocity * Math.cos(robotAngleRad);
-    	double yRobot = xVelocity * Math.cos(robotAngleRad) + yVelocity * Math.sin(robotAngleRad);
-    	this.swerveDriveRobot(xRobot, yRobot, rotateVelocity, isLowGear, isHighGear);
+    	double xRobot = xVelocity * Math.cos(robotAngleRad) - yVelocity * Math.sin(robotAngleRad);
+    	double yRobot = xVelocity * Math.sin(robotAngleRad) + yVelocity * Math.cos(robotAngleRad);
+    	this.swerveDriveRobot(xRobot, yRobot, rotateVelocity, xPivotOffset, yPivotOffset);
     }
     
     /**
@@ -340,14 +326,22 @@ public class SwerveDrive extends RobotDrive {
      */
     public void swerveDriveTeleop() {
         double xVelocity, yVelocity, rotateVelocity1, rotateVelocity;
-        boolean isLowGear, isHighGear;
         yVelocity = -SwerveMap.Control.DRIVE_STICK.getRawAxis(SwerveMap.Control.DRIVE_AXIS_FORWARD_BACK);
-        xVelocity = -SwerveMap.Control.DRIVE_STICK.getRawAxis(SwerveMap.Control.DRIVE_AXIS_SIDEWAYS);
+        xVelocity = SwerveMap.Control.DRIVE_STICK.getRawAxis(SwerveMap.Control.DRIVE_AXIS_SIDEWAYS);
         rotateVelocity1 = SwerveMap.Control.DRIVE_STICK.getRawAxis(SwerveMap.Control.DRIVE_AXIS_ROTATE);
-        rotateVelocity = (.5 * rotateVelocity1);
-        isLowGear = SwerveMap.Control.DRIVE_STICK.getRawButton(SwerveMap.Control.DRIVE_CONTROLLER_SHIFT_LOW);
-        isHighGear = SwerveMap.Control.DRIVE_STICK.getRawButton(SwerveMap.Control.DRIVE_CONTROLLER_SHIFT_HIGH);
-        swerveDriveRobot(xVelocity, yVelocity, rotateVelocity, isLowGear, isHighGear);
+        rotateVelocity = ( rotateVelocity1);
+        double xPivotOffset = 0.0;
+        double yPivotOffset = 0.0;
+        if (SwerveMap.Control.DRIVE_STICK.getRawButton(SwerveMap.Control.DRIVE_BUTTON_ROTATE_AROUND_CONTAINER)) {
+        	xPivotOffset = 0.0;
+        	yPivotOffset = SwerveMap.Constants.CONTAINER_CENTER_DISTANCE_FORWARD + 0.5 * SwerveMap.Constants.WHEEL_BASE_LENGTH;
+        }
+        double robotAngle = 0.0;
+        if (SwerveMap.Control.DRIVE_STICK.getRawButton(SwerveMap.Control.DRIVE_BUTTON_ABSOLUTE_GYRO_MODE)) {
+            robotAngle = SwerveMap.Control.GYRO.getAngle();
+        }
+        
+        swerveDriveAbsolute(xVelocity, yVelocity, robotAngle, rotateVelocity, xPivotOffset, yPivotOffset);
         
       /*  if (Math.abs(yVelocity)< .2){
         	yVelocity = 0;
@@ -368,21 +362,11 @@ public class SwerveDrive extends RobotDrive {
         	rotateVelocity = 1;
         }
         */
-    }
-    
-    /**
-     * Control robot relative to a fixed angle using gyro
-     */
-    public void swerveDriveTeleopGyro() {
-        double xVelocity, yVelocity, rotateVelocity;
-        boolean isLowGear, isHighGear;
-        yVelocity = -SwerveMap.Control.DRIVE_STICK.getRawAxis(SwerveMap.Control.DRIVE_AXIS_FORWARD_BACK);
-        xVelocity = SwerveMap.Control.DRIVE_STICK.getRawAxis(SwerveMap.Control.DRIVE_AXIS_SIDEWAYS);
-        rotateVelocity = SwerveMap.Control.DRIVE_STICK.getRawAxis(SwerveMap.Control.DRIVE_AXIS_ROTATE);
-        isLowGear = SwerveMap.Control.DRIVE_STICK.getRawButton(SwerveMap.Control.DRIVE_CONTROLLER_SHIFT_LOW);
-        isHighGear = SwerveMap.Control.DRIVE_STICK.getRawButton(SwerveMap.Control.DRIVE_CONTROLLER_SHIFT_HIGH);
-        double robotAngle = SwerveMap.Control.GYRO.getAngle();
-        swerveDriveAbsolute(robotAngle, xVelocity, yVelocity, rotateVelocity, isLowGear, isHighGear);
+        if (SwerveMap.Control.DRIVE_STICK.getRawButton(SwerveMap.Control.DRIVE_BUTTON_SPEED_SHIFT)) {
+       	 rotateVelocity = ( .5 * rotateVelocity );
+       	 xVelocity = ( .5 * xVelocity);
+       	 yVelocity = ( .5 * yVelocity);
+        }
     }
     
     /**
@@ -552,4 +536,5 @@ public class SwerveDrive extends RobotDrive {
 
     public void initDefaultCommand() {
     }
+
 }
