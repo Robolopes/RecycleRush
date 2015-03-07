@@ -1,7 +1,21 @@
 
 package org.usfirst.frc.team2339.Barracuda;
 
-import edu.wpi.first.wpilibj.Encoder;
+import org.usfirst.frc.team2339.Barracuda.RobotMap.SwerveMap;
+
+import edu.wpi.first.wpilibj.IterativeRobot;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.Talon;
+
+
+/**
+ * The VM is configured to automatically run this class, and to call the
+ * functions corresponding to each mode, as described in the IterativeRobot
+ * d
+package org.usfirst.frc.team2339.Barracuda;
+
+import org.usfirst.frc.team2339.Barracuda.RobotMap.SwerveMap;
+
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.Talon;
@@ -77,9 +91,8 @@ public class Barracuda extends IterativeRobot {
         
         robotDrive.resetPodAngles();
         
-        System.out.println("Before init: " + System.currentTimeMillis());
        //* visionControl.visionInit();
-        System.out.println("After init: " + System.currentTimeMillis());
+        System.out.println("End robot init: " + System.currentTimeMillis());
     }
     
 
@@ -117,9 +130,9 @@ public class Barracuda extends IterativeRobot {
 		/*
 		 * Print out siginigicant changes in drive info
 		 */
-		SmartDashboard.putNumber("Joystick forward ", RobotMap.Control.DRIVE_STICK.getRawAxis(RobotMap.SwerveMap.Control.DRIVE_AXIS_FORWARD_BACK));
-		SmartDashboard.putNumber("Joystick sideways ", RobotMap.Control.DRIVE_STICK.getRawAxis(RobotMap.SwerveMap.Control.DRIVE_AXIS_SIDEWAYS));
-		SmartDashboard.putNumber("Joystick rotate ", RobotMap.Control.DRIVE_STICK.getRawAxis(RobotMap.SwerveMap.Control.DRIVE_AXIS_ROTATE));
+		SmartDashboard.putNumber("Joystick forward ", RobotMap.Control.DRIVE_STICK.getRawAxis(SwerveMap.Control.DRIVE_AXIS_FORWARD_BACK));
+		SmartDashboard.putNumber("Joystick sideways ", RobotMap.Control.DRIVE_STICK.getRawAxis(SwerveMap.Control.DRIVE_AXIS_SIDEWAYS));
+		SmartDashboard.putNumber("Joystick rotate ", RobotMap.Control.DRIVE_STICK.getRawAxis(SwerveMap.Control.DRIVE_AXIS_ROTATE));
 		SmartDashboard.putNumber("Gyro angle ", RobotMap.Control.GYRO.getAngle());
           
     	if(RobotMap.Control.OPERATOR_STICK.getRawButton(RobotMap.Control.GYRO_BUTTON_RESET)) {
@@ -140,14 +153,14 @@ public class Barracuda extends IterativeRobot {
     	
     	// Test a wheel
     	/*
-    	robotDrive.setWheelPod(SwerveDrive.frontLeft, 180 * RobotMap.Control.DRIVE_STICK.getRawAxis(RobotMap.SwerveMap.Control.DRIVE_AXIS_ROTATE), 
+    	robotDrive.setWheelPod(SwerveDrive.frontLeft, 180 * RobotMap.Control.DRIVE_STICK.getRawAxis(SwerveMap.Control.DRIVE_AXIS_ROTATE), 
     			RobotMap.Control.DRIVE_STICK.getRawAxis(RobotMap.SwerveMap.Control.DRIVE_AXIS_FORWARD_BACK));
-    	robotDrive.setWheelPod(SwerveDrive.frontRight, 180 * RobotMap.Control.DRIVE_STICK.getRawAxis(RobotMap.SwerveMap.Control.DRIVE_AXIS_ROTATE), 
+    	robotDrive.setWheelPod(SwerveDrive.frontRight, 180 * RobotMap.Control.DRIVE_STICK.getRawAxis(SwerveMap.Control.DRIVE_AXIS_ROTATE), 
     			RobotMap.Control.DRIVE_STICK.getRawAxis(RobotMap.SwerveMap.Control.DRIVE_AXIS_FORWARD_BACK));
-    	robotDrive.setWheelPod(SwerveDrive.rearLeft, 180 * RobotMap.Control.DRIVE_STICK.getRawAxis(RobotMap.SwerveMap.Control.DRIVE_AXIS_ROTATE), 
+    	robotDrive.setWheelPod(SwerveDrive.rearLeft, 180 * RobotMap.Control.DRIVE_STICK.getRawAxis(SwerveMap.Control.DRIVE_AXIS_ROTATE), 
     			RobotMap.Control.DRIVE_STICK.getRawAxis(RobotMap.SwerveMap.Control.DRIVE_AXIS_FORWARD_BACK));
-    	robotDrive.setWheelPod(SwerveDrive.rearRight, 180 * RobotMap.Control.DRIVE_STICK.getRawAxis(RobotMap.SwerveMap.Control.DRIVE_AXIS_ROTATE), 
-    			RobotMap.Control.DRIVE_STICK.getRawAxis(RobotMap.SwerveMap.Control.DRIVE_AXIS_FORWARD_BACK));
+    	robotDrive.setWheelPod(SwerveDrive.rearRight, 180 * RobotMap.Control.DRIVE_STICK.getRawAxis(SwerveMap.Control.DRIVE_AXIS_ROTATE), 
+    			RobotMap.Control.DRIVE_STICK.getRawAxis(SwerveMap.Control.DRIVE_AXIS_FORWARD_BACK));
     			*/
           
     }
@@ -160,8 +173,7 @@ public class Barracuda extends IterativeRobot {
         long time = System.currentTimeMillis();
         SmartDashboard.putNumber("Test Mode Running Time ", time);
        // long elapsed = System.currentTimeMillis() - startTime;
-        Encoder frontLeftEnc = new Encoder(RobotMap.SwerveMap.DIO.DRIVE_FRONT_LEFT_ENC_A, RobotMap.SwerveMap.DIO.DRIVE_FRONT_LEFT_ENC_A);
-        SmartDashboard.putNumber("Front left encoder ", frontLeftEnc.getRaw());
     }
     
 }
+
