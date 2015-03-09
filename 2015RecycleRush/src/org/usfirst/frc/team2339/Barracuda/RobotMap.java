@@ -21,6 +21,7 @@ public class RobotMap {
 	// put this here to make a diffrence..
 	public static class SwerveMap {
 		public static class Constants {
+			
 			// These should be set to actual robot dimensions. 
 			// I don't think the units matter but looks like the original is in inches
 			public static final double WHEEL_BASE_LENGTH = 28.5;
@@ -59,6 +60,8 @@ public class RobotMap {
 		}
 
 		public static class PWM {
+			public static final int DRIVE_CONTROLLER[] = {0, 1, 2, 3};
+			public static final int STEERING_CONTROLLER[] = {4, 5, 6, 7};
 			public static final int DRIVE_FRONT_LEFT = 0;
 			public static final int DRIVE_FRONT_LEFT_STEERING = 4;
 			public static final int DRIVE_FRONT_RIGHT = 1;
@@ -76,6 +79,8 @@ public class RobotMap {
 			 * backwards from normal front mounted encoders so you will need compensate for this in software or 
 			 * simply connect Ch. A output to your Ch. B input and Ch. B output to your Ch. A input.
 			 */
+			public static final int STEERING_ENCODER_A[] = {0, 2, 4, 6};
+			public static final int STEERING_ENCODER_B[] = {1, 3, 5, 7};
 			public static final int DRIVE_FRONT_LEFT_ENC_A = 0;
 			public static final int DRIVE_FRONT_LEFT_ENC_B = 1;
 			public static final int DRIVE_FRONT_RIGHT_ENC_A = 2;
@@ -87,7 +92,16 @@ public class RobotMap {
 		};
 		
 		public static class Wheel {
-			public static SwerveSteeringPidController STEERING_PID_CONTROLLER[] = new SwerveSteeringPidController[4];
+			public static final int NUMBER_OF_WHEELS = 4;
+			
+			/*
+			 * Controllers are stored in wheel order. Wheels are ordered counter-clockwise
+			 * as viewed from top of robot. This agrees with wheel order as defined by SwerveDrive.
+			 * For four wheels front right is the first, or wheel number zero. 
+			 */
+			public static SwerveSteeringPidController STEERING_PID_CONTROLLER[] = 
+					new SwerveSteeringPidController[NUMBER_OF_WHEELS];
+			public static Talon DRIVE_CONTROLLER[] = new Talon[NUMBER_OF_WHEELS];
 		}
 		
 		public static class Analog {
@@ -102,6 +116,29 @@ public class RobotMap {
 		public static final int LIFT_WINCH = 8;
 	}
 
+    /**
+	 * Create a swerve steering controller
+	 * 
+     * @param steeringEncoderChannelA First steering encoder DIO channel 
+     * @param steeringEncoderChannelB Second steering encoder DIO channel
+     * @param steeringMotorControllerPwm Steering motor controller PWM channel
+     * @return new swerve steering controller
+     */
+    public static SwerveSteeringPidController newSwerveSteeringController(
+    		int steeringEncoderChannelA, 
+    		int steeringEncoderChannelB, 
+    		int steeringMotorControllerPwm) {
+    	
+    	return new SwerveSteeringPidController(
+    			SwerveMap.Constants.STEERING_PID_P, 
+    			SwerveMap.Constants.STEERING_PID_I, 
+    			SwerveMap.Constants.STEERING_PID_D, 
+    			new SwerveSteeringEncoder(steeringEncoderChannelA, 
+    					steeringEncoderChannelA, 
+    					SwerveMap.Constants.STEERING_ENC_DEGREES_PER_PULSE), 
+    			new Talon(steeringMotorControllerPwm));
+    }
+
 	/**
 	 * Initialize objects based on RobotMap values
 	 */
@@ -110,14 +147,19 @@ public class RobotMap {
     	/*
     	 * Initialize wheel steering controllers
     	 */
-    	SwerveMap.Wheel.STEERING_PID_CONTROLLER[SwerveDrive.frontLeft] = new SwerveSteeringPidController(
-    			SwerveMap.Constants.STEERING_PID_P, 
-    			SwerveMap.Constants.STEERING_PID_I, 
-    			SwerveMap.Constants.STEERING_PID_D, 
-    			new SwerveSteeringEncoder(SwerveMap.DIO.DRIVE_FRONT_LEFT_ENC_A, 
-    					SwerveMap.DIO.DRIVE_FRONT_LEFT_ENC_B, 
-    					SwerveMap.Constants.STEERING_ENC_DEGREES_PER_PULSE), 
-    			new Talon(SwerveMap.PWM.DRIVE_FRONT_LEFT_STEERING));
+    	for (int iiWheel = 0; iiWheel < SwerveMap.Wheel.NUMBER_OF_WHEELS; iiWheel++) {
+        	SwerveMap.Wheel.STEERING_PID_CONTROLLER[iiWheel] = newSwerveSteeringController(
+        			SwerveMap.DIO.STEERING_ENCODER_A[iiWheel],
+        			SwerveMap.DIO.STEERING_ENCODER_B[iiWheel],
+        			SwerveMap.PWM.STEERING_CONTROLLER[iiWheel]);
+    	}
+    	
+    	/*
+    	 * Initialize wheel drive controllers
+    	 */
+    	for (int iiWheel = 0; iiWheel < SwerveMap.Wheel.NUMBER_OF_WHEELS; iiWheel++) {
+    		SwerveMap.Wheel.DRIVE_CONTROLLER[iiWheel] = new Talon(SwerveMap.PWM.DRIVE_CONTROLLER[iiWheel]);
+    	}
     }
 
 }

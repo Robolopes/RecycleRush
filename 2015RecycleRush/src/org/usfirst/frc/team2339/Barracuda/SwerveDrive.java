@@ -27,10 +27,21 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  */
 public class SwerveDrive extends RobotDrive {
 
-    public static final int frontLeft = MotorType.kFrontLeft.value;
-    public static final int frontRight = MotorType.kFrontRight.value;
-    public static final int rearLeft = MotorType.kRearLeft.value;
-    public static final int rearRight = MotorType.kRearRight.value;
+	/*
+	 * Wheel are numbered in counter-clockwise order when viewed from top of robot.
+	 * For a typical four wheel configuration the front right wheel is Number 0.
+	 * This follows the scheme in Ether's derivation of swerve inverse kinematics.
+	 * @See http://www.chiefdelphi.com/media/papers/2426
+	 * 
+	 * The static values provided below are for convenience.
+	 * Note: Ether starts numbering at 1, but Java indices start at zero. 
+	 *       Thus the indices below start at zero.
+	 * 
+	 */
+    public static final int frontRight = 0;
+    public static final int frontLeft = 1;
+    public static final int rearLeft = 2;
+    public static final int rearRight = 3;
     
     protected final SpeedController speedControllers[] = new SpeedController[kMaxNumberOfMotors];
     protected final Pod wheelPods[] = new Pod[kMaxNumberOfMotors];
