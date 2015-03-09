@@ -23,9 +23,57 @@ public class SwerveWheelDrive implements MotorSafety {
     protected SpeedController driveController;
     protected SwerveSteeringPidController steeringController;
     
-    public class WheelVelocityVector {
-    	public double wheelSpeed = 0;
-    	public double wheelAngle = 0;
+    /**
+     * Store rectangular (x and y) coordinates
+     * Can represent a position or a vector
+     * 
+     * @author emiller
+     *
+     */
+    public class RectangularCoordinates {
+    	public double x;
+    	public double y;
+    	
+    	RectangularCoordinates(double x, double y) {
+    		this.x = x;
+    		this.y = y;
+    	}
+    }
+    
+    /**
+     * Store robot motion as strafe, front-back, and rotation.
+     * strafe is sideways velocity with -1.0 = max motor speed left and 1.0 = max motor speed right. 
+     * frontBack is forward velocity with -1.0 = max motor speed backwards and 1.0 = max motor speed forward.
+     * rotate is clockwise rotational velocity. -1.0 = max motor speed counter-clockwise. 1.0 = max motor speed clockwise.
+     * 
+     * @author emiller
+     *
+     */
+    public class RobotMotion {
+    	public double strafe;
+    	public double frontBack;
+    	public double rotate;
+    	
+    	RobotMotion(double strafe, double frontBack, double rotate) {
+    		this.strafe = strafe;
+    		this.frontBack = frontBack;
+    		this.rotate = rotate;
+    	}
+    }
+    
+    /**
+     * Store a velocity as speed and angle
+     * @author emiller
+     *
+     */
+    public class VelocityPolar {
+    	public double speed = 0;
+    	public double angle = 0;
+    	
+    	VelocityPolar(double speed, double angle) {
+    		this.speed = speed;
+    		this.angle = angle;
+    	}
     }
     
     /**
@@ -75,6 +123,13 @@ public class SwerveWheelDrive implements MotorSafety {
 		}
     };
     
+    /**
+     * Construct swerve drive for a single wheel.
+     * 
+     * @param wheelNumber wheel number on robot. For information only.
+     * @param driveController speed controller for wheel
+     * @param steeringController swerve steering PID controller for this wheel 
+     */
     SwerveWheelDrive(
     		int wheelNumber, 
     		SpeedController driveController, 
@@ -90,32 +145,30 @@ public class SwerveWheelDrive implements MotorSafety {
      * desired robot forward, strafe, and rotational velocities.
      * Wheel speed are normalized to the range [0, 1.0]. Angles are normalized to the range [-180, 180).
      * @see https://docs.google.com/presentation/d/1J_BajlhCQ236HaSxthEFL2PxywlneCuLNn276MWmdiY/edit?usp=sharing
-     * @param xWheelPosition distance of wheel to right of pivot (left is negative).
-     * @param yWheelPosition distance of wheel in front of pivot (back is negative).
+     * 
+     * @param wheelPosition Position of wheel relative to pivot point. 
+     *                      x is left-right, with right positive. y is front-back with front positive.
      * @param maxWheelRadius distance of furtherest wheel on robot from pivot.
-     * @param xVelocity strafe (sideways) velocity. -1.0 = max motor speed left. 1.0 = max motor speed right.
-     * @param yVelocity forward velocity. -1.0 = max motor speed backwards. 1.0 = max motor speed forward.
-     * @param rotateVelocity clockwise rotational velocity. -1.0 = max motor speed counter-clockwise. 1.0 = max motor speed clockwise.
-     * @return wheel vector (speed and angle)
+     * @param robotMotion desired motion of robot express by strafe, frontBack, and rotation around a pivot point.
+     * @return wheel polar velocity (speed and angle)
      */
-    public WheelVelocityVector calculateWheelVelocityVector(
-    		double xWheelPosition, 
-    		double yWheelPosition, 
+    public VelocityPolar calculateWheelVelocityVector(
+    		RectangularCoordinates wheelPosition,
     		double maxWheelRadius, 
-    		double xVelocity, 
-    		double yVelocity, 
-    		double rotateVelocity) {
-        double xWheel = xVelocity + rotateVelocity * yWheelPosition / maxWheelRadius; 
-        double yWheel = yVelocity - rotateVelocity * xWheelPosition / maxWheelRadius;
-        WheelVelocityVector wheelVelocity = new WheelVelocityVector();
-        wheelVelocity.wheelSpeed = Math.hypot(xWheel, yWheel);
+    		RobotMotion robotMotion) {
+    	
+    	RectangularCoordinates wheel = new RectangularCoordinates(
+    			robotMotion.strafe + robotMotion.rotate * wheelPosition.y / maxWheelRadius,  
+    			robotMotion.frontBack - robotMotion.rotate * wheelPosition.x / maxWheelRadius);
+        
         /*
-         * atan2(xWheel, yWheel) gives angle in robot coordinates
+         * Note for angle: atan2(xWheel, yWheel) gives angle in robot coordinates
          * However, wheel has positive counter-clockwise angle and zero is on Y axis.
          * atan2(-yWheel, xWheel) converts to wheel angle system.
          */
-        wheelVelocity.wheelAngle = Math.toDegrees(Math.atan2(-yWheel, xWheel));
-        return wheelVelocity;
+        return new VelocityPolar(
+        		Math.hypot(wheel.x, wheel.y), 
+        		Math.toDegrees(Math.atan2(-wheel.y, wheel.x)));
     }
     
     /** 
@@ -187,14 +240,14 @@ public class SwerveWheelDrive implements MotorSafety {
      * @param rawWheelData Raw wheel change data
      * @return wheel change data (delta) based on current wheel values
      */
-    public WheelVelocityVector calculateDeltaWheelData(WheelVelocityVector rawWheelData) {
-    	WheelVelocityVector deltaWheelData = new WheelVelocityVector();
+    public VelocityPolar calculateDeltaWheelData(VelocityPolar rawWheelData) {
+    	VelocityPolar deltaWheelData = new VelocityPolar(0, 0);
 		// Compute turn angle from encoder value (pidGet) and raw target value
 		SmartDashboard.putNumber("Wheel " + wheelNumber + " current angle ", steeringController.get());
-		AngleFlip turnAngle = computeTurnAngle(steeringController.get(), rawWheelData.wheelAngle);
+		AngleFlip turnAngle = computeTurnAngle(steeringController.get(), rawWheelData.angle);
 		double targetAngle = normalizeAngle(steeringController.get() + turnAngle.getAngle()); 
-        deltaWheelData.wheelAngle = targetAngle;
-        deltaWheelData.wheelSpeed = driveScale(turnAngle) * rawWheelData.wheelSpeed;
+        deltaWheelData.angle = targetAngle;
+        deltaWheelData.speed = driveScale(turnAngle) * rawWheelData.speed;
     	return deltaWheelData;
     }
     
@@ -205,6 +258,11 @@ public class SwerveWheelDrive implements MotorSafety {
     
     public void setSteeringAngle(double angle) {
         steeringController.setSetpoint(angle);
+    }
+    
+    public void setWheel(VelocityPolar wheelVector) {
+        setWheelSpeed(wheelVector.speed);
+        setSteeringAngle(wheelVector.angle);
     }
     
     public void resetSteering() {
