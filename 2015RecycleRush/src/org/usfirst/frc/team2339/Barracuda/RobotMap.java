@@ -1,7 +1,11 @@
 package org.usfirst.frc.team2339.Barracuda;
 
+import org.usfirst.frc.team2339.Barracuda.components.SwerveSteeringEncoder;
+import org.usfirst.frc.team2339.Barracuda.components.SwerveSteeringPidController;
+
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Gyro;
+import edu.wpi.first.wpilibj.Talon;
 
 public class RobotMap {
 	
@@ -82,6 +86,10 @@ public class RobotMap {
 			public static final int DRIVE_REAR_RIGHT_ENC_B = 7;
 		};
 		
+		public static class Wheel {
+			public static SwerveSteeringPidController STEERING_PID_CONTROLLER[] = new SwerveSteeringPidController[4];
+		}
+		
 		public static class Analog {
 			public static final int GYRO_CHANNEL = 0;
 		};
@@ -93,4 +101,23 @@ public class RobotMap {
 		public static final int WINCH_AXIS = 1;
 		public static final int LIFT_WINCH = 8;
 	}
+
+	/**
+	 * Initialize objects based on RobotMap values
+	 */
+    public static void init() {
+    	
+    	/*
+    	 * Initialize wheel steering controllers
+    	 */
+    	SwerveMap.Wheel.STEERING_PID_CONTROLLER[SwerveDrive.frontLeft] = new SwerveSteeringPidController(
+    			SwerveMap.Constants.STEERING_PID_P, 
+    			SwerveMap.Constants.STEERING_PID_I, 
+    			SwerveMap.Constants.STEERING_PID_D, 
+    			new SwerveSteeringEncoder(SwerveMap.DIO.DRIVE_FRONT_LEFT_ENC_A, 
+    					SwerveMap.DIO.DRIVE_FRONT_LEFT_ENC_B, 
+    					SwerveMap.Constants.STEERING_ENC_DEGREES_PER_PULSE), 
+    			new Talon(SwerveMap.PWM.DRIVE_FRONT_LEFT_STEERING));
+    }
+
 }
