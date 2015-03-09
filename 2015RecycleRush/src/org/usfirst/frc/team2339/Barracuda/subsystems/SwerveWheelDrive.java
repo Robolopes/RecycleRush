@@ -1,8 +1,9 @@
 package org.usfirst.frc.team2339.Barracuda.subsystems;
 
+import org.usfirst.frc.team2339.Barracuda.components.SwerveSteeringPidController;
+
 import edu.wpi.first.wpilibj.MotorSafety;
 import edu.wpi.first.wpilibj.MotorSafetyHelper;
-import edu.wpi.first.wpilibj.PIDController;
 import edu.wpi.first.wpilibj.SpeedController;
 
 /**
@@ -16,16 +17,15 @@ import edu.wpi.first.wpilibj.SpeedController;
 public class SwerveWheelDrive implements MotorSafety {
 	
     protected MotorSafetyHelper safetyHelper;
-    public static final double kDefaultExpirationTime = MotorSafety.DEFAULT_SAFETY_EXPIRATION;
     
     protected int wheelNumber;
     protected SpeedController driveController;
-    protected PIDController steeringController;
+    protected SwerveSteeringPidController steeringController;
     
     SwerveWheelDrive(
     		int wheelNumber, 
     		SpeedController driveController, 
-    		PIDController steeringController) {
+    		SwerveSteeringPidController steeringController) {
         this.wheelNumber = wheelNumber;
         this.driveController = driveController;
         this.steeringController = steeringController;
@@ -34,6 +34,7 @@ public class SwerveWheelDrive implements MotorSafety {
 
     public void setWheelSpeed(double speed) {
         driveController.set(speed);
+        if (safetyHelper != null) safetyHelper.feed();
     }
     
     public void setSteeringAngle(double angle) {
@@ -56,8 +57,8 @@ public class SwerveWheelDrive implements MotorSafety {
     
     private void setupMotorSafety() {
         safetyHelper = new MotorSafetyHelper(this);
-        this.setExpiration(kDefaultExpirationTime);
-        this.setSafetyEnabled(true);
+        setExpiration(MotorSafety.DEFAULT_SAFETY_EXPIRATION);
+        setSafetyEnabled(true);
     }
 
 	@Override
