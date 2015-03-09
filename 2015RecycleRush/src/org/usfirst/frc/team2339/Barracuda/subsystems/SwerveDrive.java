@@ -1,4 +1,4 @@
-package org.usfirst.frc.team2339.Barracuda;
+package org.usfirst.frc.team2339.Barracuda.subsystems;
 
 /*
  * Add a swerve mode to RobotDrive
@@ -8,6 +8,11 @@ package org.usfirst.frc.team2339.Barracuda;
 
 import org.usfirst.frc.team2339.Barracuda.RobotMap.SwerveMap;
 
+
+import org.usfirst.frc.team2339.Barracuda.RobotMap.SwerveMap.Constants;
+import org.usfirst.frc.team2339.Barracuda.RobotMap.SwerveMap.Control;
+import org.usfirst.frc.team2339.Barracuda.RobotMap.SwerveMap.DIO;
+import org.usfirst.frc.team2339.Barracuda.RobotMap.SwerveMap.PWM;
 
 //import com.sun.squawk.util.MathUtils;
 import java.lang.Math;
