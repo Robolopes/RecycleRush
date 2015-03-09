@@ -20,6 +20,7 @@ public class SwerveWheelDrive implements MotorSafety {
     protected MotorSafetyHelper safetyHelper;
     
     protected int wheelNumber;
+    protected RectangularCoordinates wheelPosition;
     protected SpeedController driveController;
     protected SwerveSteeringPidController steeringController;
     
@@ -37,6 +38,14 @@ public class SwerveWheelDrive implements MotorSafety {
     	RectangularCoordinates(double x, double y) {
     		this.x = x;
     		this.y = y;
+    	}
+    	
+    	public RectangularCoordinates subtract(RectangularCoordinates p0) {
+    		return new RectangularCoordinates(x - p0.x, y - p0.y);
+    	}
+    	
+    	public RectangularCoordinates divide(double r) {
+    		return new RectangularCoordinates(x/r, y/r);
     	}
     }
     
@@ -127,39 +136,45 @@ public class SwerveWheelDrive implements MotorSafety {
      * Construct swerve drive for a single wheel.
      * 
      * @param wheelNumber wheel number on robot. For information only.
+     * @param wheelPosition position of wheel relative to robot.
      * @param driveController speed controller for wheel
      * @param steeringController swerve steering PID controller for this wheel 
      */
     SwerveWheelDrive(
     		int wheelNumber, 
+    		RectangularCoordinates wheelPosition, 
     		SpeedController driveController, 
     		SwerveSteeringPidController steeringController) {
         this.wheelNumber = wheelNumber;
+        this.wheelPosition = wheelPosition;
         this.driveController = driveController;
         this.steeringController = steeringController;
     	setupMotorSafety();
     }
 
     /**
-     * Calculate wheel velocity vector given wheel position relative to pivot location and 
-     * desired robot forward, strafe, and rotational velocities.
+     * Calculate wheel velocity vector given wheel position and pivot location. 
+     * Robot motion is expressed with strafe, forward-back, and rotational velocities.
      * Wheel speed are normalized to the range [0, 1.0]. Angles are normalized to the range [-180, 180).
      * @see https://docs.google.com/presentation/d/1J_BajlhCQ236HaSxthEFL2PxywlneCuLNn276MWmdiY/edit?usp=sharing
      * 
-     * @param wheelPosition Position of wheel relative to pivot point. 
+     * @param wheelPosition Position of wheel. 
      *                      x is left-right, with right positive. y is front-back with front positive.
+     * @param pivot Position of pivot. 
      * @param maxWheelRadius distance of furtherest wheel on robot from pivot.
      * @param robotMotion desired motion of robot express by strafe, frontBack, and rotation around a pivot point.
      * @return wheel polar velocity (speed and angle)
      */
     public VelocityPolar calculateWheelVelocityVector(
     		RectangularCoordinates wheelPosition,
+    		RectangularCoordinates pivot,
     		double maxWheelRadius, 
     		RobotMotion robotMotion) {
     	
+    	RectangularCoordinates wheelRelativePosition = wheelPosition.subtract(pivot).divide(maxWheelRadius);
     	RectangularCoordinates wheel = new RectangularCoordinates(
-    			robotMotion.strafe + robotMotion.rotate * wheelPosition.y / maxWheelRadius,  
-    			robotMotion.frontBack - robotMotion.rotate * wheelPosition.x / maxWheelRadius);
+    			robotMotion.strafe + robotMotion.rotate * wheelRelativePosition.y,  
+    			robotMotion.frontBack - robotMotion.rotate * wheelRelativePosition.x);
         
         /*
          * Note for angle: atan2(xWheel, yWheel) gives angle in robot coordinates
@@ -169,6 +184,24 @@ public class SwerveWheelDrive implements MotorSafety {
         return new VelocityPolar(
         		Math.hypot(wheel.x, wheel.y), 
         		Math.toDegrees(Math.atan2(-wheel.y, wheel.x)));
+    }
+    
+    /**
+     * Calculate wheel velocity vector given wheel position relative to pivot location and 
+     * desired robot forward, strafe, and rotational velocities.
+     * Wheel speed are normalized to the range [0, 1.0]. Angles are normalized to the range [-180, 180).
+     * @see https://docs.google.com/presentation/d/1J_BajlhCQ236HaSxthEFL2PxywlneCuLNn276MWmdiY/edit?usp=sharing
+     * 
+     * @param pivot Position of pivot. 
+     * @param maxWheelRadius distance of furtherest wheel on robot from pivot.
+     * @param robotMotion desired motion of robot express by strafe, frontBack, and rotation around a pivot point.
+     * @return wheel polar velocity (speed and angle)
+     */
+    public VelocityPolar calculateWheelVelocityVector(
+    		RectangularCoordinates pivot,
+    		double maxWheelRadius, 
+    		RobotMotion robotMotion) {
+    	return calculateWheelVelocityVector(wheelPosition, pivot, maxWheelRadius, robotMotion);
     }
     
     /** 
