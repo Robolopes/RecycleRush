@@ -99,9 +99,9 @@ public class RobotMap {
 			 * as viewed from top of robot. This agrees with wheel order as defined by SwerveDrive.
 			 * For four wheels front right is the first, or wheel number zero. 
 			 */
-			public static SwerveSteeringPidController STEERING_PID_CONTROLLER[] = 
+			public static SwerveSteeringPidController STEERING_PID_CONTROLLERS[] = 
 					new SwerveSteeringPidController[NUMBER_OF_WHEELS];
-			public static Talon DRIVE_CONTROLLER[] = new Talon[NUMBER_OF_WHEELS];
+			public static Talon DRIVE_CONTROLLERS[] = new Talon[NUMBER_OF_WHEELS];
 		}
 		
 		public static class Analog {
@@ -148,7 +148,7 @@ public class RobotMap {
     	 * Initialize wheel steering controllers
     	 */
     	for (int iiWheel = 0; iiWheel < SwerveMap.Wheel.NUMBER_OF_WHEELS; iiWheel++) {
-        	SwerveMap.Wheel.STEERING_PID_CONTROLLER[iiWheel] = newSwerveSteeringController(
+        	SwerveMap.Wheel.STEERING_PID_CONTROLLERS[iiWheel] = newSwerveSteeringController(
         			SwerveMap.DIO.STEERING_ENCODER_A[iiWheel],
         			SwerveMap.DIO.STEERING_ENCODER_B[iiWheel],
         			SwerveMap.PWM.STEERING_CONTROLLER[iiWheel]);
@@ -158,7 +158,7 @@ public class RobotMap {
     	 * Initialize wheel drive controllers
     	 */
     	for (int iiWheel = 0; iiWheel < SwerveMap.Wheel.NUMBER_OF_WHEELS; iiWheel++) {
-    		SwerveMap.Wheel.DRIVE_CONTROLLER[iiWheel] = new Talon(SwerveMap.PWM.DRIVE_CONTROLLER[iiWheel]);
+    		SwerveMap.Wheel.DRIVE_CONTROLLERS[iiWheel] = new Talon(SwerveMap.PWM.DRIVE_CONTROLLER[iiWheel]);
     	}
     }
 

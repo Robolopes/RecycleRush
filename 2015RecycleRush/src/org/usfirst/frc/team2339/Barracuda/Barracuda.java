@@ -3,6 +3,7 @@ package org.usfirst.frc.team2339.Barracuda;
 
 import org.usfirst.frc.team2339.Barracuda.RobotMap.SwerveMap;
 import org.usfirst.frc.team2339.Barracuda.subsystems.SwerveDrive;
+import org.usfirst.frc.team2339.Barracuda.subsystems.SwerveDriveRectangle;
 
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -26,7 +27,7 @@ public class Barracuda extends IterativeRobot {
     /**********************/
     
 
-    private final SwerveDrive robotDrive = null; 
+    private SwerveDriveRectangle robotDrive = null; 
     private final Talon winchMotor = new Talon(RobotMap.WinchMap.LIFT_WINCH);
       
    
@@ -68,6 +69,12 @@ public class Barracuda extends IterativeRobot {
     public void robotInit() {
         robotStartTime = System.currentTimeMillis();
         System.out.println("Robot init time: " + robotStartTime);
+        
+        robotDrive = new SwerveDriveRectangle(SwerveDriveRectangle.createWheels(
+        		SwerveMap.Constants.WHEEL_BASE_LENGTH, 
+        		SwerveMap.Constants.WHEEL_BASE_WIDTH, 
+        		SwerveMap.Wheel.DRIVE_CONTROLLERS, 
+        		SwerveMap.Wheel.STEERING_PID_CONTROLLERS));
         
         robotDrive.resetSteering();
         
