@@ -26,12 +26,7 @@ public class Barracuda extends IterativeRobot {
     /**********************/
     
 
-    /*
-    private final RobotDrive robotDrive = 
-            new RobotDrive(m_frontLeft, m_frontRight);
-    */
-    private final SwerveDrive robotDrive = 
-            new SwerveDrive();
+    private final SwerveDrive robotDrive = null; 
     private final Talon winchMotor = new Talon(RobotMap.WinchMap.LIFT_WINCH);
       
    
@@ -74,10 +69,7 @@ public class Barracuda extends IterativeRobot {
         robotStartTime = System.currentTimeMillis();
         System.out.println("Robot init time: " + robotStartTime);
         
-        //robotDrive.setInvertedMotor(RobotDrive.MotorType.kFrontLeft, true);
-        //robotDrive.setInvertedMotor(RobotDrive.MotorType.kFrontRight, true);
-        
-        robotDrive.resetPodAngles();
+        robotDrive.resetSteering();
         
        //* visionControl.visionInit();
         System.out.println("End robot init: " + System.currentTimeMillis());
@@ -91,8 +83,8 @@ public class Barracuda extends IterativeRobot {
 		startTime = System.currentTimeMillis();
 		System.out.println("Autonomous init time: " + startTime);
        	RobotMap.Control.GYRO.reset();
-        robotDrive.resetPodAngles();
-        robotDrive.enablePids(true);
+        robotDrive.resetSteering();
+        robotDrive.enableSteering(true);
     }
 	
     public void autonomousPeriodic() {
@@ -103,8 +95,8 @@ public class Barracuda extends IterativeRobot {
      */
     public void teleopInit() {
     	RobotMap.Control.GYRO.reset();
-        robotDrive.resetPodAngles();
-        robotDrive.enablePids(true);
+        robotDrive.resetSteering();
+        robotDrive.enableSteering(true);
     }
 
  

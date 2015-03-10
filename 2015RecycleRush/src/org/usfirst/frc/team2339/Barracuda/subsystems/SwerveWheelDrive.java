@@ -164,7 +164,7 @@ public class SwerveWheelDrive implements MotorSafety {
 	public void setWheelPosition(RectangularCoordinates wheelPosition) {
 		this.wheelPosition = wheelPosition;
 	}
-
+	
     /**
      * Calculate wheel velocity vector given wheel position and pivot location. 
      * Robot motion is expressed with strafe, forward-back, and rotational velocities.
@@ -323,10 +323,10 @@ public class SwerveWheelDrive implements MotorSafety {
     public void resetSteering() {
     	boolean isEnabled = steeringController.isEnable();
     	steeringController.reset();
-    	steeringEnable(isEnabled);
+    	enableSteering(isEnabled);
     }
     
-    public void steeringEnable(boolean enable) {
+    public void enableSteering(boolean enable) {
     	if (enable) {
     		steeringController.enable();
     	} else {
