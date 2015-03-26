@@ -6,6 +6,9 @@ import org.usfirst.frc.team2339.Barracuda.subsystems.SwerveWheelDrive.VelocityPo
 import edu.wpi.first.wpilibj.command.Command;
 
 public class TimedDrive extends Command {
+	/**
+	 * Drives for a given time in at a given speed and direction
+	 */
 	
 	private final SwerveDrive robotDrive;
 	private final double time;
@@ -41,7 +44,7 @@ public class TimedDrive extends Command {
 
 	@Override
 	protected boolean isFinished() {
-		return timeSinceInitialized() < time;
+		return timeSinceInitialized() >= time;
 	}
 
 	@Override
