@@ -2,12 +2,19 @@ package org.usfirst.frc.team2339.Barracuda;
 
 import org.usfirst.frc.team2339.Barracuda.components.SwerveSteeringEncoder;
 import org.usfirst.frc.team2339.Barracuda.components.SwerveSteeringPidController;
+import org.usfirst.frc.team2339.Barracuda.subsystems.Lift;
+import org.usfirst.frc.team2339.Barracuda.subsystems.SwerveDriveRectangle;
 
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Gyro;
 import edu.wpi.first.wpilibj.Talon;
 
 public class RobotMap {
+	
+	// Subsystems
+    public static SwerveDriveRectangle robotDrive; 
+    public static Lift lift;
+    
 	
 	public static class Control {
 		// Robot gyro
@@ -140,7 +147,7 @@ public class RobotMap {
     }
 
 	/**
-	 * Initialize objects based on RobotMap values
+	 * Initialize subsystems and components based on RobotMap values
 	 */
     public static void init() {
     	
@@ -160,6 +167,22 @@ public class RobotMap {
     	for (int iiWheel = 0; iiWheel < SwerveMap.Wheel.NUMBER_OF_WHEELS; iiWheel++) {
     		SwerveMap.Wheel.DRIVE_CONTROLLERS[iiWheel] = new Talon(SwerveMap.PWM.DRIVE_CONTROLLER[iiWheel]);
     	}
+    	
+    	/*
+    	 * Initialize robot drive subsystem
+    	 */
+        robotDrive = new SwerveDriveRectangle(SwerveDriveRectangle.createWheels(
+        		SwerveMap.Constants.WHEEL_BASE_LENGTH, 
+        		SwerveMap.Constants.WHEEL_BASE_WIDTH, 
+        		SwerveMap.Wheel.DRIVE_CONTROLLERS, 
+        		SwerveMap.Wheel.STEERING_PID_CONTROLLERS));
+        robotDrive.resetSteering();
+
+        /*
+         * Initialize lift subsystem
+         */
+        lift = new Lift(RobotMap.WinchMap.LIFT_WINCH);
+        
     }
 
 }
