@@ -8,6 +8,7 @@ import org.usfirst.frc.team2339.Barracuda.commands.TimedLift;
 import org.usfirst.frc.team2339.Barracuda.subsystems.Lift;
 import org.usfirst.frc.team2339.Barracuda.subsystems.SwerveDriveRectangle;
 import org.usfirst.frc.team2339.Barracuda.commands.TeleopDrive;
+import org.usfirst.frc.team2339.Barracuda.OI;
 
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.command.CommandGroup;
@@ -31,11 +32,17 @@ public class Barracuda extends IterativeRobot {
     /**********************/
     
 
-    private SwerveDriveRectangle robotDrive = null; 
-    private Lift lift = null;
-    private CommandGroup autoCommands = null;
-    private TeleopDrive teleopDrive = null;
-    private TeleopLift teleopLift = null;
+	// Subsystems
+    private SwerveDriveRectangle robotDrive; 
+    private Lift lift;
+    
+    // Control operator interface
+    public static OI oi;
+
+    // Commands
+    private CommandGroup autonomousCommand;
+    private TeleopDrive teleopDrive;
+    private TeleopLift teleopLift;
     
       
    
@@ -78,6 +85,13 @@ public class Barracuda extends IterativeRobot {
         
         lift = new Lift(RobotMap.WinchMap.LIFT_WINCH);
         
+        // OI must be constructed after subsystems. If the OI creates Commands 
+        //(which it very likely will), subsystems are not guaranteed to be 
+        // constructed yet. Thus, their requires() statements may grab null 
+        // pointers. Bad news. Don't move it.
+        oi = new OI();
+        
+        
        //* visionControl.visionInit();
         System.out.println("End robot init: " + System.currentTimeMillis());
     }
@@ -93,11 +107,11 @@ public class Barracuda extends IterativeRobot {
         robotDrive.resetSteering();
         robotDrive.enableSteering(true);
         
-        autoCommands = new CommandGroup("Autonomous Commands");
-        autoCommands.addSequential(new TimedDrive("Push RC to wall", robotDrive, 1.0, 0.5, 0.0));
-        autoCommands.addSequential(new TimedLift("Pick up RC", lift, 0.5, 0.25));
-        autoCommands.addSequential(new TimedDrive("Backup to auto zone", robotDrive, 2.0, 0.5, 180.0));
-        autoCommands.start();
+        autonomousCommand = new CommandGroup("Autonomous Commands");
+        autonomousCommand.addSequential(new TimedDrive("Push RC to wall", robotDrive, 1.0, 0.5, 0.0));
+        autonomousCommand.addSequential(new TimedLift("Pick up RC", lift, 0.5, 0.25));
+        autonomousCommand.addSequential(new TimedDrive("Backup to auto zone", robotDrive, 2.0, 0.5, 180.0));
+        autonomousCommand.start();
     }
 	
     public void autonomousPeriodic() {
