@@ -3,13 +3,13 @@ package org.usfirst.frc.team2339.Barracuda;
 
 import org.usfirst.frc.team2339.Barracuda.RobotMap.SwerveMap;
 import org.usfirst.frc.team2339.Barracuda.commands.TimedDrive;
-import org.usfirst.frc.team2339.Barracuda.subsystems.SwerveDrive;
+import org.usfirst.frc.team2339.Barracuda.commands.TimedLift;
+import org.usfirst.frc.team2339.Barracuda.subsystems.Lift;
 import org.usfirst.frc.team2339.Barracuda.subsystems.SwerveDriveRectangle;
 
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.command.CommandGroup;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj.Talon;
 
 
 /**
@@ -30,7 +30,8 @@ public class Barracuda extends IterativeRobot {
     
 
     private SwerveDriveRectangle robotDrive = null; 
-    private final Talon winchMotor = new Talon(RobotMap.WinchMap.LIFT_WINCH);
+    private Lift lift = null;
+    CommandGroup autoCommands = null;
       
    
     /*
@@ -54,16 +55,6 @@ public class Barracuda extends IterativeRobot {
      * Methods for this class are below here
     /**********************/
     
-    /*
-     * This method sets winch motors
-     * 
-     * @param value motor speed
-     */
-    public void setWinchMotor(double value) {
-        SmartDashboard.putNumber("Winch motor value ", value);
-        winchMotor.set(value);
-    }
-    
     /**
      * This method is run when the robot is first started up and should be
      * used for any initialization code.
@@ -80,6 +71,8 @@ public class Barracuda extends IterativeRobot {
         
         robotDrive.resetSteering();
         
+        lift = new Lift(RobotMap.WinchMap.LIFT_WINCH);
+        
        //* visionControl.visionInit();
         System.out.println("End robot init: " + System.currentTimeMillis());
     }
@@ -95,8 +88,9 @@ public class Barracuda extends IterativeRobot {
         robotDrive.resetSteering();
         robotDrive.enableSteering(true);
         
-        CommandGroup autoCommands = new CommandGroup("Autonomous Commands");
+        autoCommands = new CommandGroup("Autonomous Commands");
         autoCommands.addSequential(new TimedDrive("Push RC to wall", robotDrive, 1.0, 0.5, 0.0));
+        autoCommands.addSequential(new TimedLift("Pick up RC", lift, 0.5, 0.25));
         autoCommands.addSequential(new TimedDrive("Backup to auto zone", robotDrive, 2.0, 0.5, 180.0));
         autoCommands.start();
     }
@@ -135,9 +129,9 @@ public class Barracuda extends IterativeRobot {
     	}
     	
         /*
-         * Set winch motors
+         * Set lift motor
          */
-    	setWinchMotor(RobotMap.WinchMap.WINCH_STICK.getRawAxis(RobotMap.WinchMap.WINCH_AXIS));
+    	lift.setLiftMotor(RobotMap.WinchMap.WINCH_STICK.getRawAxis(RobotMap.WinchMap.WINCH_AXIS));
     	  
         
 		/*
