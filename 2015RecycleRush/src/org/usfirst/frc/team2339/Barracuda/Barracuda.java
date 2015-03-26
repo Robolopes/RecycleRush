@@ -2,10 +2,12 @@
 package org.usfirst.frc.team2339.Barracuda;
 
 import org.usfirst.frc.team2339.Barracuda.RobotMap.SwerveMap;
+import org.usfirst.frc.team2339.Barracuda.commands.TimedDrive;
 import org.usfirst.frc.team2339.Barracuda.subsystems.SwerveDrive;
 import org.usfirst.frc.team2339.Barracuda.subsystems.SwerveDriveRectangle;
 
 import edu.wpi.first.wpilibj.IterativeRobot;
+import edu.wpi.first.wpilibj.command.CommandGroup;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.Talon;
 
@@ -92,6 +94,11 @@ public class Barracuda extends IterativeRobot {
        	RobotMap.Control.GYRO.reset();
         robotDrive.resetSteering();
         robotDrive.enableSteering(true);
+        
+        CommandGroup autoCommands = new CommandGroup("Autonomous Commands");
+        autoCommands.addSequential(new TimedDrive("Push RC to wall", robotDrive, 1.0, 0.5, 0.0));
+        autoCommands.addSequential(new TimedDrive("Backup to auto zone", robotDrive, 2.0, 0.5, 180.0));
+        autoCommands.start();
     }
 	
     public void autonomousPeriodic() {
