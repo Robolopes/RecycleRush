@@ -30,15 +30,10 @@ public class SwerveDrive {
 	 * This follows the scheme in Ether's derivation of swerve inverse kinematics.
 	 * @See http://www.chiefdelphi.com/media/papers/2426
 	 * 
-	 * The static values provided below are for convenience.
 	 * Note: Ether starts numbering at 1, but Java indices start at zero. 
-	 *       Thus the indices below start at zero.
+	 *       Thus the wheel indices are one less than Ether's numbers.
 	 * 
 	 */
-    public static final int frontRight = 0;
-    public static final int frontLeft = 1;
-    public static final int rearLeft = 2;
-    public static final int rearRight = 3;
     
     protected final SwerveWheelDrive wheels[];
     protected RectangularCoordinates pivot = new RectangularCoordinates(0, 0);
@@ -147,11 +142,7 @@ public class SwerveDrive {
 	 */
 	public void setDeadBandValues() {
     	for (int iiWheel = 0; iiWheel < wheels.length; iiWheel++) {
-    		if (iiWheel == frontLeft || iiWheel == rearRight) {
-        		wheels[iiWheel].setWheel(new VelocityPolar(0, -45));
-    		} else {
-        		wheels[iiWheel].setWheel(new VelocityPolar(0, 45));
-    		}
+        	wheels[iiWheel].setWheel(new VelocityPolar(0, 0));
     	}
 	}
 	
