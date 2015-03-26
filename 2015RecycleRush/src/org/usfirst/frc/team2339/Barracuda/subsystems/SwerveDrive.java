@@ -6,18 +6,11 @@ package org.usfirst.frc.team2339.Barracuda.subsystems;
  */
 
 
-import org.usfirst.frc.team2339.Barracuda.RobotMap.SwerveMap;
 import org.usfirst.frc.team2339.Barracuda.subsystems.SwerveWheelDrive.RectangularCoordinates;
 import org.usfirst.frc.team2339.Barracuda.subsystems.SwerveWheelDrive.RobotMotion;
 import org.usfirst.frc.team2339.Barracuda.subsystems.SwerveWheelDrive.VelocityPolar;
 
-import edu.wpi.first.wpilibj.Encoder;
-import edu.wpi.first.wpilibj.PIDController;
-import edu.wpi.first.wpilibj.PIDOutput;
-import edu.wpi.first.wpilibj.PIDSource;
-import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj.command.Subsystem;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  *
@@ -178,44 +171,6 @@ public class SwerveDrive extends Subsystem {
 	}
 	
     /**
-     * Control robot using joystick inputs
-     */
-    public void swerveDriveTeleop() {
-    	
-    	RobotMotion robotMotion = new RobotMotion(
-    			SwerveMap.Control.DRIVE_STICK.getRawAxis(SwerveMap.Control.DRIVE_AXIS_SIDEWAYS), 
-    			-SwerveMap.Control.DRIVE_STICK.getRawAxis(SwerveMap.Control.DRIVE_AXIS_FORWARD_BACK), 
-    			SwerveMap.Control.DRIVE_STICK.getRawAxis(SwerveMap.Control.DRIVE_AXIS_ROTATE));
-        
-    	if (Math.abs(robotMotion.strafe) > SwerveMap.Control.DRIVE_STICK_DEAD_BAND || 
-    			Math.abs(robotMotion.frontBack) > SwerveMap.Control.DRIVE_STICK_DEAD_BAND || 
-    			Math.abs(robotMotion.rotate) > SwerveMap.Control.DRIVE_STICK_DEAD_BAND) {
-    		robotMotion.rotate *= .5;
-
-    		RectangularCoordinates pivot = new RectangularCoordinates(0, 0);
-            if (SwerveMap.Control.DRIVE_STICK.getRawButton(SwerveMap.Control.DRIVE_BUTTON_ROTATE_AROUND_CONTAINER)) {
-            	pivot.x = 0.0;
-            	pivot.y = SwerveMap.Constants.CONTAINER_CENTER_DISTANCE_FORWARD + 0.5 * SwerveMap.Constants.WHEEL_BASE_LENGTH;
-            }
-            if (SwerveMap.Control.DRIVE_STICK.getRawButton(SwerveMap.Control.DRIVE_BUTTON_SPEED_SHIFT)) {
-        		robotMotion.rotate *= .5;
-        		robotMotion.strafe *= .5;
-        		robotMotion.frontBack *= .5;
-        	}
-            
-            double robotAngle = 0.0;
-            if (SwerveMap.Control.DRIVE_STICK.getRawButton(SwerveMap.Control.DRIVE_BUTTON_ABSOLUTE_GYRO_MODE)) {
-                robotAngle = SwerveMap.Control.GYRO.getAngle();
-            }
-            
-            swerveDriveAbsolute(robotMotion, robotAngle, pivot);
-    	} else {
-    		// Joystick in dead band, set neutral values
-    		setDeadBandValues();
-    	}
-    }
-    
-    /**
      * Class to store angle and flip together
      * @author emiller
      *
@@ -326,60 +281,6 @@ public class SwerveDrive extends Subsystem {
     	return scale;
     }
     
-    public class Pod implements PIDOutput, PIDSource {
-
-        private Encoder steeringEnc;
-        private SpeedController drive;
-        private SpeedController steer;
-        private PIDController pid;
-        private int podNumber;
-
-        public Pod(SpeedController driveController, SpeedController steeringController, int steeringEncA,
-                int steeringEncB, int podNumber) {
-            steeringEnc = new Encoder(steeringEncA, steeringEncB);
-            steeringEnc.setDistancePerPulse(SwerveMap.Constants.STEERING_ENC_DEGREES_PER_PULSE);
-            drive = driveController;
-            steer = steeringController;
-            this.podNumber = podNumber;
-            pid = new PIDController(SwerveMap.Constants.STEERING_PID_P,
-                    SwerveMap.Constants.STEERING_PID_I,
-                    SwerveMap.Constants.STEERING_PID_D, this, this);
-            SmartDashboard.putData("Steering Pod " + podNumber, pid);
-            pid.setInputRange(-180, 180);
-            pid.setContinuous(true);
-        }
-
-        public void pidWrite(double output) {
-            steer.set(output);
-        }
-
-        public double pidGet() {
-        	SmartDashboard.putData("Enc " + this.podNumber + " ", steeringEnc);
-            return steeringEnc.getDistance();
-        }
-
-        public void setSteeringAngle(double angle) {
-            pid.setSetpoint(angle);
-        }
-        public void setWheelSpeed(double speed) {
-            drive.set(speed);
-       // public void setWheelSpeed(double speed) {
-         //   drive.set(.5 * speed);
-        }
-        
-        public void resetAngle() {
-        	steeringEnc.reset();
-        }
-        
-        public void pidEnable(boolean enable) {
-        	if (enable) {
-        		pid.enable();
-        	} else {
-        		pid.disable();
-        	}
-        }
-    }
-
     public void initDefaultCommand() {
     }
 

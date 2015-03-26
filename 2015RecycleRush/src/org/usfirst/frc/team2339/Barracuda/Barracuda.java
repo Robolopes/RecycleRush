@@ -6,6 +6,7 @@ import org.usfirst.frc.team2339.Barracuda.commands.TimedDrive;
 import org.usfirst.frc.team2339.Barracuda.commands.TimedLift;
 import org.usfirst.frc.team2339.Barracuda.subsystems.Lift;
 import org.usfirst.frc.team2339.Barracuda.subsystems.SwerveDriveRectangle;
+import org.usfirst.frc.team2339.Barracuda.commands.TeleopDrive;
 
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.command.CommandGroup;
@@ -31,7 +32,9 @@ public class Barracuda extends IterativeRobot {
 
     private SwerveDriveRectangle robotDrive = null; 
     private Lift lift = null;
-    CommandGroup autoCommands = null;
+    private CommandGroup autoCommands = null;
+    private TeleopDrive teleopDrive = null;
+    
       
    
     /*
@@ -105,6 +108,8 @@ public class Barracuda extends IterativeRobot {
     	RobotMap.Control.GYRO.reset();
         robotDrive.resetSteering();
         robotDrive.enableSteering(true);
+        teleopDrive = new TeleopDrive("Teleop drive", robotDrive);
+        teleopDrive.start();
     }
 
  
@@ -133,12 +138,6 @@ public class Barracuda extends IterativeRobot {
          */
     	lift.setLiftMotor(RobotMap.WinchMap.WINCH_STICK.getRawAxis(RobotMap.WinchMap.WINCH_AXIS));
     	  
-        
-		/*
-		 * Drive robot based on values from joystick
-		 */
-		robotDrive.swerveDriveTeleop();
-    	
     	// Test a wheel
     	/*
     	robotDrive.setWheelPod(SwerveDrive.frontLeft, 180 * RobotMap.Control.DRIVE_STICK.getRawAxis(SwerveMap.Control.DRIVE_AXIS_ROTATE), 
