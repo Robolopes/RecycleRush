@@ -124,7 +124,7 @@ public class Barracuda extends IterativeRobot {
     	RobotMap.Control.GYRO.reset();
         robotDrive.resetSteering();
         robotDrive.enableSteering(true);
-        teleopDrive = new TeleopDrive("Teleop drive", robotDrive, oi.getJoystickDrive());
+        teleopDrive = new TeleopDrive("Teleop drive", robotDrive, oi.getJoystickDrive(), RobotMap.Control.GYRO);
         teleopDrive.start();
         teleopLift = new TeleopLift("Teleop lift", lift);
         teleopLift.start();
@@ -138,14 +138,6 @@ public class Barracuda extends IterativeRobot {
 
     public void teleopPeriodic() {
    
-		/*
-		 * Print out siginigicant changes in drive info
-		 */
-		SmartDashboard.putNumber("Joystick forward ", RobotMap.Control.DRIVE_STICK.getRawAxis(SwerveMap.Control.DRIVE_AXIS_FORWARD_BACK));
-		SmartDashboard.putNumber("Joystick sideways ", RobotMap.Control.DRIVE_STICK.getRawAxis(SwerveMap.Control.DRIVE_AXIS_SIDEWAYS));
-		SmartDashboard.putNumber("Joystick rotate ", RobotMap.Control.DRIVE_STICK.getRawAxis(SwerveMap.Control.DRIVE_AXIS_ROTATE));
-		SmartDashboard.putNumber("Gyro angle ", RobotMap.Control.GYRO.getAngle());
-          
     	if(RobotMap.Control.OPERATOR_STICK.getRawButton(RobotMap.Control.GYRO_BUTTON_RESET)) {
     		// Reset gyro
     		RobotMap.Control.GYRO.reset();

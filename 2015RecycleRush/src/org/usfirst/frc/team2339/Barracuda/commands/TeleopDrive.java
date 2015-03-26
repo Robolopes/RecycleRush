@@ -1,5 +1,6 @@
 package org.usfirst.frc.team2339.Barracuda.commands;
 
+import org.usfirst.frc.team2339.Barracuda.RobotMap;
 import org.usfirst.frc.team2339.Barracuda.RobotMap.SwerveMap;
 import org.usfirst.frc.team2339.Barracuda.components.SwerveJoystick;
 import org.usfirst.frc.team2339.Barracuda.subsystems.SwerveDrive;
@@ -7,7 +8,9 @@ import org.usfirst.frc.team2339.Barracuda.subsystems.SwerveWheelDrive.Rectangula
 import org.usfirst.frc.team2339.Barracuda.subsystems.SwerveWheelDrive.RobotMotion;
 import org.usfirst.frc.team2339.Barracuda.subsystems.SwerveWheelDrive.VelocityPolar;
 
+import edu.wpi.first.wpilibj.Gyro;
 import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class TeleopDrive extends Command {
 	/**
@@ -16,22 +19,20 @@ public class TeleopDrive extends Command {
 	
 	private final SwerveDrive robotDrive;
 	private final SwerveJoystick driveStick;
+	private final Gyro gyro;
 
-	protected static final double DRIVE_STICK_DEAD_BAND = 0.1;
-	protected static final int DRIVE_BUTTON_SPEED_SHIFT = 1;
-	protected static final int DRIVE_BUTTON_ROTATE_AROUND_CONTAINER = 8;
-	
 	/**
 	 * 
 	 * @param name Name of command
 	 * @param robotDrive Robot drive subsystem
 	 * @param driveStick joystick used to drive robot in teleop
 	 */
-	public TeleopDrive(String name, SwerveDrive robotDrive, SwerveJoystick driveStick) {
+	public TeleopDrive(String name, SwerveDrive robotDrive, SwerveJoystick driveStick, Gyro gyro) {
 		super(name);
         requires(robotDrive);
         this.robotDrive = robotDrive;
         this.driveStick = driveStick;
+        this.gyro = gyro;
 	}
 
 	@Override
@@ -40,6 +41,14 @@ public class TeleopDrive extends Command {
 
 	@Override
 	protected void execute() {
+		/*
+		 * Print out significant changes in drive info
+		 */
+		SmartDashboard.putNumber("Joystick forward ", driveStick.getFrontBack());
+		SmartDashboard.putNumber("Joystick sideways ", driveStick.getStrafe());
+		SmartDashboard.putNumber("Joystick rotate ", driveStick.getRotate());
+		SmartDashboard.putNumber("Gyro angle ", gyro.getAngle());
+          
     	if (driveStick.isInDeadband()) {
     		// Joystick in dead band, set neutral values
     		robotDrive.setDeadBandValues();
@@ -65,7 +74,7 @@ public class TeleopDrive extends Command {
             
             double robotAngle = 0.0;
             if (driveStick.getGyro()) {
-                robotAngle = SwerveMap.Control.GYRO.getAngle();
+                robotAngle = gyro.getAngle();
             }
             
             robotDrive.swerveDriveAbsolute(robotMotion, robotAngle, pivot);
