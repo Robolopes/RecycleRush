@@ -3,6 +3,8 @@
  */
 package org.usfirst.frc.team2339.Barracuda;
 
+import org.usfirst.frc.team2339.Barracuda.components.SwerveJoystick;
+
 import edu.wpi.first.wpilibj.Joystick;
 
 /**
@@ -13,7 +15,7 @@ import edu.wpi.first.wpilibj.Joystick;
  */
 public class OI {
 
-    private Joystick joystickDrive;
+    private SwerveJoystick joystickDrive;
     private Joystick joystickOperator;
     
 	/**
@@ -21,20 +23,20 @@ public class OI {
 	 */
 	public OI() {
         setJoystickOperator(new Joystick(1));
-        setJoystickDrive(new Joystick(0));
+        setJoystickDrive(new SwerveJoystick(0));
 	}
 
 	/**
 	 * @return the joystickDrive
 	 */
-	public Joystick getJoystickDrive() {
+	public SwerveJoystick getJoystickDrive() {
 		return joystickDrive;
 	}
 
 	/**
 	 * @param joystickDrive the joystickDrive to set
 	 */
-	protected void setJoystickDrive(Joystick joystickDrive) {
+	protected void setJoystickDrive(SwerveJoystick joystickDrive) {
 		this.joystickDrive = joystickDrive;
 	}
 

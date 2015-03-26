@@ -124,7 +124,7 @@ public class Barracuda extends IterativeRobot {
     	RobotMap.Control.GYRO.reset();
         robotDrive.resetSteering();
         robotDrive.enableSteering(true);
-        teleopDrive = new TeleopDrive("Teleop drive", robotDrive);
+        teleopDrive = new TeleopDrive("Teleop drive", robotDrive, oi.getJoystickDrive());
         teleopDrive.start();
         teleopLift = new TeleopLift("Teleop lift", lift);
         teleopLift.start();
