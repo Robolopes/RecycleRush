@@ -1,10 +1,7 @@
 package org.usfirst.frc.team2339.Barracuda.commands;
 
-import org.usfirst.frc.team2339.Barracuda.RobotMap;
-import org.usfirst.frc.team2339.Barracuda.RobotMap.SwerveMap;
 import org.usfirst.frc.team2339.Barracuda.components.SwerveJoystick;
 import org.usfirst.frc.team2339.Barracuda.subsystems.SwerveDrive;
-import org.usfirst.frc.team2339.Barracuda.subsystems.SwerveWheelDrive.RectangularCoordinates;
 import org.usfirst.frc.team2339.Barracuda.subsystems.SwerveWheelDrive.RobotMotion;
 import org.usfirst.frc.team2339.Barracuda.subsystems.SwerveWheelDrive.VelocityPolar;
 
@@ -61,11 +58,6 @@ public class TeleopDrive extends Command {
             
     		robotMotion.rotate *= .5;
 
-    		RectangularCoordinates pivot = new RectangularCoordinates(0, 0);
-            if (driveStick.getRotateAroundContainer()) {
-            	pivot.x = 0.0;
-            	pivot.y = SwerveMap.Constants.CONTAINER_CENTER_DISTANCE_FORWARD + 0.5 * SwerveMap.Constants.WHEEL_BASE_LENGTH;
-            }
             if (driveStick.getSpeedShift()) {
         		robotMotion.rotate *= .5;
         		robotMotion.strafe *= .5;
@@ -77,7 +69,7 @@ public class TeleopDrive extends Command {
                 robotAngle = gyro.getAngle();
             }
             
-            robotDrive.swerveDriveAbsolute(robotMotion, robotAngle, pivot);
+            robotDrive.swerveDriveAbsolute(robotMotion, robotAngle);
     	}
 	}
 

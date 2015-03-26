@@ -125,13 +125,9 @@ public class SwerveDrive extends Subsystem {
      * Drive in swerve mode with a given speed and rotation.
      * Driving parameters are assumed to be relative to the current robot angle.
      * @param robotMotion desired motion of robot express by strafe, frontBack, and rotation around a pivot point.
-     * @param pivot Position of pivot. 
      */
     public void swerveDriveRobot(
-    		RobotMotion robotMotion, 
-    		RectangularCoordinates pivot) {
-    	
-    	setPivot(pivot);
+    		RobotMotion robotMotion) {
     	
     	VelocityPolar rawVelocities[] = new VelocityPolar[wheels.length];
     	for (int iiWheel = 0; iiWheel < wheels.length; iiWheel++) {
@@ -147,18 +143,16 @@ public class SwerveDrive extends Subsystem {
      * @param robotMotion desired motion of robot express by strafe, frontBack, and rotation around a pivot point.
      * @param robotAngle Angle (in degrees) of robot relative to fixed angle. Zero degrees means front of robot points in desired direction. 
      *                   Positive is clockwise, negative counter-clockwise. This is probably taken from the gyro.
-     * @param pivot Position of pivot. 
      */
     public void swerveDriveAbsolute(
     		RobotMotion robotMotion, 
-    		double robotAngle,
-    		RectangularCoordinates pivot) {
+    		double robotAngle) {
     	double robotAngleRad = Math.toRadians(robotAngle);
     	RobotMotion relativeMotion = new RobotMotion(
     			robotMotion.strafe * Math.cos(robotAngleRad) - robotMotion.frontBack * Math.sin(robotAngleRad),
     			robotMotion.strafe * Math.sin(robotAngleRad) + robotMotion.frontBack * Math.cos(robotAngleRad), 
     			robotMotion.rotate);
-    	this.swerveDriveRobot(relativeMotion, pivot);
+    	this.swerveDriveRobot(relativeMotion);
     }
     
 	/**

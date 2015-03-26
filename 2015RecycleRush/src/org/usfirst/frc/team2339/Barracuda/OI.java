@@ -3,11 +3,16 @@
  */
 package org.usfirst.frc.team2339.Barracuda;
 
+import org.usfirst.frc.team2339.Barracuda.RobotMap.SwerveMap;
+import org.usfirst.frc.team2339.Barracuda.commands.SetSwervePivotPoint;
 import org.usfirst.frc.team2339.Barracuda.commands.TeleopDrive;
 import org.usfirst.frc.team2339.Barracuda.commands.TeleopLift;
 import org.usfirst.frc.team2339.Barracuda.components.SwerveJoystick;
+import org.usfirst.frc.team2339.Barracuda.subsystems.SwerveWheelDrive.RectangularCoordinates;
+import org.usfirst.frc2339.OIInfo.commands.PivotAroundContainer;
 
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.buttons.JoystickButton;
 
 /**
  * This class is the glue that binds the controls on the physical operator
@@ -17,11 +22,17 @@ import edu.wpi.first.wpilibj.Joystick;
  */
 public class OI {
 
+	private static final int DRIVE_BUTTON_SPEED_SHIFT = 1;
+	private static final int DRIVE_BUTTON_ABSOLUTE_GYRO_MODE = 2;
+	private static final int DRIVE_BUTTON_ROTATE_AROUND_CONTAINER = 8;
+    
     private SwerveJoystick joystickDrive;
+    private JoystickButton containerPivotButton;
+    
     private Joystick joystickOperator;
     private TeleopDrive teleopDrive;
     private TeleopLift teleopLift;
-    
+
 	/**
 	 * 
 	 */
@@ -30,6 +41,13 @@ public class OI {
         setJoystickDrive(new SwerveJoystick(0));
         setTeleopDrive(new TeleopDrive("Teleop drive", RobotMap.robotDrive, getJoystickDrive(), RobotMap.Control.GYRO));
         setTeleopLift(new TeleopLift("Teleop lift", RobotMap.lift));
+        
+        containerPivotButton = new JoystickButton(getJoystickDrive(), DRIVE_BUTTON_ROTATE_AROUND_CONTAINER);
+        containerPivotButton.whenPressed(new SetSwervePivotPoint("Container Pivot", RobotMap.robotDrive, 
+        		new RectangularCoordinates(0.0, SwerveMap.Constants.CONTAINER_CENTER_DISTANCE_FORWARD + 0.5 * SwerveMap.Constants.WHEEL_BASE_LENGTH)));
+        containerPivotButton.whenReleased(new SetSwervePivotPoint("Container Pivot", RobotMap.robotDrive, 
+        		new RectangularCoordinates(0.0, 0.0)));
+        
 	}
 
 	/**
