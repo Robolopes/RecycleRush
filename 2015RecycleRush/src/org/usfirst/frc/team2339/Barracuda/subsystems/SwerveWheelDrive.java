@@ -84,7 +84,7 @@ public class SwerveWheelDrive implements MotorSafety {
     	public double speed = 0;
     	public double angle = 0;
     	
-    	VelocityPolar(double speed, double angle) {
+    	public VelocityPolar(double speed, double angle) {
     		this.speed = speed;
     		this.angle = angle;
     	}

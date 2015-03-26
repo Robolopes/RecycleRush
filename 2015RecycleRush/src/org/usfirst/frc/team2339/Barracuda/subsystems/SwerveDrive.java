@@ -16,13 +16,14 @@ import edu.wpi.first.wpilibj.PIDController;
 import edu.wpi.first.wpilibj.PIDOutput;
 import edu.wpi.first.wpilibj.PIDSource;
 import edu.wpi.first.wpilibj.SpeedController;
+import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  *
  * 
  */
-public class SwerveDrive {
+public class SwerveDrive extends Subsystem {
 
 	/*
 	 * Wheel are numbered in counter-clockwise order when viewed from top of robot.
@@ -85,21 +86,15 @@ public class SwerveDrive {
 	}
 	
     /**
-     * Drive in swerve mode with a given speed and rotation.
+     * Drive in swerve mode with a given wheel speeds and directions.
      * Driving parameters are assumed to be relative to the current robot angle.
-     * @param robotMotion desired motion of robot express by strafe, frontBack, and rotation around a pivot point.
-     * @param pivot Position of pivot. 
+     * @param rawVelocities desired speed and direction vectors for each wheel.
      */
     public void swerveDriveRobot(
-    		RobotMotion robotMotion, 
-    		RectangularCoordinates pivot) {
+    		VelocityPolar rawVelocities[]) {
     	
-    	setPivot(pivot);
-    	
-    	VelocityPolar rawVelocities[] = new VelocityPolar[wheels.length];
     	double speedMax = 0;
     	for (int iiWheel = 0; iiWheel < wheels.length; iiWheel++) {
-    		rawVelocities[iiWheel] = wheels[iiWheel].calculateWheelVelocity(getPivot(), maxWheelRadius, robotMotion);
     		if (Math.abs(rawVelocities[iiWheel].speed) > speedMax) {
     			speedMax = rawVelocities[iiWheel].speed;
     		}
@@ -115,6 +110,42 @@ public class SwerveDrive {
     	for (int iiWheel = 0; iiWheel < wheels.length; iiWheel++) {
     		wheels[iiWheel].setWheelSanely(rawVelocities[iiWheel]);
     	}
+    }
+
+    /**
+     * Drive in swerve mode with a given speed and direction.
+     * Driving parameters are assumed to be relative to the current robot angle.
+     * @param robotVelocity desired speed and direction vector.
+     */
+    public void swerveDriveRobot(
+    		VelocityPolar robotVelocity) {
+    	
+    	VelocityPolar rawVelocities[] = new VelocityPolar[wheels.length];
+    	for (int iiWheel = 0; iiWheel < wheels.length; iiWheel++) {
+    		rawVelocities[iiWheel] = robotVelocity;
+    	}
+    	
+    	swerveDriveRobot(rawVelocities);
+    }
+
+    /**
+     * Drive in swerve mode with a given speed and rotation.
+     * Driving parameters are assumed to be relative to the current robot angle.
+     * @param robotMotion desired motion of robot express by strafe, frontBack, and rotation around a pivot point.
+     * @param pivot Position of pivot. 
+     */
+    public void swerveDriveRobot(
+    		RobotMotion robotMotion, 
+    		RectangularCoordinates pivot) {
+    	
+    	setPivot(pivot);
+    	
+    	VelocityPolar rawVelocities[] = new VelocityPolar[wheels.length];
+    	for (int iiWheel = 0; iiWheel < wheels.length; iiWheel++) {
+    		rawVelocities[iiWheel] = wheels[iiWheel].calculateWheelVelocity(getPivot(), maxWheelRadius, robotMotion);
+    	}
+    	
+    	swerveDriveRobot(rawVelocities);
     }
 
     /**
