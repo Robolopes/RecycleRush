@@ -36,7 +36,7 @@ public class SwerveWheelDrive implements MotorSafety {
     	public double x;
     	public double y;
     	
-    	RectangularCoordinates(double x, double y) {
+    	public RectangularCoordinates(double x, double y) {
     		this.x = x;
     		this.y = y;
     	}
@@ -68,7 +68,7 @@ public class SwerveWheelDrive implements MotorSafety {
     	public double frontBack;
     	public double rotate;
     	
-    	RobotMotion(double strafe, double frontBack, double rotate) {
+    	public RobotMotion(double strafe, double frontBack, double rotate) {
     		this.strafe = strafe;
     		this.frontBack = frontBack;
     		this.rotate = rotate;
