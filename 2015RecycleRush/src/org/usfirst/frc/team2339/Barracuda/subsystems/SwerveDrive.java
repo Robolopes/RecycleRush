@@ -43,7 +43,7 @@ public class SwerveDrive {
     protected final SwerveWheelDrive wheels[];
     protected RectangularCoordinates pivot = new RectangularCoordinates(0, 0);
 
-	// Distance of wheel furthest from pivot
+	// Distance of wheel farthest from pivot
     protected double maxWheelRadius = 1;
     
     public SwerveDrive(SwerveWheelDrive wheels[]) {

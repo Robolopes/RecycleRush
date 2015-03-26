@@ -165,6 +165,14 @@ public class SwerveWheelDrive implements MotorSafety {
 		this.wheelPosition = wheelPosition;
 	}
 	
+	public double getRadialAngle() {
+		return Math.toDegrees(-Math.atan2(wheelPosition.y, wheelPosition.x));
+	}
+	
+	public double getPerpendicularAngle() {
+		return Math.toDegrees(Math.atan2(wheelPosition.x, wheelPosition.y));
+	}
+	
     /**
      * Calculate wheel velocity vector given wheel position and pivot location. 
      * Robot motion is expressed with strafe, forward-back, and rotational velocities.
