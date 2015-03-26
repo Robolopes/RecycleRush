@@ -2,16 +2,13 @@
 package org.usfirst.frc.team2339.Barracuda;
 
 import org.usfirst.frc.team2339.Barracuda.RobotMap.SwerveMap;
+import org.usfirst.frc.team2339.Barracuda.commands.AutonomousCommand;
+import org.usfirst.frc.team2339.Barracuda.commands.TeleopDrive;
 import org.usfirst.frc.team2339.Barracuda.commands.TeleopLift;
-import org.usfirst.frc.team2339.Barracuda.commands.TimedDrive;
-import org.usfirst.frc.team2339.Barracuda.commands.TimedLift;
 import org.usfirst.frc.team2339.Barracuda.subsystems.Lift;
 import org.usfirst.frc.team2339.Barracuda.subsystems.SwerveDriveRectangle;
-import org.usfirst.frc.team2339.Barracuda.commands.TeleopDrive;
-import org.usfirst.frc.team2339.Barracuda.OI;
 
 import edu.wpi.first.wpilibj.IterativeRobot;
-import edu.wpi.first.wpilibj.command.CommandGroup;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 
@@ -40,7 +37,7 @@ public class Barracuda extends IterativeRobot {
     public static OI oi;
 
     // Commands
-    private CommandGroup autonomousCommand;
+    private AutonomousCommand autonomousCommand;
     private TeleopDrive teleopDrive;
     private TeleopLift teleopLift;
     
@@ -90,7 +87,9 @@ public class Barracuda extends IterativeRobot {
         // constructed yet. Thus, their requires() statements may grab null 
         // pointers. Bad news. Don't move it.
         oi = new OI();
-        
+
+        // Autonomous command
+        autonomousCommand = new AutonomousCommand(robotDrive, lift);
         
        //* visionControl.visionInit();
         System.out.println("End robot init: " + System.currentTimeMillis());
@@ -107,10 +106,6 @@ public class Barracuda extends IterativeRobot {
         robotDrive.resetSteering();
         robotDrive.enableSteering(true);
         
-        autonomousCommand = new CommandGroup("Autonomous Commands");
-        autonomousCommand.addSequential(new TimedDrive("Push RC to wall", robotDrive, 1.0, 0.5, 0.0));
-        autonomousCommand.addSequential(new TimedLift("Pick up RC", lift, 0.5, 0.25));
-        autonomousCommand.addSequential(new TimedDrive("Backup to auto zone", robotDrive, 2.0, 0.5, 180.0));
         autonomousCommand.start();
     }
 	
