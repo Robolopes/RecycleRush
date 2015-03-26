@@ -9,6 +9,8 @@ import org.usfirst.frc.team2339.Barracuda.subsystems.Lift;
 import org.usfirst.frc.team2339.Barracuda.subsystems.SwerveDriveRectangle;
 
 import edu.wpi.first.wpilibj.IterativeRobot;
+import edu.wpi.first.wpilibj.command.Scheduler;
+import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 
@@ -42,35 +44,11 @@ public class Barracuda extends IterativeRobot {
     private TeleopLift teleopLift;
     
       
-   
-    /*
-     * Vision class
-    */
-   //* private final RecycleRushV2ision visionControl = new RecycleRushVision();
-
-    
-    /*
-     * Initialize values for autonomous control
-     */
-    private long startTime = 0;
-    
-    /*
-     * Time variables to help with timed printouts
-     */
-    private long robotStartTime = 0;
-    
-    /**********************
-     * CLASS METHODS
-     * Methods for this class are below here
-    /**********************/
-    
     /**
      * This method is run when the robot is first started up and should be
      * used for any initialization code.
      */
     public void robotInit() {
-        robotStartTime = System.currentTimeMillis();
-        System.out.println("Robot init time: " + robotStartTime);
         
         robotDrive = new SwerveDriveRectangle(SwerveDriveRectangle.createWheels(
         		SwerveMap.Constants.WHEEL_BASE_LENGTH, 
@@ -97,25 +75,46 @@ public class Barracuda extends IterativeRobot {
     
 
     /**
+     * This function is called when the disabled button is hit.
+     * You can use it to reset subsystems before shutting down.
+     */
+    public void disabledInit(){
+
+    }
+
+    public void disabledPeriodic() {
+        Scheduler.getInstance().run();
+    }
+
+    /**
      * This method is called at the beginning of autonomous period
      */
-	public void autonomousPeriodicInit() {
-		startTime = System.currentTimeMillis();
-		System.out.println("Autonomous init time: " + startTime);
+    public void autonomousInit() {
        	RobotMap.Control.GYRO.reset();
         robotDrive.resetSteering();
         robotDrive.enableSteering(true);
         
-        autonomousCommand.start();
+        // schedule the autonomous command (example)
+        if (autonomousCommand != null) autonomousCommand.start();
     }
-	
+
+    /**
+     * This function is called periodically during autonomous
+     */
     public void autonomousPeriodic() {
+        Scheduler.getInstance().run();
     }
-    
+
     /**
      * This method is called at the beginning of operator control
      */
     public void teleopInit() {
+        // This makes sure that the autonomous stops running when
+        // teleop starts running. If you want the autonomous to 
+        // continue until interrupted by another command, remove
+        // this line or comment it out.
+        if (autonomousCommand != null) autonomousCommand.cancel();
+        
     	RobotMap.Control.GYRO.reset();
         robotDrive.resetSteering();
         robotDrive.enableSteering(true);
@@ -130,36 +129,20 @@ public class Barracuda extends IterativeRobot {
     /**
      * This function is called periodically during operator control
      */
-
     public void teleopPeriodic() {
-   
+        Scheduler.getInstance().run();
+        
     	if(RobotMap.Control.OPERATOR_STICK.getRawButton(RobotMap.Control.GYRO_BUTTON_RESET)) {
     		// Reset gyro
     		RobotMap.Control.GYRO.reset();
     	}
-    	
-    	// Test a wheel
-    	/*
-    	robotDrive.setWheelPod(SwerveDrive.frontLeft, 180 * RobotMap.Control.DRIVE_STICK.getRawAxis(SwerveMap.Control.DRIVE_AXIS_ROTATE), 
-    			RobotMap.Control.DRIVE_STICK.getRawAxis(RobotMap.SwerveMap.Control.DRIVE_AXIS_FORWARD_BACK));
-    	robotDrive.setWheelPod(SwerveDrive.frontRight, 180 * RobotMap.Control.DRIVE_STICK.getRawAxis(SwerveMap.Control.DRIVE_AXIS_ROTATE), 
-    			RobotMap.Control.DRIVE_STICK.getRawAxis(RobotMap.SwerveMap.Control.DRIVE_AXIS_FORWARD_BACK));
-    	robotDrive.setWheelPod(SwerveDrive.rearLeft, 180 * RobotMap.Control.DRIVE_STICK.getRawAxis(SwerveMap.Control.DRIVE_AXIS_ROTATE), 
-    			RobotMap.Control.DRIVE_STICK.getRawAxis(RobotMap.SwerveMap.Control.DRIVE_AXIS_FORWARD_BACK));
-    	robotDrive.setWheelPod(SwerveDrive.rearRight, 180 * RobotMap.Control.DRIVE_STICK.getRawAxis(SwerveMap.Control.DRIVE_AXIS_ROTATE), 
-    			RobotMap.Control.DRIVE_STICK.getRawAxis(SwerveMap.Control.DRIVE_AXIS_FORWARD_BACK));
-    			*/
-          
     }
- 
 
-	/**
+    /**
      * This function is called periodically during test mode
      */
     public void testPeriodic() {
-        long time = System.currentTimeMillis();
-        SmartDashboard.putNumber("Test Mode Running Time ", time);
-       // long elapsed = System.currentTimeMillis() - startTime;
+        LiveWindow.run();
     }
     
 }
