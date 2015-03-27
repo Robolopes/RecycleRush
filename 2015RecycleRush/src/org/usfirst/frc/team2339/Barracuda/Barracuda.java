@@ -2,6 +2,7 @@
 package org.usfirst.frc.team2339.Barracuda;
 
 import org.usfirst.frc.team2339.Barracuda.commands.AutonomousCommand;
+import org.usfirst.frc.team2339.Barracuda.subsystems.SwerveWheelDrive.VelocityPolar;
 
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.command.Scheduler;
@@ -47,9 +48,6 @@ public class Barracuda extends IterativeRobot {
 
         // Autonomous command
         autonomousCommand = new AutonomousCommand(RobotMap.robotDrive, RobotMap.lift);
-        
-       //* visionControl.visionInit();
-        System.out.println("End robot init: " + System.currentTimeMillis());
     }
     
 
@@ -58,7 +56,8 @@ public class Barracuda extends IterativeRobot {
      * You can use it to reset subsystems before shutting down.
      */
     public void disabledInit(){
-
+    	// Zero wheels
+       	RobotMap.robotDrive.swerveDriveRobot(new VelocityPolar(0.0, 0.0));
     }
 
     public void disabledPeriodic() {
