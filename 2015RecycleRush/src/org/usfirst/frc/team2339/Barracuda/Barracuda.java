@@ -108,11 +108,6 @@ public class Barracuda extends IterativeRobot {
      */
     public void teleopPeriodic() {
         Scheduler.getInstance().run();
-        
-    	if(RobotMap.Control.OPERATOR_STICK.getRawButton(RobotMap.Control.GYRO_BUTTON_RESET)) {
-    		// Reset gyro
-    		RobotMap.Control.GYRO.reset();
-    	}
     }
 
     /**

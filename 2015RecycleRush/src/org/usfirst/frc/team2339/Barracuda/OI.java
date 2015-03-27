@@ -4,6 +4,7 @@
 package org.usfirst.frc.team2339.Barracuda;
 
 import org.usfirst.frc.team2339.Barracuda.RobotMap.SwerveMap;
+import org.usfirst.frc.team2339.Barracuda.commands.GyroReset;
 import org.usfirst.frc.team2339.Barracuda.commands.SetSwervePivotPoint;
 import org.usfirst.frc.team2339.Barracuda.commands.TeleopDrive;
 import org.usfirst.frc.team2339.Barracuda.commands.TeleopLift;
@@ -25,11 +26,14 @@ public class OI {
 	public static final int DRIVE_BUTTON_SPEED_SHIFT = 1;
 	public static final int DRIVE_BUTTON_ABSOLUTE_GYRO_MODE = 2;
 	private static final int DRIVE_BUTTON_ROTATE_AROUND_CONTAINER = 8;
+	private static final int GYRO_BUTTON_RESET = 1;
     
     private SwerveJoystick joystickDrive;
     private JoystickButton containerPivotButton;
     
     private Joystick joystickOperator;
+    private JoystickButton gyroResetButton;
+    
     private TeleopDrive teleopDrive;
     private TeleopLift teleopLift;
 
@@ -47,6 +51,9 @@ public class OI {
         		new RectangularCoordinates(0.0, SwerveMap.Constants.CONTAINER_CENTER_DISTANCE_FORWARD + 0.5 * SwerveMap.Constants.WHEEL_BASE_LENGTH)));
         containerPivotButton.whenReleased(new SetSwervePivotPoint("Container Pivot", RobotMap.robotDrive, 
         		new RectangularCoordinates(0.0, 0.0)));
+        
+        gyroResetButton = new JoystickButton(getJoystickOperator(), GYRO_BUTTON_RESET);
+        gyroResetButton.whenPressed(new GyroReset(RobotMap.Control.GYRO));
         
 	}
 
