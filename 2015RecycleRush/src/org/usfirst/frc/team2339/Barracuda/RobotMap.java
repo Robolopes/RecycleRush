@@ -91,7 +91,7 @@ public class RobotMap {
     			Constants.STEERING_PID_I, 
     			Constants.STEERING_PID_D, 
     			new SwerveSteeringEncoder(steeringEncoderChannelA, 
-    					steeringEncoderChannelA, 
+    					steeringEncoderChannelB, 
     					Constants.STEERING_ENC_DEGREES_PER_PULSE), 
     			new Talon(steeringMotorControllerPwm));
     }
