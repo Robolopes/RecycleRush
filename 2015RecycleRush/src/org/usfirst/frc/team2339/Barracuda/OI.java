@@ -11,7 +11,6 @@ import org.usfirst.frc.team2339.Barracuda.components.OperatorJoystick;
 import org.usfirst.frc.team2339.Barracuda.components.SwerveJoystick;
 import org.usfirst.frc.team2339.Barracuda.subsystems.SwerveWheelDrive.RectangularCoordinates;
 
-import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
 
 /**
@@ -43,15 +42,15 @@ public class OI {
 	public OI() {
         setJoystickOperator(new OperatorJoystick(1));
         setJoystickDrive(new SwerveJoystick(0));
-        setTeleopDrive(new TeleopDrive("Teleop drive", RobotMap.robotDrive, getJoystickDrive(), RobotMap.Analog.GYRO));
-        setTeleopLift(new TeleopLift("Teleop lift", RobotMap.lift, getJoystickOperator()));
+        setTeleopDrive(new TeleopDrive("Teleop drive", RobotMap.Subsystems.robotDrive, getJoystickDrive(), RobotMap.Analog.GYRO));
+        setTeleopLift(new TeleopLift("Teleop lift", RobotMap.Subsystems.lift, getJoystickOperator()));
         
         containerPivotButton = new JoystickButton(getJoystickDrive(), DRIVE_BUTTON_ROTATE_AROUND_CONTAINER);
-        containerPivotButton.whenPressed(new SetSwervePivotPoint("Container Pivot", RobotMap.robotDrive, 
+        containerPivotButton.whenPressed(new SetSwervePivotPoint("Container Pivot", RobotMap.Subsystems.robotDrive, 
         		new RectangularCoordinates(0.0, 
         				RobotMap.Constants.CONTAINER_CENTER_DISTANCE_FORWARD + 
         				0.5 * RobotMap.Constants.WHEEL_BASE_LENGTH)));
-        containerPivotButton.whenReleased(new SetSwervePivotPoint("Container Pivot", RobotMap.robotDrive, 
+        containerPivotButton.whenReleased(new SetSwervePivotPoint("Container Pivot", RobotMap.Subsystems.robotDrive, 
         		new RectangularCoordinates(0.0, 0.0)));
         
         gyroResetButton = new JoystickButton(getJoystickOperator(), GYRO_BUTTON_RESET);

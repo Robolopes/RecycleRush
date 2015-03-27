@@ -47,7 +47,8 @@ public class Barracuda extends IterativeRobot {
         oi = new OI();
 
         // Autonomous command
-        autonomousCommand = new AutonomousCommand(RobotMap.robotDrive, RobotMap.lift);
+        autonomousCommand = new AutonomousCommand(RobotMap.Subsystems.robotDrive, RobotMap.Subsystems.lift);
+        
     }
     
 
@@ -57,7 +58,7 @@ public class Barracuda extends IterativeRobot {
      */
     public void disabledInit(){
     	// Zero wheels
-       	RobotMap.robotDrive.swerveDriveRobot(new VelocityPolar(0.0, 0.0));
+       	RobotMap.Subsystems.robotDrive.swerveDriveRobot(new VelocityPolar(0.0, 0.0));
     }
 
     public void disabledPeriodic() {
@@ -69,8 +70,8 @@ public class Barracuda extends IterativeRobot {
      */
     public void autonomousInit() {
        	RobotMap.Analog.GYRO.reset();
-       	RobotMap.robotDrive.resetSteering();
-       	RobotMap.robotDrive.enableSteering(true);
+       	RobotMap.Subsystems.robotDrive.resetSteering();
+       	RobotMap.Subsystems.robotDrive.enableSteering(true);
         
         // schedule the autonomous command (example)
         if (autonomousCommand != null) autonomousCommand.start();
@@ -94,8 +95,8 @@ public class Barracuda extends IterativeRobot {
         if (autonomousCommand != null) autonomousCommand.cancel();
         
     	RobotMap.Analog.GYRO.reset();
-    	RobotMap.robotDrive.resetSteering();
-    	RobotMap.robotDrive.enableSteering(true);
+    	RobotMap.Subsystems.robotDrive.resetSteering();
+    	RobotMap.Subsystems.robotDrive.enableSteering(true);
         oi.getTeleopDrive().start();
         oi.getTeleopLift().start();
     }

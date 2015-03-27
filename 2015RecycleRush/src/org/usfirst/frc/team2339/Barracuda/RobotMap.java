@@ -10,10 +10,6 @@ import edu.wpi.first.wpilibj.Talon;
 
 public class RobotMap {
 	
-	// Subsystems
-    public static SwerveDriveRectangle robotDrive; 
-    public static Lift lift;
-    
 	public static class Constants {
 		
 		public static final int NUMBER_OF_WHEELS = 4;
@@ -72,6 +68,11 @@ public class RobotMap {
 		public static final int STEERING_ENCODER_B[] = {3, 1, 5, 7};
 	};
 	
+	public static class Subsystems {
+	    public static SwerveDriveRectangle robotDrive; 
+	    public static Lift lift;
+	};
+    
     /**
 	 * Create a swerve steering controller
 	 * 
@@ -123,17 +124,17 @@ public class RobotMap {
     	/*
     	 * Initialize robot drive subsystem
     	 */
-        robotDrive = new SwerveDriveRectangle(SwerveDriveRectangle.createWheels(
+        Subsystems.robotDrive = new SwerveDriveRectangle(SwerveDriveRectangle.createWheels(
         		Constants.WHEEL_BASE_LENGTH, 
         		Constants.WHEEL_BASE_WIDTH, 
         		driveControllers, 
         		steeringPidControllers));
-        robotDrive.resetSteering();
+        Subsystems.robotDrive.resetSteering();
 
         /*
          * Initialize lift subsystem
          */
-        lift = new Lift(RobotMap.PWM.LIFT_WINCH);
+        Subsystems.lift = new Lift(RobotMap.PWM.LIFT_WINCH);
         
     }
 
