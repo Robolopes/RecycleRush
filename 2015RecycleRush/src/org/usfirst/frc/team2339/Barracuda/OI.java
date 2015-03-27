@@ -3,11 +3,11 @@
  */
 package org.usfirst.frc.team2339.Barracuda;
 
-import org.usfirst.frc.team2339.Barracuda.RobotMap.SwerveMap;
 import org.usfirst.frc.team2339.Barracuda.commands.GyroReset;
 import org.usfirst.frc.team2339.Barracuda.commands.SetSwervePivotPoint;
 import org.usfirst.frc.team2339.Barracuda.commands.TeleopDrive;
 import org.usfirst.frc.team2339.Barracuda.commands.TeleopLift;
+import org.usfirst.frc.team2339.Barracuda.components.OperatorJoystick;
 import org.usfirst.frc.team2339.Barracuda.components.SwerveJoystick;
 import org.usfirst.frc.team2339.Barracuda.subsystems.SwerveWheelDrive.RectangularCoordinates;
 
@@ -31,7 +31,7 @@ public class OI {
     private SwerveJoystick joystickDrive;
     private JoystickButton containerPivotButton;
     
-    private Joystick joystickOperator;
+    private OperatorJoystick joystickOperator;
     private JoystickButton gyroResetButton;
     
     private TeleopDrive teleopDrive;
@@ -41,19 +41,21 @@ public class OI {
 	 * 
 	 */
 	public OI() {
-        setJoystickOperator(new Joystick(1));
+        setJoystickOperator(new OperatorJoystick(1));
         setJoystickDrive(new SwerveJoystick(0));
-        setTeleopDrive(new TeleopDrive("Teleop drive", RobotMap.robotDrive, getJoystickDrive(), RobotMap.Control.GYRO));
-        setTeleopLift(new TeleopLift("Teleop lift", RobotMap.lift));
+        setTeleopDrive(new TeleopDrive("Teleop drive", RobotMap.robotDrive, getJoystickDrive(), RobotMap.Analog.GYRO));
+        setTeleopLift(new TeleopLift("Teleop lift", RobotMap.lift, getJoystickOperator()));
         
         containerPivotButton = new JoystickButton(getJoystickDrive(), DRIVE_BUTTON_ROTATE_AROUND_CONTAINER);
         containerPivotButton.whenPressed(new SetSwervePivotPoint("Container Pivot", RobotMap.robotDrive, 
-        		new RectangularCoordinates(0.0, SwerveMap.Constants.CONTAINER_CENTER_DISTANCE_FORWARD + 0.5 * SwerveMap.Constants.WHEEL_BASE_LENGTH)));
+        		new RectangularCoordinates(0.0, 
+        				RobotMap.Constants.CONTAINER_CENTER_DISTANCE_FORWARD + 
+        				0.5 * RobotMap.Constants.WHEEL_BASE_LENGTH)));
         containerPivotButton.whenReleased(new SetSwervePivotPoint("Container Pivot", RobotMap.robotDrive, 
         		new RectangularCoordinates(0.0, 0.0)));
         
         gyroResetButton = new JoystickButton(getJoystickOperator(), GYRO_BUTTON_RESET);
-        gyroResetButton.whenPressed(new GyroReset(RobotMap.Control.GYRO));
+        gyroResetButton.whenPressed(new GyroReset(RobotMap.Analog.GYRO));
         
 	}
 
@@ -74,14 +76,14 @@ public class OI {
 	/**
 	 * @return the joystickOperator
 	 */
-	public Joystick getJoystickOperator() {
+	public OperatorJoystick getJoystickOperator() {
 		return joystickOperator;
 	}
 
 	/**
 	 * @param joystickOperator the joystickOperator to set
 	 */
-	protected void setJoystickOperator(Joystick joystickOperator) {
+	protected void setJoystickOperator(OperatorJoystick joystickOperator) {
 		this.joystickOperator = joystickOperator;
 	}
 

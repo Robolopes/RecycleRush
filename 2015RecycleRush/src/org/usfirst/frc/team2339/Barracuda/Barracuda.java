@@ -68,7 +68,7 @@ public class Barracuda extends IterativeRobot {
      * This method is called at the beginning of autonomous period
      */
     public void autonomousInit() {
-       	RobotMap.Control.GYRO.reset();
+       	RobotMap.Analog.GYRO.reset();
        	RobotMap.robotDrive.resetSteering();
        	RobotMap.robotDrive.enableSteering(true);
         
@@ -93,7 +93,7 @@ public class Barracuda extends IterativeRobot {
         // this line or comment it out.
         if (autonomousCommand != null) autonomousCommand.cancel();
         
-    	RobotMap.Control.GYRO.reset();
+    	RobotMap.Analog.GYRO.reset();
     	RobotMap.robotDrive.resetSteering();
     	RobotMap.robotDrive.enableSteering(true);
         oi.getTeleopDrive().start();

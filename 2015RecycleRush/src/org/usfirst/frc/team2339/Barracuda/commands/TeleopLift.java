@@ -1,6 +1,6 @@
 package org.usfirst.frc.team2339.Barracuda.commands;
 
-import org.usfirst.frc.team2339.Barracuda.RobotMap;
+import org.usfirst.frc.team2339.Barracuda.components.OperatorJoystick;
 import org.usfirst.frc.team2339.Barracuda.subsystems.Lift;
 
 import edu.wpi.first.wpilibj.command.Command;
@@ -11,16 +11,18 @@ public class TeleopLift extends Command {
 	 */
 	
 	private final Lift lift;
+	private final OperatorJoystick liftStick;
 
 	/**
 	 * 
 	 * @param name Name of command
 	 * @param lift lift subsystem
 	 */
-	public TeleopLift(String name, Lift lift) {
+	public TeleopLift(String name, Lift lift, OperatorJoystick liftStick) {
 		super(name);
         requires(lift);
         this.lift = lift;
+        this.liftStick = liftStick;
 	}
 
 	@Override
@@ -29,7 +31,7 @@ public class TeleopLift extends Command {
 
 	@Override
 	protected void execute() {
-    	lift.setLiftMotor(RobotMap.WinchMap.WINCH_STICK.getRawAxis(RobotMap.WinchMap.WINCH_AXIS));
+    	lift.setLiftMotor(liftStick.getLift());
 	}
 
 	@Override
