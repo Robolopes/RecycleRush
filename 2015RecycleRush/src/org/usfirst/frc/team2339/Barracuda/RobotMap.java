@@ -50,8 +50,8 @@ public class RobotMap {
 		 * Values are counter-clockwise viewed from top of robot. First value is front right.
 		 * Thus order is front right, front left, rear left, rear right 
 		 */
-		public static final int DRIVE_CONTROLLER[] = {1, 0, 2, 3};
-		public static final int STEERING_CONTROLLER[] = {5, 4, 6, 7};
+		public static final int DRIVE_CONTROLLERS[] = {1, 0, 2, 3};
+		public static final int STEERING_CONTROLLERS[] = {5, 4, 6, 7};
 		public static final int LIFT_WINCH = 8;
 	};
 	
@@ -64,11 +64,11 @@ public class RobotMap {
 		 * 
 		 * Order is same as wheel order (see above): front right, front left, rear left, rear right
 		 */
-		public static final int STEERING_ENCODER_A[] = {2, 0, 4, 6};
-		public static final int STEERING_ENCODER_B[] = {3, 1, 5, 7};
+		public static final int STEERING_ENCODERS_A[] = {2, 0, 4, 6};
+		public static final int STEERING_ENCODERS_B[] = {3, 1, 5, 7};
 	};
 	
-	public static class Subsystems {
+	public static class Subsystem {
 	    public static SwerveDriveRectangle robotDrive; 
 	    public static Lift lift;
 	};
@@ -108,9 +108,9 @@ public class RobotMap {
 				new SwerveSteeringPidController[Constants.NUMBER_OF_WHEELS];
     	for (int iiWheel = 0; iiWheel < Constants.NUMBER_OF_WHEELS; iiWheel++) {
     		steeringPidControllers[iiWheel] = newSwerveSteeringController(
-        			DIO.STEERING_ENCODER_A[iiWheel],
-        			DIO.STEERING_ENCODER_B[iiWheel],
-        			PWM.STEERING_CONTROLLER[iiWheel]);
+        			DIO.STEERING_ENCODERS_A[iiWheel],
+        			DIO.STEERING_ENCODERS_B[iiWheel],
+        			PWM.STEERING_CONTROLLERS[iiWheel]);
     	}
     	
     	/*
@@ -118,23 +118,23 @@ public class RobotMap {
     	 */
 		Talon driveControllers[] = new Talon[Constants.NUMBER_OF_WHEELS];
     	for (int iiWheel = 0; iiWheel < Constants.NUMBER_OF_WHEELS; iiWheel++) {
-    		driveControllers[iiWheel] = new Talon(PWM.DRIVE_CONTROLLER[iiWheel]);
+    		driveControllers[iiWheel] = new Talon(PWM.DRIVE_CONTROLLERS[iiWheel]);
     	}
     	
     	/*
     	 * Initialize robot drive subsystem
     	 */
-        Subsystems.robotDrive = new SwerveDriveRectangle(SwerveDriveRectangle.createWheels(
+        Subsystem.robotDrive = new SwerveDriveRectangle(SwerveDriveRectangle.createWheels(
         		Constants.WHEEL_BASE_LENGTH, 
         		Constants.WHEEL_BASE_WIDTH, 
         		driveControllers, 
         		steeringPidControllers));
-        Subsystems.robotDrive.resetSteering();
+        Subsystem.robotDrive.resetSteering();
 
         /*
          * Initialize lift subsystem
          */
-        Subsystems.lift = new Lift(RobotMap.PWM.LIFT_WINCH);
+        Subsystem.lift = new Lift(RobotMap.PWM.LIFT_WINCH);
         
     }
 

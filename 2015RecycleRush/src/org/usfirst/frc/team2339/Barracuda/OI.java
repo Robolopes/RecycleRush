@@ -42,15 +42,15 @@ public class OI {
 	public OI() {
         setJoystickOperator(new OperatorJoystick(1));
         setJoystickDrive(new SwerveJoystick(0));
-        setTeleopDrive(new TeleopDrive("Teleop drive", RobotMap.Subsystems.robotDrive, getJoystickDrive(), RobotMap.Analog.GYRO));
-        setTeleopLift(new TeleopLift("Teleop lift", RobotMap.Subsystems.lift, getJoystickOperator()));
+        setTeleopDrive(new TeleopDrive("Teleop drive", RobotMap.Subsystem.robotDrive, getJoystickDrive(), RobotMap.Analog.GYRO));
+        setTeleopLift(new TeleopLift("Teleop lift", RobotMap.Subsystem.lift, getJoystickOperator()));
         
         containerPivotButton = new JoystickButton(getJoystickDrive(), DRIVE_BUTTON_ROTATE_AROUND_CONTAINER);
-        containerPivotButton.whenPressed(new SetSwervePivotPoint("Container Pivot", RobotMap.Subsystems.robotDrive, 
+        containerPivotButton.whenPressed(new SetSwervePivotPoint("Container Pivot", RobotMap.Subsystem.robotDrive, 
         		new RectangularCoordinates(0.0, 
         				RobotMap.Constants.CONTAINER_CENTER_DISTANCE_FORWARD + 
         				0.5 * RobotMap.Constants.WHEEL_BASE_LENGTH)));
-        containerPivotButton.whenReleased(new SetSwervePivotPoint("Container Pivot", RobotMap.Subsystems.robotDrive, 
+        containerPivotButton.whenReleased(new SetSwervePivotPoint("Container Pivot", RobotMap.Subsystem.robotDrive, 
         		new RectangularCoordinates(0.0, 0.0)));
         
         gyroResetButton = new JoystickButton(getJoystickOperator(), GYRO_BUTTON_RESET);
