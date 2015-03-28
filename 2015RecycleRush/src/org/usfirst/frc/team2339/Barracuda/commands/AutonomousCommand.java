@@ -32,6 +32,6 @@ public class AutonomousCommand extends CommandGroup {
     	
         addSequential(new TimedDrive("Push RC to wall", robotDrive, 1.0, 0.5, 0.0));
         addSequential(new TimedLift("Pick up RC", lift, 0.5, 0.25));
-        addSequential(new TimedDrive("Backup to auto zone", robotDrive, 2.0, 0.5, 180.0));
+        addSequential(new TimedDrive("Backup to auto zone", robotDrive, 2.0, -0.5, 0.0));
     }
 }
