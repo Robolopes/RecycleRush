@@ -108,6 +108,7 @@ public class SwerveDrive extends Subsystem {
     /**
      * Drive in swerve mode with a given speed and direction.
      * Driving parameters are assumed to be relative to the current robot angle.
+     * Angles are counter-clockwise from top of robot, with zero deg forward.
      * @param robotVelocity desired speed and direction vector.
      */
     public void swerveDriveRobot(
@@ -115,8 +116,7 @@ public class SwerveDrive extends Subsystem {
     	
     	VelocityPolar rawVelocities[] = new VelocityPolar[wheels.length];
     	for (int iiWheel = 0; iiWheel < wheels.length; iiWheel++) {
-    		rawVelocities[iiWheel] = new VelocityPolar(robotVelocity.speed, 
-    				normalizeAngle(robotVelocity.angle - 90));
+    		rawVelocities[iiWheel] = robotVelocity;
     	}
     	
     	swerveDriveRobot(rawVelocities);
