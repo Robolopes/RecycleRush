@@ -166,11 +166,11 @@ public class SwerveWheelDrive implements MotorSafety {
 	}
 	
 	public double getRadialAngle() {
-		return Math.toDegrees(-Math.atan2(wheelPosition.y, wheelPosition.x));
+		return Math.toDegrees(Math.atan2(wheelPosition.x, wheelPosition.y));
 	}
 	
 	public double getPerpendicularAngle() {
-		return Math.toDegrees(Math.atan2(wheelPosition.x, wheelPosition.y));
+		return Math.toDegrees(Math.atan2(-wheelPosition.y, wheelPosition.x));
 	}
 	
     /**
@@ -196,16 +196,14 @@ public class SwerveWheelDrive implements MotorSafety {
     	RectangularCoordinates wheelVectorRobotCoord = new RectangularCoordinates(
     			robotMotion.strafe + robotMotion.rotate * wheelRelativePosition.y,  
     			robotMotion.frontBack - robotMotion.rotate * wheelRelativePosition.x);
-        /*
-         * Note: Robot x-axis is to right, wheel x-axis is forward.
-         *       Both systems have positive angle counter-clockwise with x-axis = 0.
-         *       Thus wheel x-axis == robot y-axis and wheel y-axix = - robot x-axis
-         */
-    	RectangularCoordinates wheel = new RectangularCoordinates(wheelVectorRobotCoord.y, -wheelVectorRobotCoord.x);
 
-        return new VelocityPolar(
-        		Math.hypot(wheel.x, wheel.y), 
-        		Math.toDegrees(Math.atan2(wheel.x, wheel.y)));
+    	double wheelSpeed = Math.hypot(wheelVectorRobotCoord.x, wheelVectorRobotCoord.y); 
+    	// Clockwise
+    	double wheelAngle = Math.toDegrees(Math.atan2(wheelVectorRobotCoord.x, wheelVectorRobotCoord.y));
+    	// Counter clockwise
+    	// double wheelAngle = Math.toDegrees(Math.atan2(-wheelVectorRobotCoord.x, wheelVectorRobotCoord.y));
+    	
+        return new VelocityPolar(wheelSpeed, wheelAngle);
     }
     
     /**
