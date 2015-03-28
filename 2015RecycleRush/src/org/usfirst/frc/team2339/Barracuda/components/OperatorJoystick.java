@@ -3,8 +3,6 @@
  */
 package org.usfirst.frc.team2339.Barracuda.components;
 
-import org.usfirst.frc.team2339.Barracuda.OI;
-
 import edu.wpi.first.wpilibj.Joystick;
 
 /**
