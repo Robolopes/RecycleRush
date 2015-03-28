@@ -3,14 +3,14 @@ package org.usfirst.frc.team2339.Barracuda.swervemath;
 import edu.wpi.first.wpilibj.RobotDrive.MotorType;
 
 public class WorkingPalmdale {
-	public static final int kMaxNumberOfMotors = 4;
+	public static int kMaxNumberOfMotors = 4;
 	
 	// These should be set to actual robot dimensions. 
 	// The units do not matter as long as they are consistent. Numbers below are in inches.
-	public static final double WHEEL_BASE_LENGTH = 28.5;
-	public static final double WHEEL_BASE_WIDTH = 25.0;
+	public static double WHEEL_BASE_LENGTH = 28.5;
+	public static double WHEEL_BASE_WIDTH = 25.0;
 	// Distance of center of container in front of front wheels. (Negative if behind front wheel line.)
-	public static final double CONTAINER_CENTER_DISTANCE_FORWARD = 2.0;
+	public static double CONTAINER_CENTER_DISTANCE_FORWARD = 2.0;
 
 	public static final int frontLeft = MotorType.kFrontLeft.value;
     public static final int frontRight = MotorType.kFrontRight.value;
@@ -32,7 +32,7 @@ public class WorkingPalmdale {
     	}
     }
     
-    public class WheelData {
+    public static class WheelData {
     	public double wheelSpeeds[] = new double[kMaxNumberOfMotors];
     	public double wheelAngles[] = new double[kMaxNumberOfMotors];
     	
@@ -69,7 +69,7 @@ public class WorkingPalmdale {
      * @param rotateVelocity clockwise rotational velocity. -1.0 = max motor speed counter-clockwise. 1.0 = max motor speed clockwise.
      * @return wheel vector (speed and angle)
      */
-    public WheelVelocityVector calculateWheelVelocityVector(double xWheelPosition, double yWheelPosition, double maxWheelRadius, 
+    public static WheelVelocityVector calculateWheelVelocityVector(double xWheelPosition, double yWheelPosition, double maxWheelRadius, 
     		double xVelocity, double yVelocity, double rotateVelocity) {
         double xWheel = xVelocity - rotateVelocity * yWheelPosition / maxWheelRadius; 
         double yWheel = yVelocity - rotateVelocity * xWheelPosition / maxWheelRadius;
@@ -92,7 +92,7 @@ public class WorkingPalmdale {
      * @param yPivotOffset Amount pivot is offset forward from center. (Positive toward front, negative toward back)
      * @return raw wheel speeds and angles
      */
-    public WheelData calculateRawWheelDataGeneral(double xVelocity, double yVelocity, double rotateVelocity, 
+    public static WheelData calculateRawWheelDataGeneral(double xVelocity, double yVelocity, double rotateVelocity, 
     		double xPivotOffset, double yPivotOffset) {
     	
     	WheelData rawWheelData = new WheelData();
@@ -112,19 +112,19 @@ public class WorkingPalmdale {
 
         WheelVelocityVector wheelVelocity = new WheelVelocityVector();
         
-        wheelVelocity = this.calculateWheelVelocityVector(rightDist, frontDist, rMax, xVelocity, yVelocity, rotateVelocity);
+        wheelVelocity = calculateWheelVelocityVector(rightDist, frontDist, rMax, xVelocity, yVelocity, rotateVelocity);
         rawWheelData.wheelSpeeds[frontRight] = wheelVelocity.wheelSpeed;
         rawWheelData.wheelAngles[frontRight] = wheelVelocity.wheelAngle;
         
-        wheelVelocity = this.calculateWheelVelocityVector(-leftDist, frontDist, rMax, xVelocity, yVelocity, rotateVelocity);
+        wheelVelocity = calculateWheelVelocityVector(-leftDist, frontDist, rMax, xVelocity, yVelocity, rotateVelocity);
         rawWheelData.wheelSpeeds[frontLeft] = wheelVelocity.wheelSpeed;
         rawWheelData.wheelAngles[frontLeft] = wheelVelocity.wheelAngle;
         
-        wheelVelocity = this.calculateWheelVelocityVector(-leftDist, -rearDist, rMax, xVelocity, yVelocity, rotateVelocity);
+        wheelVelocity = calculateWheelVelocityVector(-leftDist, -rearDist, rMax, xVelocity, yVelocity, rotateVelocity);
         rawWheelData.wheelSpeeds[rearLeft] = wheelVelocity.wheelSpeed;
         rawWheelData.wheelAngles[rearLeft] = wheelVelocity.wheelAngle;
         
-        wheelVelocity = this.calculateWheelVelocityVector(rightDist, -rearDist, rMax, xVelocity, yVelocity, rotateVelocity);
+        wheelVelocity = calculateWheelVelocityVector(rightDist, -rearDist, rMax, xVelocity, yVelocity, rotateVelocity);
         rawWheelData.wheelSpeeds[rearRight] = wheelVelocity.wheelSpeed;
         rawWheelData.wheelAngles[rearRight] = wheelVelocity.wheelAngle;
 
@@ -161,7 +161,7 @@ public class WorkingPalmdale {
      * @param rotateVelocity clockwise rotational velocity. -1.0 = max motor speed counter-clockwise. 1.0 = max motor speed clockwise.
      * @return raw wheel speeds and angles
      */
-    public WheelData calculateRawWheelData(double xVelocity, double yVelocity, double rotateVelocity) {
+    public static WheelData calculateRawWheelData(double xVelocity, double yVelocity, double rotateVelocity) {
     	
     	WheelData rawWheelData = new WheelData();
     	
