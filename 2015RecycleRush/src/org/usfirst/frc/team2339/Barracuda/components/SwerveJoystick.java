@@ -38,7 +38,7 @@ public class SwerveJoystick extends Joystick {
 	}
 
 	public double getRotate() {
-		return getRawAxis(3);
+		return -getRawAxis(3);
 	}
 
 	public boolean isInDeadband() {
