@@ -71,7 +71,7 @@ public class WorkingPalmdale {
      */
     public static WheelVelocityVector calculateWheelVelocityVector(double xWheelPosition, double yWheelPosition, double maxWheelRadius, 
     		double xVelocity, double yVelocity, double rotateVelocity) {
-        double xWheel = xVelocity - rotateVelocity * yWheelPosition / maxWheelRadius; 
+        double xWheel = xVelocity + rotateVelocity * yWheelPosition / maxWheelRadius; 
         double yWheel = yVelocity - rotateVelocity * xWheelPosition / maxWheelRadius;
         WheelVelocityVector wheelVelocity = new WheelVelocityVector();
         wheelVelocity.wheelSpeed = Math.hypot(xWheel, yWheel);
