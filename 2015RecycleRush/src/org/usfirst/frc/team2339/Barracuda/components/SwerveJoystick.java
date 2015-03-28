@@ -30,11 +30,11 @@ public class SwerveJoystick extends Joystick {
 	}
 	
 	public double getStrafe() {
-		return getX();
+		return getRawAxis(1);
 	}
 
 	public double getFrontBack() {
-		return -getY();
+		return -getRawAxis(0);
 	}
 
 	public double getRotate() {

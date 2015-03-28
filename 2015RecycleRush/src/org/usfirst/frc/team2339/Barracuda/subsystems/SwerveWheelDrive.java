@@ -193,18 +193,19 @@ public class SwerveWheelDrive implements MotorSafety {
     		RobotMotion robotMotion) {
     	
     	RectangularCoordinates wheelRelativePosition = wheelPosition.subtract(pivot).divide(maxWheelRadius);
-    	RectangularCoordinates wheel = new RectangularCoordinates(
+    	RectangularCoordinates wheelVectorRobotCoord = new RectangularCoordinates(
     			robotMotion.strafe + robotMotion.rotate * wheelRelativePosition.y,  
     			robotMotion.frontBack - robotMotion.rotate * wheelRelativePosition.x);
-        
         /*
-         * Note for angle: atan2(xWheel, yWheel) gives angle in robot coordinates
-         * However, wheel has positive counter-clockwise angle and zero is on Y axis.
-         * atan2(-yWheel, xWheel) converts to wheel angle system.
+         * Note: Robot x-axis is to right, wheel x-axis is forward.
+         *       Both systems have positive angle counter-clockwise with x-axis = 0.
+         *       Thus wheel x-axis == robot y-axis and wheel y-axix = - robot x-axis
          */
+    	RectangularCoordinates wheel = new RectangularCoordinates(wheelVectorRobotCoord.y, -wheelVectorRobotCoord.x);
+
         return new VelocityPolar(
         		Math.hypot(wheel.x, wheel.y), 
-        		Math.toDegrees(Math.atan2(-wheel.y, wheel.x)));
+        		Math.toDegrees(Math.atan2(wheel.x, wheel.y)));
     }
     
     /**
@@ -325,7 +326,8 @@ public class SwerveWheelDrive implements MotorSafety {
      * @param velocity desired wheel velocity 
      */
     public void setWheelSanely(VelocityPolar velocity) {
-    	setWheel(calculateDeltaWheelData(velocity));
+    	//setWheel(calculateDeltaWheelData(velocity));
+    	setWheel(velocity);
     }
     
     public void resetSteering() {

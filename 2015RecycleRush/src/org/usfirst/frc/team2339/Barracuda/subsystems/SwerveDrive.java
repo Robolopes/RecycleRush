@@ -115,7 +115,8 @@ public class SwerveDrive extends Subsystem {
     	
     	VelocityPolar rawVelocities[] = new VelocityPolar[wheels.length];
     	for (int iiWheel = 0; iiWheel < wheels.length; iiWheel++) {
-    		rawVelocities[iiWheel] = robotVelocity;
+    		rawVelocities[iiWheel] = new VelocityPolar(robotVelocity.speed, 
+    				normalizeAngle(robotVelocity.angle - 90));
     	}
     	
     	swerveDriveRobot(rawVelocities);
