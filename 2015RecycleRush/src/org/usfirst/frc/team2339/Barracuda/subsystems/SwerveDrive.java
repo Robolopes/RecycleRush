@@ -78,6 +78,12 @@ public class SwerveDrive extends Subsystem {
     	}
 	}
 	
+	public void stopRobot() {
+    	for (int iiWheel = 0; iiWheel < wheels.length; iiWheel++) {
+    		wheels[iiWheel].setWheelSpeed(0.0);
+    	}
+	}
+	
     /**
      * Drive in swerve mode with a given wheel speeds and directions.
      * Driving parameters are assumed to be relative to the current robot angle.
