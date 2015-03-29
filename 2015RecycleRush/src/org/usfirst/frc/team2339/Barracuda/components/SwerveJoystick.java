@@ -30,7 +30,7 @@ public class SwerveJoystick extends Joystick {
 	}
 	
 	public double getStrafe() {
-		return -getRawAxis(0);
+		return getRawAxis(0);
 	}
 
 	public double getFrontBack() {
