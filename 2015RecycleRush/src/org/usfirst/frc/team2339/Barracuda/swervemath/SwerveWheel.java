@@ -308,7 +308,8 @@ public class SwerveWheel {
 		AngleFlip turnAngle = computeTurnAngle(currentVelocity.angle, rawVelocity.angle);
 		double targetAngle = normalizeAngle(currentVelocity.angle + turnAngle.getAngle()); 
         deltaVelocity.angle = targetAngle;
-        deltaVelocity.speed = driveScale(turnAngle) * rawVelocity.speed;
+        //deltaVelocity.speed = driveScale(turnAngle) * rawVelocity.speed;
+        deltaVelocity.speed = rawVelocity.speed;
     	return deltaVelocity;
     }
     
