@@ -264,7 +264,7 @@ public class SwerveWheel {
      */
     public static double driveScale(AngleFlip turnAngle) {
     	double scale = 0;
-    	if (Math.abs(turnAngle.getAngle()) < 45) {
+    	if (Math.abs(turnAngle.getAngle()) <= 90) {
     		/*
     		 * Eric comment: I don't like the discontinuous nature of this scaling.
     		 * Possible improvements:
