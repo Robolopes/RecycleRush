@@ -194,8 +194,8 @@ public class SwerveWheelDrive implements MotorSafety {
     	
     	RectangularCoordinates wheelRelativePosition = wheelPosition.subtract(pivot).divide(maxWheelRadius);
     	RectangularCoordinates wheelVectorRobotCoord = new RectangularCoordinates(
-    			robotMotion.strafe - robotMotion.rotate * wheelRelativePosition.y,  
-    			robotMotion.frontBack + robotMotion.rotate * wheelRelativePosition.x);
+    			robotMotion.strafe + robotMotion.rotate * wheelRelativePosition.y,  
+    			robotMotion.frontBack - robotMotion.rotate * wheelRelativePosition.x);
 
     	double wheelSpeed = Math.hypot(wheelVectorRobotCoord.x, wheelVectorRobotCoord.y); 
     	// Clockwise
