@@ -11,6 +11,7 @@ import org.usfirst.frc.team2339.Barracuda.swervemath.SwerveWheel.RobotMotion;
 import org.usfirst.frc.team2339.Barracuda.swervemath.SwerveWheel.VelocityPolar;
 
 import edu.wpi.first.wpilibj.command.Subsystem;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  *
@@ -107,8 +108,18 @@ public class SwerveDrive extends Subsystem {
     	}
     	
     	for (int iiWheel = 0; iiWheel < wheels.length; iiWheel++) {
+    		SmartDashboard.putNumber("Wheel " + iiWheel + " raw ", rawVelocities[iiWheel].angle);
+    	}
+    	
+    	
+    	for (int iiWheel = 0; iiWheel < wheels.length; iiWheel++) {
     		wheels[iiWheel].setWheelSanely(rawVelocities[iiWheel]);
     	}
+    	
+    	for (int iiWheel = 0; iiWheel < wheels.length; iiWheel++) {
+    		SmartDashboard.putNumber("Wheel " + iiWheel + " pid get ", wheels[iiWheel].getSteeringAngle());
+    	}
+    	
     }
 
     /**

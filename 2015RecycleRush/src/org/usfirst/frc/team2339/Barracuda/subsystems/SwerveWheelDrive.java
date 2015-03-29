@@ -141,6 +141,10 @@ public class SwerveWheelDrive implements MotorSafety {
         steeringController.setSetpoint(angle);
     }
     
+    public double getSteeringAngle() {
+        return steeringController.get();
+    }
+    
     public void setWheel(VelocityPolar velocity) {
         setWheelSpeed(velocity.speed);
         setSteeringAngle(velocity.angle);
