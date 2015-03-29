@@ -86,4 +86,28 @@ public class MathTests {
 		}
 
 	}
+	
+	@Test
+	public void testDelta() {
+		VelocityPolar deltaVel = SwerveWheel.calculateDeltaWheelData(
+				new VelocityPolar(0, 0), 
+				new VelocityPolar(1, 180));
+		assertEquals(-1.0, deltaVel.speed, 0.1);
+		assertEquals(0, deltaVel.angle, 0.1);
+		deltaVel = SwerveWheel.calculateDeltaWheelData(
+				new VelocityPolar(0, 90), 
+				new VelocityPolar(1, -90));
+		assertEquals(-1.0, deltaVel.speed, 0.1);
+		assertEquals(90, deltaVel.angle, 0.1);
+		deltaVel = SwerveWheel.calculateDeltaWheelData(
+				new VelocityPolar(0, 0), 
+				new VelocityPolar(1, 45));
+		assertEquals(1.0, deltaVel.speed, 0.1);
+		assertEquals(45, deltaVel.angle, 0.1);
+		deltaVel = SwerveWheel.calculateDeltaWheelData(
+				new VelocityPolar(0, 0), 
+				new VelocityPolar(1, 135));
+		assertEquals(-1.0, deltaVel.speed, 0.1);
+		assertEquals(-45, deltaVel.angle, 0.1);
+	}
 }
