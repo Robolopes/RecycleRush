@@ -2,7 +2,7 @@
 package org.usfirst.frc.team2339.Barracuda;
 
 import org.usfirst.frc.team2339.Barracuda.commands.AutonomousCommand;
-import org.usfirst.frc.team2339.Barracuda.subsystems.SwerveWheelDrive.VelocityPolar;
+import org.usfirst.frc.team2339.Barracuda.swervemath.SwerveWheel.VelocityPolar;
 
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.command.Scheduler;

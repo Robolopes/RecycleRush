@@ -1,7 +1,7 @@
 package org.usfirst.frc.team2339.Barracuda.commands;
 
 import org.usfirst.frc.team2339.Barracuda.subsystems.SwerveDrive;
-import org.usfirst.frc.team2339.Barracuda.subsystems.SwerveWheelDrive.RectangularCoordinates;
+import org.usfirst.frc.team2339.Barracuda.swervemath.SwerveWheel.RectangularCoordinates;
 
 import edu.wpi.first.wpilibj.command.Command;
 

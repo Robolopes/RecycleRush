@@ -6,9 +6,9 @@ package org.usfirst.frc.team2339.Barracuda.subsystems;
  */
 
 
-import org.usfirst.frc.team2339.Barracuda.subsystems.SwerveWheelDrive.RectangularCoordinates;
-import org.usfirst.frc.team2339.Barracuda.subsystems.SwerveWheelDrive.RobotMotion;
-import org.usfirst.frc.team2339.Barracuda.subsystems.SwerveWheelDrive.VelocityPolar;
+import org.usfirst.frc.team2339.Barracuda.swervemath.SwerveWheel.RectangularCoordinates;
+import org.usfirst.frc.team2339.Barracuda.swervemath.SwerveWheel.RobotMotion;
+import org.usfirst.frc.team2339.Barracuda.swervemath.SwerveWheel.VelocityPolar;
 
 import edu.wpi.first.wpilibj.command.Subsystem;
 

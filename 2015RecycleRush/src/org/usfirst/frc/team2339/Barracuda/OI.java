@@ -9,7 +9,7 @@ import org.usfirst.frc.team2339.Barracuda.commands.TeleopDrive;
 import org.usfirst.frc.team2339.Barracuda.commands.TeleopLift;
 import org.usfirst.frc.team2339.Barracuda.components.OperatorJoystick;
 import org.usfirst.frc.team2339.Barracuda.components.SwerveJoystick;
-import org.usfirst.frc.team2339.Barracuda.subsystems.SwerveWheelDrive.RectangularCoordinates;
+import org.usfirst.frc.team2339.Barracuda.swervemath.SwerveWheel.RectangularCoordinates;
 
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
 
@@ -21,7 +21,7 @@ import edu.wpi.first.wpilibj.buttons.JoystickButton;
  */
 public class OI {
 
-	public static final double DRIVE_STICK_DEAD_BAND = 0.3;
+	public static final double DRIVE_STICK_DEAD_BAND = 0.1;
 	public static final int DRIVE_BUTTON_SPEED_SHIFT = 1;
 	public static final int DRIVE_BUTTON_ABSOLUTE_GYRO_MODE = 2;
 	private static final int DRIVE_BUTTON_ROTATE_AROUND_CONTAINER = 8;

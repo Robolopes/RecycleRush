@@ -1,7 +1,7 @@
 package org.usfirst.frc.team2339.Barracuda.subsystems;
 
 import org.usfirst.frc.team2339.Barracuda.components.SwerveSteeringPidController;
-import org.usfirst.frc.team2339.Barracuda.subsystems.SwerveWheelDrive.RectangularCoordinates;
+import org.usfirst.frc.team2339.Barracuda.swervemath.SwerveWheel.RectangularCoordinates;
 
 import edu.wpi.first.wpilibj.SpeedController;
 

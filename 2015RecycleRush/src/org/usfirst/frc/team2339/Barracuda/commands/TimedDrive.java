@@ -1,7 +1,7 @@
 package org.usfirst.frc.team2339.Barracuda.commands;
 
 import org.usfirst.frc.team2339.Barracuda.subsystems.SwerveDrive;
-import org.usfirst.frc.team2339.Barracuda.subsystems.SwerveWheelDrive.VelocityPolar;
+import org.usfirst.frc.team2339.Barracuda.swervemath.SwerveWheel.VelocityPolar;
 
 import edu.wpi.first.wpilibj.command.Command;
 
