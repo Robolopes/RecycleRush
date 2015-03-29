@@ -152,8 +152,8 @@ public class SwerveWheelDrive implements MotorSafety {
      * @param velocity desired wheel velocity 
      */
     public void setWheelSanely(VelocityPolar velocity) {
-    	//setWheel(SwerveWheel.calculateDeltaWheelData(new VelocityPolar(0.0, steeringController.get()), velocity));
-    	setWheel(velocity);
+    	setWheel(SwerveWheel.calculateDeltaWheelData(new VelocityPolar(0.0, steeringController.get()), velocity));
+    	//setWheel(velocity);
     }
     
     public void resetSteering() {
