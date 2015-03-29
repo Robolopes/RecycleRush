@@ -24,7 +24,7 @@ public class OI {
 	public static final double DRIVE_STICK_DEAD_BAND = 0.1;
 	public static final int DRIVE_BUTTON_SPEED_SHIFT = 1;
 	public static final int DRIVE_BUTTON_ABSOLUTE_GYRO_MODE = 2;
-	private static final int DRIVE_BUTTON_ROTATE_AROUND_CONTAINER = 8;
+	private static final int DRIVE_BUTTON_ROTATE_AROUND_CONTAINER = 7;
 	private static final int GYRO_BUTTON_RESET = 1;
     
     private SwerveJoystick joystickDrive;
