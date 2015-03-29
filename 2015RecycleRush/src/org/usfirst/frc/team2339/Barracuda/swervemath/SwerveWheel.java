@@ -1,7 +1,5 @@
 package org.usfirst.frc.team2339.Barracuda.swervemath;
 
-import org.usfirst.frc.team2339.Barracuda.subsystems.SwerveWheelDrive.RobotMotion;
-import org.usfirst.frc.team2339.Barracuda.subsystems.SwerveWheelDrive.VelocityPolar;
 
 
 public class SwerveWheel {
@@ -24,10 +22,6 @@ public class SwerveWheel {
     	
     	public RectangularCoordinates subtract(RectangularCoordinates p0) {
     		return new RectangularCoordinates(x - p0.x, y - p0.y);
-    	}
-    	
-    	public RectangularCoordinates divide(double r) {
-    		return new RectangularCoordinates(x/r, y/r);
     	}
     	
     	public double magnitude() {
@@ -155,14 +149,15 @@ public class SwerveWheel {
     		double maxWheelRadius, 
     		RobotMotion robotMotion) {
     	
-    	RectangularCoordinates wheelRelativePosition = wheelPosition.subtract(pivot).divide(maxWheelRadius);
+    	RectangularCoordinates wheelRelativePosition = wheelPosition.subtract(pivot);
+    	double rotateSpeed = robotMotion.rotate / maxWheelRadius;
     	RectangularCoordinates wheelVectorRobotCoord = new RectangularCoordinates(
-    			robotMotion.strafe - robotMotion.rotate * wheelRelativePosition.y,  
-    			robotMotion.frontBack + robotMotion.rotate * wheelRelativePosition.x);
+    			robotMotion.strafe - rotateSpeed * wheelRelativePosition.y,  
+    			robotMotion.frontBack + rotateSpeed * wheelRelativePosition.x);
 
     	double wheelSpeed = Math.hypot(wheelVectorRobotCoord.x, wheelVectorRobotCoord.y); 
     	// Clockwise
-    	double wheelAngle = Math.toDegrees(Math.atan2(wheelVectorRobotCoord.x, wheelVectorRobotCoord.y));
+    	double wheelAngle = Math.toDegrees(Math.atan2(-wheelVectorRobotCoord.x, wheelVectorRobotCoord.y));
     	// Counter clockwise
     	// double wheelAngle = Math.toDegrees(Math.atan2(-wheelVectorRobotCoord.x, wheelVectorRobotCoord.y));
     	
@@ -196,8 +191,10 @@ public class SwerveWheel {
 				
 			}
     		rawVelocities[iiWheel] = calculateWheelVelocity(wheelPosition, new RectangularCoordinates(0, 0), 
-    				Math.hypot(width, length), robotMotion);
+    				Math.hypot(width/2, length/2), robotMotion);
     	}
+		
+		normalize(rawVelocities);
     	
     	return rawVelocities;
     }
@@ -282,6 +279,21 @@ public class SwerveWheel {
     		scale = -scale;
     	}
     	return scale;
+    }
+    
+    public static void normalize(VelocityPolar velocities[]) {
+    	double maxSpeed = 0;
+    	for (int iiWheel = 0; iiWheel < velocities.length; iiWheel++) {
+    		if (Math.abs(velocities[iiWheel].speed) > maxSpeed) {
+    			maxSpeed = velocities[iiWheel].speed;
+    		}
+    	}
+    	
+    	if (maxSpeed > 1.0) {
+	    	for (int iiWheel = 0; iiWheel < velocities.length; iiWheel++) {
+	    		velocities[iiWheel].speed /= maxSpeed;
+	    	}
+    	}
     }
     
     /**

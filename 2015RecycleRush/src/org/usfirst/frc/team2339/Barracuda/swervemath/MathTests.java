@@ -3,15 +3,14 @@ package org.usfirst.frc.team2339.Barracuda.swervemath;
 import static org.junit.Assert.*;
 
 import org.junit.Test;
+import org.usfirst.frc.team2339.Barracuda.swervemath.SwerveWheel.RobotMotion;
+import org.usfirst.frc.team2339.Barracuda.swervemath.SwerveWheel.VelocityPolar;
 import org.usfirst.frc.team2339.Barracuda.swervemath.WorkingPalmdale.WheelData;
 
 public class MathTests {
 
 	@Test
-	public void testBasicRotate() {
-		System.out.println("Hello test world");
-		System.out.println("Normalize angle " + 455 + " is " + WorkingPalmdale.normalizeAngle(455));
-		
+	public void testPalmdaleRotate() {
 		/*
 		 * 45 degree angle case
 		 */
@@ -68,4 +67,21 @@ public class MathTests {
 
 	}
 
+	@Test
+	public void testNewRotate() {
+		VelocityPolar[] rawWheelData = SwerveWheel.calculateRectangularWheelVelocities(25, 25, 
+				new RobotMotion(0.0, 0.0, 1.0));
+		for (int ii = 0; ii < WorkingPalmdale.kMaxNumberOfMotors; ii++) {
+			System.out.println("Wheel " + ii + ": speed " + rawWheelData[ii].speed +
+					", angle " + rawWheelData[ii].angle);
+		}
+
+		rawWheelData = SwerveWheel.calculateRectangularWheelVelocities(25, 25, 
+				new RobotMotion(0.0, 0.0, -1.0));
+		for (int ii = 0; ii < WorkingPalmdale.kMaxNumberOfMotors; ii++) {
+			System.out.println("Wheel " + ii + ": speed " + rawWheelData[ii].speed +
+					", angle " + rawWheelData[ii].angle);
+		}
+
+	}
 }

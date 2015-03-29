@@ -148,8 +148,19 @@ public class WorkingPalmdale {
     	return calculateRawWheelDataGeneral(xVelocity, yVelocity, rotateVelocity, 0.0, 0.0);
     }
     
-    public static void normalize(double wheelSpees[]) {
+    public static void normalize(double wheelSpeeds[]) {
+    	double maxSpeed = 0;
+    	for (int iiWheel = 0; iiWheel < wheelSpeeds.length; iiWheel++) {
+    		if (Math.abs(wheelSpeeds[iiWheel]) > maxSpeed) {
+    			maxSpeed = wheelSpeeds[iiWheel];
+    		}
+    	}
     	
+    	if (maxSpeed > 1.0) {
+	    	for (int iiWheel = 0; iiWheel < wheelSpeeds.length; iiWheel++) {
+	    		wheelSpeeds[iiWheel] /= maxSpeed;
+	    	}
+    	}
     }
     
     /**
