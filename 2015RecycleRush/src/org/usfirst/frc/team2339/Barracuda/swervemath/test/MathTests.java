@@ -104,7 +104,6 @@ public class MathTests {
 
 	}
 	
-	// Merged 1
 	@Test
 	public void testDelta() {
 		VelocityPolar deltaVel = SwerveWheel.calculateDeltaWheelData(
