@@ -78,6 +78,9 @@ public class MathTests {
 			System.out.println("Wheel " + ii + ": speed " + rawWheelData[ii].speed +
 					", angle " + rawWheelData[ii].angle);
 		}
+		assertEquals(rawWheelData[0].angle, -rawWheelData[3].angle, 0.1);
+		assertEquals(rawWheelData[1].angle, -rawWheelData[2].angle, 0.1);
+		assertEquals(Math.abs(rawWheelData[0].angle + rawWheelData[1].angle), 180, 0.1);
 
 		rawWheelData = SwerveWheel.calculateRectangularWheelVelocities(25, 25, 
 				new RobotMotion(0.0, 0.0, -1.0));
@@ -85,6 +88,19 @@ public class MathTests {
 			System.out.println("Wheel " + ii + ": speed " + rawWheelData[ii].speed +
 					", angle " + rawWheelData[ii].angle);
 		}
+		assertEquals(rawWheelData[0].angle, -rawWheelData[3].angle, 0.1);
+		assertEquals(rawWheelData[1].angle, -rawWheelData[2].angle, 0.1);
+		assertEquals(Math.abs(rawWheelData[0].angle + rawWheelData[1].angle), 180, 0.1);
+
+		rawWheelData = SwerveWheel.calculateRectangularWheelVelocities(28.5, 25, 
+				new RobotMotion(0.0, 0.0, 1.0));
+		for (int ii = 0; ii < WorkingPalmdale.kMaxNumberOfMotors; ii++) {
+			System.out.println("Wheel " + ii + ": speed " + rawWheelData[ii].speed +
+					", angle " + rawWheelData[ii].angle);
+		}
+		assertEquals(rawWheelData[0].angle, -rawWheelData[3].angle, 0.1);
+		assertEquals(rawWheelData[1].angle, -rawWheelData[2].angle, 0.1);
+		assertEquals(Math.abs(rawWheelData[0].angle + rawWheelData[1].angle), 180, 0.1);
 
 	}
 	
