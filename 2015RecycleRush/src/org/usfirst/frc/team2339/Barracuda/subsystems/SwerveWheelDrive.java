@@ -84,21 +84,6 @@ public class SwerveWheelDrive implements MotorSafety {
     	return SwerveWheel.calculateWheelVelocity(wheelPosition, pivot, maxWheelRadius, robotMotion);
     }
     
-    /** 
-     * Normalizes an angle in degrees to (-180, 180].
-     * @param theta Angle to normalize
-     * @return Normalized angle
-     */
-    public double normalizeAngle(double theta) {
-    	while (theta > 180) {
-    		theta -= 360;
-    	}
-    	while (theta < -180) {
-    		theta += 360;
-    	}
-    	return theta;
-    }
-
     /**
      * Compute angle needed to turn and whether or not flip is needed
      * @param currentAngle
@@ -108,7 +93,7 @@ public class SwerveWheelDrive implements MotorSafety {
     public AngleFlip computeTurnAngle(double currentAngle, double targetAngle) {
     	AngleFlip turnAngle = new AngleFlip(targetAngle - currentAngle, false);
     	if (Math.abs(turnAngle.getAngle()) > 90) {
-    		turnAngle.setAngle(normalizeAngle(turnAngle.getAngle() + 180));
+    		turnAngle.setAngle(SwerveWheel.normalizeAngle(turnAngle.getAngle() + 180));
     		turnAngle.setFlip(true);
     	}
     	return turnAngle;
@@ -148,22 +133,6 @@ public class SwerveWheelDrive implements MotorSafety {
     	return scale;
     }
     
-    /**
-     * Calculate wheel velocity change (delta) based on current data.
-     * @param rawVelocity Raw wheel change data
-     * @return wheel change data (delta) based on current wheel values
-     */
-    public VelocityPolar calculateDeltaWheelData(VelocityPolar rawVelocity) {
-    	VelocityPolar deltaVelocity = new VelocityPolar(0, 0);
-		// Compute turn angle from encoder value (pidGet) and raw target value
-		SmartDashboard.putNumber("Wheel " + wheelNumber + " current angle ", steeringController.get());
-		AngleFlip turnAngle = computeTurnAngle(steeringController.get(), rawVelocity.angle);
-		double targetAngle = normalizeAngle(steeringController.get() + turnAngle.getAngle()); 
-        deltaVelocity.angle = targetAngle;
-        deltaVelocity.speed = driveScale(turnAngle) * rawVelocity.speed;
-    	return deltaVelocity;
-    }
-    
     public void setWheelSpeed(double speed) {
         driveController.set(speed);
         if (safetyHelper != null) safetyHelper.feed();
@@ -184,7 +153,7 @@ public class SwerveWheelDrive implements MotorSafety {
      * @param velocity desired wheel velocity 
      */
     public void setWheelSanely(VelocityPolar velocity) {
-    	//setWheel(calculateDeltaWheelData(velocity));
+    	//setWheel(SwerveWheel.calculateDeltaWheelData(velocity));
     	setWheel(velocity);
     }
     
