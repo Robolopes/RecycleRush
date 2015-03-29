@@ -11,11 +11,18 @@ import edu.wpi.first.wpilibj.SpeedController;
  */
 public class SwerveSteeringPidController extends PIDController {
 
+	private final SwerveSteeringEncoder steeringEncoder;
+	
 	public SwerveSteeringPidController(double Kp, double Ki, double Kd,
 			SwerveSteeringEncoder steeringEncoder, SpeedController steeringController) {
 		super(Kp, Ki, Kd, steeringEncoder, steeringController);
+		this.steeringEncoder = steeringEncoder;
         this.setInputRange(-180, 180);
         this.setContinuous(true);
+	}
+	
+	public double getSteeringAngle() {
+		return steeringEncoder.getDistance();
 	}
 
 }

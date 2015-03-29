@@ -29,6 +29,8 @@ public class SwerveWheelDrive implements MotorSafety {
 	protected SpeedController driveController;
     protected SwerveSteeringPidController steeringController;
     
+    protected VelocityPolar currentVelocity;
+    
     /**
      * Construct swerve drive for a single wheel.
      * 
@@ -46,6 +48,7 @@ public class SwerveWheelDrive implements MotorSafety {
         this.wheelPosition = wheelPosition;
         this.driveController = driveController;
         this.steeringController = steeringController;
+        this.currentVelocity = new VelocityPolar(0, 0);
     	setupMotorSafety();
     }
 
@@ -57,6 +60,18 @@ public class SwerveWheelDrive implements MotorSafety {
 		this.wheelPosition = wheelPosition;
 	}
 	
+	public VelocityPolar getCurrentVelocity() {
+		return currentVelocity;
+	}
+
+	private void setCurrentSpeed(double speed) {
+		this.currentVelocity.speed = speed;
+	}
+
+	private void setCurrentAngle(double angle) {
+		this.currentVelocity.angle = angle;
+	}
+
 	public double getRadialAngle() {
 		return Math.toDegrees(Math.atan2(wheelPosition.x, wheelPosition.y));
 	}
@@ -134,15 +149,32 @@ public class SwerveWheelDrive implements MotorSafety {
     
     public void setWheelSpeed(double speed) {
         driveController.set(speed);
+        setCurrentSpeed(speed);
+        if (safetyHelper != null) safetyHelper.feed();
+    }
+    
+    /**
+     * Update speed controller and motor safety using current speed
+     */
+    public void maintainWheelSpeed(double speed) {
+        driveController.set(getCurrentVelocity().speed);
         if (safetyHelper != null) safetyHelper.feed();
     }
     
     public void setSteeringAngle(double angle) {
         steeringController.setSetpoint(angle);
+        setCurrentAngle(angle);
+    }
+    
+    /**
+     * Update steering controller and motor safety using current angle
+     */
+    public void maintainSteeringAngle() {
+        steeringController.setSetpoint(getCurrentVelocity().angle);
     }
     
     public double getSteeringAngle() {
-        return steeringController.get();
+        return steeringController.getSteeringAngle();
     }
     
     public void setWheel(VelocityPolar velocity) {
@@ -156,7 +188,9 @@ public class SwerveWheelDrive implements MotorSafety {
      * @param velocity desired wheel velocity 
      */
     public void setWheelSanely(VelocityPolar velocity) {
-    	setWheel(SwerveWheel.calculateDeltaWheelData(new VelocityPolar(0.0, steeringController.get()), velocity));
+    	setWheel(SwerveWheel.calculateDeltaWheelData(
+    			new VelocityPolar(0.0, steeringController.getSteeringAngle()), 
+    			velocity));
     	//setWheel(velocity);
     }
     

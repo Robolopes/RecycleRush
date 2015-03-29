@@ -117,7 +117,7 @@ public class SwerveDrive extends Subsystem {
     	}
     	
     	for (int iiWheel = 0; iiWheel < wheels.length; iiWheel++) {
-    		SmartDashboard.putNumber("Wheel " + iiWheel + " pid get ", wheels[iiWheel].getSteeringAngle());
+    		SmartDashboard.putNumber("Wheel " + iiWheel + " encoder angle ", wheels[iiWheel].getSteeringAngle());
     	}
     	
     }
