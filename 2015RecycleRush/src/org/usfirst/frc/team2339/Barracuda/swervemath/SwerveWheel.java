@@ -275,6 +275,8 @@ public class SwerveWheel {
     	} else {
     		scale = 0;
     	}
+    	// Override above speed scaling.
+    	scale = 1;
     	if (turnAngle.isFlip()) {
     		scale = -scale;
     	}
@@ -304,12 +306,10 @@ public class SwerveWheel {
     public static VelocityPolar calculateDeltaWheelData(VelocityPolar currentVelocity, VelocityPolar rawVelocity) {
     	VelocityPolar deltaVelocity = new VelocityPolar(0, 0);
 		// Compute turn angle from encoder value (pidGet) and raw target value
-		System.out.println("Wheel current angle " + currentVelocity.angle);
 		AngleFlip turnAngle = computeTurnAngle(currentVelocity.angle, rawVelocity.angle);
 		double targetAngle = normalizeAngle(currentVelocity.angle + turnAngle.getAngle()); 
         deltaVelocity.angle = targetAngle;
-        //deltaVelocity.speed = driveScale(turnAngle) * rawVelocity.speed;
-        deltaVelocity.speed = rawVelocity.speed;
+        deltaVelocity.speed = driveScale(turnAngle) * rawVelocity.speed;
     	return deltaVelocity;
     }
     
