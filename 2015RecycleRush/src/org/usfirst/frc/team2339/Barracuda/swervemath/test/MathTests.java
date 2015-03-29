@@ -4,6 +4,7 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 import org.usfirst.frc.team2339.Barracuda.swervemath.SwerveWheel;
+import org.usfirst.frc.team2339.Barracuda.swervemath.SwerveWheel.AngleFlip;
 import org.usfirst.frc.team2339.Barracuda.swervemath.SwerveWheel.RobotMotion;
 import org.usfirst.frc.team2339.Barracuda.swervemath.SwerveWheel.VelocityPolar;
 import org.usfirst.frc.team2339.Barracuda.swervemath.WorkingPalmdale;
@@ -110,5 +111,18 @@ public class MathTests {
 				new VelocityPolar(1, 135));
 		assertEquals(-1.0, deltaVel.speed, 0.1);
 		assertEquals(-45, deltaVel.angle, 0.1);
+	}
+
+	@Test
+	public void testTurnAngle() {
+		AngleFlip turnAngle = SwerveWheel.computeTurnAngle(0, 45);
+		assertEquals(45, turnAngle.getAngle(), 0.1);
+		assertFalse(turnAngle.isFlip());
+		turnAngle = SwerveWheel.computeTurnAngle(0, 135);
+		assertEquals(-45, turnAngle.getAngle(), 0.1);
+		assertTrue(turnAngle.isFlip());
+		turnAngle = SwerveWheel.computeTurnAngle(-90, 90);
+		assertEquals(0, turnAngle.getAngle(), 0.1);
+		assertTrue(turnAngle.isFlip());
 	}
 }
