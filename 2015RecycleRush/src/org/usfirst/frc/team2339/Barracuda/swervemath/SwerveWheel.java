@@ -165,7 +165,7 @@ public class SwerveWheel {
     }
     
     public static VelocityPolar[] calculateRectangularWheelVelocities(double length, double width, 
-    		RobotMotion robotMotion) {
+    		RobotMotion robotMotion, RectangularCoordinates pivot) {
     	
     	VelocityPolar rawVelocities[] = new VelocityPolar[4];
     	RectangularCoordinates wheelPosition = new RectangularCoordinates(0, 0);
@@ -190,7 +190,9 @@ public class SwerveWheel {
 				break;
 				
 			}
-    		rawVelocities[iiWheel] = calculateWheelVelocity(wheelPosition, new RectangularCoordinates(0, 0), 
+			RectangularCoordinates wpPivot = wheelPosition.subtract(pivot);
+			System.out.println("wpPivot " + wpPivot.x + ", " + wpPivot.y);
+    		rawVelocities[iiWheel] = calculateWheelVelocity(wpPivot, new RectangularCoordinates(0, 0), 
     				Math.hypot(width/2, length/2), robotMotion);
     	}
 		
@@ -199,6 +201,11 @@ public class SwerveWheel {
     	return rawVelocities;
     }
 
+    public static VelocityPolar[] calculateRectangularWheelVelocities(double length, double width, 
+    		RobotMotion robotMotion) {
+    	return calculateRectangularWheelVelocities(length, width, robotMotion, new RectangularCoordinates(0, 0));
+    }
+    	
     /**
      * Calculate wheel velocity vector given wheel position relative to pivot location and 
      * desired robot forward, strafe, and rotational velocities.

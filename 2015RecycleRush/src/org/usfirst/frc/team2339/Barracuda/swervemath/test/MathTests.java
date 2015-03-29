@@ -5,6 +5,7 @@ import static org.junit.Assert.*;
 import org.junit.Test;
 import org.usfirst.frc.team2339.Barracuda.swervemath.SwerveWheel;
 import org.usfirst.frc.team2339.Barracuda.swervemath.SwerveWheel.AngleFlip;
+import org.usfirst.frc.team2339.Barracuda.swervemath.SwerveWheel.RectangularCoordinates;
 import org.usfirst.frc.team2339.Barracuda.swervemath.SwerveWheel.RobotMotion;
 import org.usfirst.frc.team2339.Barracuda.swervemath.SwerveWheel.VelocityPolar;
 import org.usfirst.frc.team2339.Barracuda.swervemath.WorkingPalmdale;
@@ -14,6 +15,7 @@ public class MathTests {
 
 	@Test
 	public void testPalmdaleRotate() {
+		System.out.println("*********** testPalmdaleRotate start ***********");
 		/*
 		 * 45 degree angle case
 		 */
@@ -68,10 +70,12 @@ public class MathTests {
 			assertEquals(rawWheelDataGen.wheelAngles[ii], rawWheelData.wheelAngles[ii], 0.01);
 		}
 
+		System.out.println("*********** testPalmdaleRotate end ***********");
 	}
 
 	@Test
 	public void testNewRotate() {
+		System.out.println("*********** testNewRotate start ***********");
 		VelocityPolar[] rawWheelData = SwerveWheel.calculateRectangularWheelVelocities(25, 25, 
 				new RobotMotion(0.0, 0.0, 1.0));
 		for (int ii = 0; ii < WorkingPalmdale.kMaxNumberOfMotors; ii++) {
@@ -102,10 +106,39 @@ public class MathTests {
 		assertEquals(rawWheelData[1].angle, -rawWheelData[2].angle, 0.1);
 		assertEquals(Math.abs(rawWheelData[0].angle + rawWheelData[1].angle), 180, 0.1);
 
+		System.out.println("*********** testNewRotate end ***********");
+	}
+	
+	@Test
+	public void testContainerRotate() {
+		System.out.println("*********** testContainerRotate start ***********");
+		RectangularCoordinates containerPivot = new RectangularCoordinates(0, 2 + 28.5/2);
+		VelocityPolar[] rawWheelData = SwerveWheel.calculateRectangularWheelVelocities(28.5, 25, 
+				new RobotMotion(0.0, 0.0, 1.0), containerPivot);
+		for (int ii = 0; ii < WorkingPalmdale.kMaxNumberOfMotors; ii++) {
+			System.out.println("Wheel " + ii + ": speed " + rawWheelData[ii].speed +
+					", angle " + rawWheelData[ii].angle);
+		}
+		assertEquals(rawWheelData[0].angle, -rawWheelData[3].angle, 0.1);
+		assertEquals(rawWheelData[1].angle, -rawWheelData[2].angle, 0.1);
+		assertEquals(Math.abs(rawWheelData[0].angle + rawWheelData[1].angle), 180, 0.1);
+
+		rawWheelData = SwerveWheel.calculateRectangularWheelVelocities(28.5, 25, 
+				new RobotMotion(0.0, 0.0, -1.0), containerPivot);
+		for (int ii = 0; ii < WorkingPalmdale.kMaxNumberOfMotors; ii++) {
+			System.out.println("Wheel " + ii + ": speed " + rawWheelData[ii].speed +
+					", angle " + rawWheelData[ii].angle);
+		}
+		assertEquals(rawWheelData[0].angle, -rawWheelData[3].angle, 0.1);
+		assertEquals(rawWheelData[1].angle, -rawWheelData[2].angle, 0.1);
+		assertEquals(Math.abs(rawWheelData[0].angle + rawWheelData[1].angle), 180, 0.1);
+
+		System.out.println("*********** testContainerRotate end ***********");
 	}
 	
 	@Test
 	public void testDelta() {
+		System.out.println("*********** testDelta start ***********");
 		VelocityPolar deltaVel = SwerveWheel.calculateDeltaWheelData(
 				new VelocityPolar(0, 0), 
 				new VelocityPolar(1, 180));
@@ -126,10 +159,12 @@ public class MathTests {
 				new VelocityPolar(1, 135));
 		assertEquals(-1.0, deltaVel.speed, 0.1);
 		assertEquals(-45, deltaVel.angle, 0.1);
+		System.out.println("*********** testDelta end ***********");
 	}
 
 	@Test
 	public void testTurnAngle() {
+		System.out.println("*********** testTurnAngle start ***********");
 		AngleFlip turnAngle = SwerveWheel.computeTurnAngle(0, 45);
 		assertEquals(45, turnAngle.getAngle(), 0.1);
 		assertFalse(turnAngle.isFlip());
@@ -139,5 +174,6 @@ public class MathTests {
 		turnAngle = SwerveWheel.computeTurnAngle(-90, 90);
 		assertEquals(0, turnAngle.getAngle(), 0.1);
 		assertTrue(turnAngle.isFlip());
+		System.out.println("*********** testTurnAngle end ***********");
 	}
 }
