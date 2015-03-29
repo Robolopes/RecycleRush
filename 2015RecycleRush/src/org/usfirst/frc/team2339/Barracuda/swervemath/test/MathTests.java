@@ -119,9 +119,8 @@ public class MathTests {
 			System.out.println("Wheel " + ii + ": speed " + rawWheelData[ii].speed +
 					", angle " + rawWheelData[ii].angle);
 		}
-		assertEquals(rawWheelData[0].angle, -rawWheelData[3].angle, 0.1);
-		assertEquals(rawWheelData[1].angle, -rawWheelData[2].angle, 0.1);
 		assertEquals(Math.abs(rawWheelData[0].angle + rawWheelData[1].angle), 180, 0.1);
+		assertEquals(Math.abs(rawWheelData[2].angle + rawWheelData[3].angle), 180, 0.1);
 
 		rawWheelData = SwerveWheel.calculateRectangularWheelVelocities(28.5, 25, 
 				new RobotMotion(0.0, 0.0, -1.0), containerPivot);
@@ -129,9 +128,8 @@ public class MathTests {
 			System.out.println("Wheel " + ii + ": speed " + rawWheelData[ii].speed +
 					", angle " + rawWheelData[ii].angle);
 		}
-		assertEquals(rawWheelData[0].angle, -rawWheelData[3].angle, 0.1);
-		assertEquals(rawWheelData[1].angle, -rawWheelData[2].angle, 0.1);
 		assertEquals(Math.abs(rawWheelData[0].angle + rawWheelData[1].angle), 180, 0.1);
+		assertEquals(Math.abs(rawWheelData[2].angle + rawWheelData[3].angle), 180, 0.1);
 
 		System.out.println("*********** testContainerRotate end ***********");
 	}
@@ -159,6 +157,26 @@ public class MathTests {
 				new VelocityPolar(1, 135));
 		assertEquals(-1.0, deltaVel.speed, 0.1);
 		assertEquals(-45, deltaVel.angle, 0.1);
+		deltaVel = SwerveWheel.calculateDeltaWheelData(
+				new VelocityPolar(0, 0), 
+				new VelocityPolar(1, 10));
+		assertEquals(1.0, deltaVel.speed, 0.1);
+		assertEquals(10, deltaVel.angle, 0.1);
+		deltaVel = SwerveWheel.calculateDeltaWheelData(
+				new VelocityPolar(0, 0), 
+				new VelocityPolar(1, -10));
+		assertEquals(1.0, deltaVel.speed, 0.1);
+		assertEquals(-10, deltaVel.angle, 0.1);
+		deltaVel = SwerveWheel.calculateDeltaWheelData(
+				new VelocityPolar(0, 0), 
+				new VelocityPolar(1, 170));
+		assertEquals(-1.0, deltaVel.speed, 0.1);
+		assertEquals(-10, deltaVel.angle, 0.1);
+		deltaVel = SwerveWheel.calculateDeltaWheelData(
+				new VelocityPolar(0, 0), 
+				new VelocityPolar(1, -170));
+		assertEquals(-1.0, deltaVel.speed, 0.1);
+		assertEquals(10, deltaVel.angle, 0.1);
 		System.out.println("*********** testDelta end ***********");
 	}
 

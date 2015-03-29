@@ -190,9 +190,7 @@ public class SwerveWheel {
 				break;
 				
 			}
-			RectangularCoordinates wpPivot = wheelPosition.subtract(pivot);
-			System.out.println("wpPivot " + wpPivot.x + ", " + wpPivot.y);
-    		rawVelocities[iiWheel] = calculateWheelVelocity(wpPivot, new RectangularCoordinates(0, 0), 
+    		rawVelocities[iiWheel] = calculateWheelVelocity(wheelPosition, pivot, 
     				Math.hypot(width/2, length/2), robotMotion);
     	}
 		
