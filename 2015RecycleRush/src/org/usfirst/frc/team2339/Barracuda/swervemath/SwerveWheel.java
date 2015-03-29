@@ -268,8 +268,7 @@ public class SwerveWheel {
     		/*
     		 * Eric comment: I don't like the discontinuous nature of this scaling.
     		 * Possible improvements:
-    		 *   1) Use cosine(2 * turnAngle)
-    		 *   2) Scale any angle < 90.
+    		 *   1) Scale any angle < 90.
     		 */
     		scale = Math.cos(Math.toRadians(turnAngle.getAngle()));
     	} else {
