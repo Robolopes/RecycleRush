@@ -9,7 +9,7 @@ import org.usfirst.frc.team2339.Barracuda.commands.TeleopDrive;
 import org.usfirst.frc.team2339.Barracuda.commands.TeleopLift;
 import org.usfirst.frc.team2339.Barracuda.components.OperatorJoystick;
 import org.usfirst.frc.team2339.Barracuda.components.SwerveJoystick;
-import org.usfirst.frc.team2339.Barracuda.subsystems.SwerveWheelDrive.RectangularCoordinates;
+import org.usfirst.frc.team2339.Barracuda.swervemath.SwerveWheel.RectangularCoordinates;
 
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
 

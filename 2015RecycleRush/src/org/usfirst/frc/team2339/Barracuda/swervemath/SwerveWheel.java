@@ -70,7 +70,7 @@ public class SwerveWheel {
      * @author emiller
      *
      */
-    protected static class AngleFlip {
+    public static class AngleFlip {
     	private double angle;
     	private boolean flip;
     	
