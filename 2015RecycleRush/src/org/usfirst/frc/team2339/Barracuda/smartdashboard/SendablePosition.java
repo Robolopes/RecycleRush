@@ -7,15 +7,19 @@ import edu.wpi.first.wpilibj.Sendable;
 import edu.wpi.first.wpilibj.tables.ITable;
 
 /**
- * Display choices and accept input for Robolopes autonomous
- * 
  * @author RobolopesDev
  *
  */
-public class AutoSettings implements Sendable {
+public class SendablePosition implements Sendable {
 	
     private ITable table;
-    private double forward;
+    private double x;
+    private double y;
+    
+    public SendablePosition(double x, double y) {
+		this.x = x;
+		this.y = y;
+	}
 
 	/* (non-Javadoc)
 	 * @see edu.wpi.first.wpilibj.Sendable#initTable(edu.wpi.first.wpilibj.tables.ITable)
@@ -24,7 +28,8 @@ public class AutoSettings implements Sendable {
 	public void initTable(ITable subtable) {
         this.table = subtable;
         if (table != null) {
-            table.putValue("forward", forward);
+            table.putValue("x", x);
+            table.putValue("y", y);
         }
 	}
 
@@ -41,7 +46,7 @@ public class AutoSettings implements Sendable {
 	 */
 	@Override
 	public String getSmartDashboardType() {
-		return "Robolopes Autonomous Settings";
+		return "Position";
 	}
 
 }
