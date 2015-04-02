@@ -7,6 +7,7 @@ import org.usfirst.frc.team2339.Barracuda.swervemath.SwerveWheel.VelocityPolar;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 
 
 /**
@@ -26,6 +27,7 @@ public class Barracuda extends IterativeRobot {
     public static OI oi;
 
     // Commands
+    private SendableChooser autoChooser;
     private AutonomousCommand autonomousCommand;
     
       
