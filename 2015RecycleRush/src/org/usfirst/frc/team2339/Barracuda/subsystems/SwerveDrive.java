@@ -178,11 +178,11 @@ public class SwerveDrive extends Subsystem {
 	 * Set speed and angle values when joystick in dead band
 	 */
 	public void setDeadBandValues() {
-		/*
     	for (int iiWheel = 0; iiWheel < wheels.length; iiWheel++) {
-        	wheels[iiWheel].setWheel(new VelocityPolar(0, 0));
+    		// Keep current angle, set speed to zero
+        	wheels[iiWheel].maintainSteeringAngle();
+        	wheels[iiWheel].setWheelSpeed(0);
     	}
-    	*/
 	}
 	
     /**
