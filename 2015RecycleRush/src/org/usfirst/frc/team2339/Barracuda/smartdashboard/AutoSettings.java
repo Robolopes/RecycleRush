@@ -40,6 +40,27 @@ public class AutoSettings implements Sendable {
 		return table;
 	}
 
+	public SendableTimeVelocity getForward() {
+		if (getTable() != null) {
+			return (SendableTimeVelocity)getTable().getValue("forward");
+		}
+		return null;
+	}
+
+	public SendableTimeSpeed getLift() {
+		if (getTable() != null) {
+			return (SendableTimeSpeed)getTable().getValue("lift");
+		}
+		return null;
+	}
+
+	public SendableTimeVelocity getBack() {
+		if (getTable() != null) {
+			return (SendableTimeVelocity)getTable().getValue("back");
+		}
+		return null;
+	}
+
 	/* (non-Javadoc)
 	 * @see edu.wpi.first.wpilibj.Sendable#getSmartDashboardType()
 	 */
