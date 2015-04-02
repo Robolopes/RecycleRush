@@ -2,7 +2,6 @@ package org.usfirst.frc.team2339.Barracuda.subsystems;
 
 import org.usfirst.frc.team2339.Barracuda.components.SwerveSteeringPidController;
 import org.usfirst.frc.team2339.Barracuda.swervemath.SwerveWheel;
-import org.usfirst.frc.team2339.Barracuda.swervemath.SwerveWheel.AngleFlip;
 import org.usfirst.frc.team2339.Barracuda.swervemath.SwerveWheel.RectangularCoordinates;
 import org.usfirst.frc.team2339.Barracuda.swervemath.SwerveWheel.RobotMotion;
 import org.usfirst.frc.team2339.Barracuda.swervemath.SwerveWheel.VelocityPolar;
@@ -73,11 +72,11 @@ public class SwerveWheelDrive implements MotorSafety {
 	}
 
 	public double getRadialAngle() {
-		return Math.toDegrees(Math.atan2(wheelPosition.x, wheelPosition.y));
+		return SwerveWheel.getRadialAngle(wheelPosition);
 	}
 	
 	public double getPerpendicularAngle() {
-		return Math.toDegrees(Math.atan2(-wheelPosition.y, wheelPosition.x));
+		return SwerveWheel.getPerpendicularAngle(wheelPosition);
 	}
 	
     /**
@@ -95,56 +94,8 @@ public class SwerveWheelDrive implements MotorSafety {
     		RectangularCoordinates pivot,
     		double maxWheelRadius, 
     		RobotMotion robotMotion) {
-    	return SwerveWheel.calculateWheelVelocity(wheelPosition, pivot, maxWheelRadius, robotMotion);
-    }
-    
-    /**
-     * Compute angle needed to turn and whether or not flip is needed
-     * @param currentAngle
-     * @param targetAngle
-     * @return new angle with flip
-     */
-    public AngleFlip computeTurnAngle(double currentAngle, double targetAngle) {
-    	AngleFlip turnAngle = new AngleFlip(targetAngle - currentAngle, false);
-    	if (Math.abs(turnAngle.getAngle()) > 90) {
-    		turnAngle.setAngle(SwerveWheel.normalizeAngle(turnAngle.getAngle() + 180));
-    		turnAngle.setFlip(true);
-    	}
-    	return turnAngle;
-    }
-    
-    /**
-     * Compute change angle to get from current to target angle.
-     * @param currentAngle Current angle
-     * @param targetAngle New angle to change to
-     * @return change angle
-     */
-    public double computeChangeAngle(double currentAngle, double targetAngle) {
-    	return computeTurnAngle(currentAngle, targetAngle).getAngle();
-    }
-    
-    /**
-     * Scale drive speed based on how far wheel needs to turn
-     * @param turnAngle Angle wheel needs to turn (with flip value)
-     * @return speed scale factor in range [0, 1]
-     */
-    public double driveScale(AngleFlip turnAngle) {
-    	double scale = 0;
-    	if (Math.abs(turnAngle.getAngle()) < 45) {
-    		/*
-    		 * Eric comment: I don't like the discontinuous nature of this scaling.
-    		 * Possible improvements:
-    		 *   1) Use cosine(2 * turnAngle)
-    		 *   2) Scale any angle < 90.
-    		 */
-    		scale = Math.cos(Math.toRadians(turnAngle.getAngle()));
-    	} else {
-    		scale = 0;
-    	}
-    	if (turnAngle.isFlip()) {
-    		scale = -scale;
-    	}
-    	return scale;
+    	return SwerveWheel.calculateWheelVelocity(wheelNumber, wheelPosition, 
+    			pivot, maxWheelRadius, robotMotion);
     }
     
     public void setWheelSpeed(double speed) {

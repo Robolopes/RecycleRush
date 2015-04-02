@@ -1,5 +1,7 @@
 package org.usfirst.frc.team2339.Barracuda.swervemath;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
 
 
 public class SwerveWheel {
@@ -112,11 +114,11 @@ public class SwerveWheel {
 		}
     };
     
-	public double getRadialAngle(RectangularCoordinates wheelPosition) {
+	public static double getRadialAngle(RectangularCoordinates wheelPosition) {
 		return Math.toDegrees(Math.atan2(wheelPosition.x, wheelPosition.y));
 	}
 	
-	public double getPerpendicularAngle(RectangularCoordinates wheelPosition) {
+	public static double getPerpendicularAngle(RectangularCoordinates wheelPosition) {
 		return Math.toDegrees(Math.atan2(-wheelPosition.y, wheelPosition.x));
 	}
 	
@@ -126,6 +128,7 @@ public class SwerveWheel {
      * Wheel speed are normalized to the range [0, 1.0]. Angles are normalized to the range [-180, 180).
      * @see https://docs.google.com/presentation/d/1J_BajlhCQ236HaSxthEFL2PxywlneCuLNn276MWmdiY/edit?usp=sharing
      * 
+     * @param wheelNumber Wheel number (for putting info on Smartdashboard)
      * @param wheelPosition Position of wheel. 
      *                      x is left-right, with right positive. y is front-back with front positive.
      * @param pivot Position of pivot. 
@@ -134,12 +137,17 @@ public class SwerveWheel {
      * @return wheel polar velocity (speed and angle)
      */
     public static VelocityPolar calculateWheelVelocity(
+    		int wheelNumber, 
     		RectangularCoordinates wheelPosition,
     		RectangularCoordinates pivot,
     		double maxWheelRadius, 
     		RobotMotion robotMotion) {
     	
+    	SmartDashboard.putNumber("Wheel " + wheelNumber + " position x ", wheelPosition.x);
+    	SmartDashboard.putNumber("Wheel " + wheelNumber + " position y ", wheelPosition.y);
     	RectangularCoordinates wheelRelativePosition = wheelPosition.subtract(pivot);
+    	SmartDashboard.putNumber("Wheel " + wheelNumber + " rel posit x ", wheelRelativePosition.x);
+    	SmartDashboard.putNumber("Wheel " + wheelNumber + " rel posit y ", wheelRelativePosition.y);
     	double rotateSpeed = robotMotion.rotate / maxWheelRadius;
     	RectangularCoordinates wheelVectorRobotCoord = new RectangularCoordinates(
     			robotMotion.strafe - rotateSpeed * wheelRelativePosition.y,  
@@ -154,6 +162,17 @@ public class SwerveWheel {
         return new VelocityPolar(wheelSpeed, wheelAngle);
     }
     
+    public static VelocityPolar calculateWheelVelocity(
+    		RectangularCoordinates wheelPosition,
+    		RectangularCoordinates pivot,
+    		double maxWheelRadius, 
+    		RobotMotion robotMotion) {
+    	return calculateWheelVelocity(0, 
+        		wheelPosition,
+        		pivot,
+        		maxWheelRadius, 
+        		robotMotion);
+    }
     public static VelocityPolar[] calculateRectangularWheelVelocities(double length, double width, 
     		RobotMotion robotMotion, RectangularCoordinates pivot) {
     	
