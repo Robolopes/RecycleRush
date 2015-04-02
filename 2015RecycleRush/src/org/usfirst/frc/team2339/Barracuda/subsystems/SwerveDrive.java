@@ -6,6 +6,7 @@ package org.usfirst.frc.team2339.Barracuda.subsystems;
  */
 
 
+import org.usfirst.frc.team2339.Barracuda.smartdashboard.SendablePosition;
 import org.usfirst.frc.team2339.Barracuda.swervemath.SwerveWheel.RectangularCoordinates;
 import org.usfirst.frc.team2339.Barracuda.swervemath.SwerveWheel.RobotMotion;
 import org.usfirst.frc.team2339.Barracuda.swervemath.SwerveWheel.VelocityPolar;
@@ -59,7 +60,7 @@ public class SwerveDrive extends Subsystem {
 	}
 
     public RectangularCoordinates getPivot() {
-    	SmartDashboard.putNumber("Drive pivot y ", pivot.y);
+    	SmartDashboard.putData("Drive pivot ", new SendablePosition(pivot.x, pivot.y));
 		return pivot;
 	}
 

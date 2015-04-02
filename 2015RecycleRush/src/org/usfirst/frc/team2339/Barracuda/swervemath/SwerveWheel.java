@@ -1,5 +1,7 @@
 package org.usfirst.frc.team2339.Barracuda.swervemath;
 
+import org.usfirst.frc.team2339.Barracuda.smartdashboard.SendablePosition;
+
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 
@@ -143,11 +145,11 @@ public class SwerveWheel {
     		double maxWheelRadius, 
     		RobotMotion robotMotion) {
     	
-    	SmartDashboard.putNumber("Wheel " + wheelNumber + " position x ", wheelPosition.x);
-    	SmartDashboard.putNumber("Wheel " + wheelNumber + " position y ", wheelPosition.y);
+    	SmartDashboard.putData("Wheel " + wheelNumber + " position ", 
+    			new SendablePosition(wheelPosition.x, wheelPosition.y));
     	RectangularCoordinates wheelRelativePosition = wheelPosition.subtract(pivot);
-    	SmartDashboard.putNumber("Wheel " + wheelNumber + " rel posit x ", wheelRelativePosition.x);
-    	SmartDashboard.putNumber("Wheel " + wheelNumber + " rel posit y ", wheelRelativePosition.y);
+    	SmartDashboard.putData("Wheel " + wheelNumber + " rel posit ", 
+    			new SendablePosition(wheelRelativePosition.x, wheelRelativePosition.y));
     	double rotateSpeed = robotMotion.rotate / maxWheelRadius;
     	RectangularCoordinates wheelVectorRobotCoord = new RectangularCoordinates(
     			robotMotion.strafe - rotateSpeed * wheelRelativePosition.y,  
