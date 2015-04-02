@@ -15,9 +15,15 @@ import edu.wpi.first.wpilibj.tables.ITable;
 public class AutoSettings implements Sendable {
 	
     private ITable table;
-    private SendableTimeVelocity forward;
-    private SendableTimeSpeed lift;
-    private SendableTimeVelocity back;
+    private final SendableTimeVelocity forward;
+    private final SendableTimeSpeed lift;
+    private final SendableTimeVelocity back;
+    
+    public AutoSettings() {
+    	this.forward = new SendableTimeVelocity(0, new SendableVelocity(0, 0));
+    	this.lift = new SendableTimeSpeed(0, 0);
+    	this.back = new SendableTimeVelocity(0, new SendableVelocity(0, 0));
+    }
 
 	/* (non-Javadoc)
 	 * @see edu.wpi.first.wpilibj.Sendable#initTable(edu.wpi.first.wpilibj.tables.ITable)
