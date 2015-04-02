@@ -112,21 +112,11 @@ public class SwerveWheel {
 		}
     };
     
-    public static RectangularCoordinates wheelPosition;
-    
-    public RectangularCoordinates getWheelPosition() {
-		return wheelPosition;
-	}
-
-	public void setWheelPosition(RectangularCoordinates wheelPosition) {
-		SwerveWheel.wheelPosition = wheelPosition;
-	}
-	
-	public double getRadialAngle() {
+	public double getRadialAngle(RectangularCoordinates wheelPosition) {
 		return Math.toDegrees(Math.atan2(wheelPosition.x, wheelPosition.y));
 	}
 	
-	public double getPerpendicularAngle() {
+	public double getPerpendicularAngle(RectangularCoordinates wheelPosition) {
 		return Math.toDegrees(Math.atan2(-wheelPosition.y, wheelPosition.x));
 	}
 	
@@ -204,24 +194,6 @@ public class SwerveWheel {
     	return calculateRectangularWheelVelocities(length, width, robotMotion, new RectangularCoordinates(0, 0));
     }
     	
-    /**
-     * Calculate wheel velocity vector given wheel position relative to pivot location and 
-     * desired robot forward, strafe, and rotational velocities.
-     * Wheel speed are normalized to the range [0, 1.0]. Angles are normalized to the range [-180, 180).
-     * @see https://docs.google.com/presentation/d/1J_BajlhCQ236HaSxthEFL2PxywlneCuLNn276MWmdiY/edit?usp=sharing
-     * 
-     * @param pivot Position of pivot. 
-     * @param maxWheelRadius distance of furtherest wheel on robot from pivot.
-     * @param robotMotion desired motion of robot express by strafe, frontBack, and rotation around a pivot point.
-     * @return wheel polar velocity (speed and angle)
-     */
-    public static VelocityPolar calculateWheelVelocity(
-    		RectangularCoordinates pivot,
-    		double maxWheelRadius, 
-    		RobotMotion robotMotion) {
-    	return calculateWheelVelocity(wheelPosition, pivot, maxWheelRadius, robotMotion);
-    }
-    
     /** 
      * Normalizes an angle in degrees to (-180, 180].
      * @param theta Angle to normalize
