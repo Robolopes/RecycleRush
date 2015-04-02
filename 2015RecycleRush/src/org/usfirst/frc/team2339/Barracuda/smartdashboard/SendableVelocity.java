@@ -30,8 +30,8 @@ public class SendableVelocity implements Sendable {
 	public void initTable(ITable subtable) {
         this.table = subtable;
         if (table != null) {
-            table.putValue("speed", speed);
-            table.putValue("angle", angle);
+            table.putNumber("speed", speed);
+            table.putNumber("angle", angle);
         }
 	}
 
@@ -41,6 +41,20 @@ public class SendableVelocity implements Sendable {
 	@Override
 	public ITable getTable() {
 		return table;
+	}
+	
+	public double getSpeed() {
+		if (getTable() != null) {
+			return getTable().getNumber("speed");
+		}
+		return 0;
+	}
+
+	public double getAngle() {
+		if (getTable() != null) {
+			return getTable().getNumber("angle");
+		}
+		return 0;
 	}
 
 	/* (non-Javadoc)

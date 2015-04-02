@@ -30,8 +30,8 @@ public class SendablePosition implements Sendable {
 	public void initTable(ITable subtable) {
         this.table = subtable;
         if (table != null) {
-            table.putValue("x", x);
-            table.putValue("y", y);
+            table.putNumber("x", x);
+            table.putNumber("y", y);
         }
 	}
 
@@ -41,6 +41,20 @@ public class SendablePosition implements Sendable {
 	@Override
 	public ITable getTable() {
 		return table;
+	}
+
+	public double getX() {
+		if (getTable() != null) {
+			return getTable().getNumber("x");
+		}
+		return 0;
+	}
+
+	public double getY() {
+		if (getTable() != null) {
+			return getTable().getNumber("y");
+		}
+		return 0;
 	}
 
 	/* (non-Javadoc)

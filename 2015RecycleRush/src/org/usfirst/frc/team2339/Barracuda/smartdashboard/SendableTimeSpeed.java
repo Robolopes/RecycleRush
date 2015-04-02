@@ -31,8 +31,8 @@ public class SendableTimeSpeed implements Sendable {
 	public void initTable(ITable subtable) {
         this.table = subtable;
         if (table != null) {
-            table.putValue("time", time);
-            table.putValue("speed", speed);
+            table.putNumber("time", time);
+            table.putNumber("speed", speed);
         }
 	}
 
@@ -42,6 +42,20 @@ public class SendableTimeSpeed implements Sendable {
 	@Override
 	public ITable getTable() {
 		return table;
+	}
+
+	public double getTime() {
+		if (getTable() != null) {
+			return getTable().getNumber("time");
+		}
+		return 0;
+	}
+
+	public double getSpeed() {
+		if (getTable() != null) {
+			return getTable().getNumber("speed");
+		}
+		return 0;
 	}
 
 	/* (non-Javadoc)
