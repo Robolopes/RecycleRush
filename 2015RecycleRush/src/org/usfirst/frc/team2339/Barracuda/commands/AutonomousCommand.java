@@ -1,5 +1,8 @@
 package org.usfirst.frc.team2339.Barracuda.commands;
 
+import org.usfirst.frc.team2339.Barracuda.smartdashboard.AutoSettings;
+import org.usfirst.frc.team2339.Barracuda.smartdashboard.SendableTimeSpeed;
+import org.usfirst.frc.team2339.Barracuda.smartdashboard.SendableTimeVelocity;
 import org.usfirst.frc.team2339.Barracuda.subsystems.Lift;
 import org.usfirst.frc.team2339.Barracuda.subsystems.SwerveDriveRectangle;
 
@@ -10,7 +13,8 @@ import edu.wpi.first.wpilibj.command.CommandGroup;
  */
 public class AutonomousCommand extends CommandGroup {
     
-    public  AutonomousCommand(SwerveDriveRectangle robotDrive, Lift lift) {
+    public  AutonomousCommand(AutoSettings autoSettings, 
+    		SwerveDriveRectangle robotDrive, Lift lift) {
     	super("Autonomous Commands");
     	
         // Add Commands here:
@@ -30,8 +34,27 @@ public class AutonomousCommand extends CommandGroup {
         // a CommandGroup containing them would require both the chassis and the
         // arm.
     	
-        addSequential(new TimedDrive("Push RC to wall", robotDrive, 1.25, 0.5, 0.0));
-        //addSequential(new TimedLift("Pick up RC", lift, 1.0, 0.25));
-        //addSequential(new TimedDrive("Backup to auto zone", robotDrive, 2.0, -0.5, 0.0));
+    	SendableTimeVelocity forward = autoSettings.getForward();
+    	if (forward != null && forward.getTime() > 0) {
+    		addSequential(new TimedDrive("Push RC to wall", robotDrive, 
+    				forward.getTime(), 
+    				forward.getVelocity().getSpeed(), 
+    				forward.getVelocity().getAngle()));
+    	}
+    	
+    	SendableTimeSpeed liftSettings = autoSettings.getLift();
+    	if (liftSettings != null && liftSettings.getTime() > 0) {
+    		addSequential(new TimedLift("Pick up RC", lift, 
+    				liftSettings.getTime(), 
+    				liftSettings.getSpeed()));
+    	}
+    	
+    	SendableTimeVelocity back = autoSettings.getBack();
+    	if (back != null && back.getTime() > 0) {
+    		addSequential(new TimedDrive("Backup to auto zone", robotDrive, 
+    				back.getTime(), 
+    				-back.getVelocity().getSpeed(), 
+    				back.getVelocity().getAngle()));
+    	}
     }
 }

@@ -49,7 +49,9 @@ public class Barracuda extends IterativeRobot {
         oi = new OI();
 
         // Autonomous command
-        autonomousCommand = new AutonomousCommand(RobotMap.Subsystem.robotDrive, RobotMap.Subsystem.lift);
+        autoSettings = new AutoSettings();
+        autonomousCommand = new AutonomousCommand(autoSettings, 
+        		RobotMap.Subsystem.robotDrive, RobotMap.Subsystem.lift);
         
     }
     
