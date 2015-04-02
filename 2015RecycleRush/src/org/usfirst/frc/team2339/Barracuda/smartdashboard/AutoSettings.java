@@ -15,7 +15,9 @@ import edu.wpi.first.wpilibj.tables.ITable;
 public class AutoSettings implements Sendable {
 	
     private ITable table;
-    private double forward;
+    private SendableTimeVelocity forward;
+    private SendableTimeSpeed lift;
+    private SendableTimeVelocity back;
 
 	/* (non-Javadoc)
 	 * @see edu.wpi.first.wpilibj.Sendable#initTable(edu.wpi.first.wpilibj.tables.ITable)
@@ -25,6 +27,8 @@ public class AutoSettings implements Sendable {
         this.table = subtable;
         if (table != null) {
             table.putValue("forward", forward);
+            table.putValue("lift", lift);
+            table.putValue("back", back);
         }
 	}
 

@@ -7,6 +7,8 @@ import edu.wpi.first.wpilibj.Sendable;
 import edu.wpi.first.wpilibj.tables.ITable;
 
 /**
+ * Show velocity (speed and angle) data
+ * 
  * @author RobolopesDev
  *
  */

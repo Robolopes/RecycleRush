@@ -7,20 +7,21 @@ import edu.wpi.first.wpilibj.Sendable;
 import edu.wpi.first.wpilibj.tables.ITable;
 
 /**
- * Show position data (x,y). Also good for showing x,y vector
+ * Show a time with a velocity.
+ * Good for auto timed drive data.
  * 
  * @author RobolopesDev
  *
  */
-public class SendablePosition implements Sendable {
+public class SendableTimeVelocity implements Sendable {
 	
     private ITable table;
-    private double x;
-    private double y;
+    private double time;
+    private SendableVelocity velocity;
     
-    public SendablePosition(double x, double y) {
-		this.x = x;
-		this.y = y;
+    public SendableTimeVelocity(double time, SendableVelocity velocity) {
+		this.time = time;
+		this.velocity = velocity;
 	}
 
 	/* (non-Javadoc)
@@ -30,8 +31,8 @@ public class SendablePosition implements Sendable {
 	public void initTable(ITable subtable) {
         this.table = subtable;
         if (table != null) {
-            table.putValue("x", x);
-            table.putValue("y", y);
+            table.putValue("time", time);
+            table.putValue("velocity", velocity);
         }
 	}
 
@@ -48,7 +49,7 @@ public class SendablePosition implements Sendable {
 	 */
 	@Override
 	public String getSmartDashboardType() {
-		return "Position";
+		return "Time Velocity";
 	}
 
 }
