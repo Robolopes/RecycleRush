@@ -145,11 +145,13 @@ public class SwerveWheel {
     		double maxWheelRadius, 
     		RobotMotion robotMotion) {
     	
-    	SmartDashboard.putData("Wheel " + wheelNumber + " position ", 
-    			new SendablePosition(wheelPosition.x, wheelPosition.y));
+    	/*SmartDashboard.putData("Wheel " + wheelNumber + " position ", 
+    			new SendablePosition(wheelPosition.x, wheelPosition.y));*/
+    	SmartDashboard.putNumber("Wheel " + wheelNumber + " position y ", wheelPosition.y);
     	RectangularCoordinates wheelRelativePosition = wheelPosition.subtract(pivot);
-    	SmartDashboard.putData("Wheel " + wheelNumber + " rel posit ", 
-    			new SendablePosition(wheelRelativePosition.x, wheelRelativePosition.y));
+    	/*SmartDashboard.putData("Wheel " + wheelNumber + " rel posit ", 
+    			new SendablePosition(wheelRelativePosition.x, wheelRelativePosition.y));*/
+    	SmartDashboard.putNumber("Wheel " + wheelNumber + " rel posit y ", wheelRelativePosition.y);
     	double rotateSpeed = robotMotion.rotate / maxWheelRadius;
     	RectangularCoordinates wheelVectorRobotCoord = new RectangularCoordinates(
     			robotMotion.strafe - rotateSpeed * wheelRelativePosition.y,  

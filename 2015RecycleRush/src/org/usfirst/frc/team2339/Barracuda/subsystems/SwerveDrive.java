@@ -60,7 +60,8 @@ public class SwerveDrive extends Subsystem {
 	}
 
     public RectangularCoordinates getPivot() {
-    	SmartDashboard.putData("Drive pivot ", new SendablePosition(pivot.x, pivot.y));
+    	//SmartDashboard.putData("Drive pivot ", new SendablePosition(pivot.x, pivot.y));
+    	SmartDashboard.putNumber("Drive pivot y ", pivot.y);
 		return pivot;
 	}
 
