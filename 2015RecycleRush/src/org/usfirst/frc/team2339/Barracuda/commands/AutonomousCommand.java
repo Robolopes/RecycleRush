@@ -58,8 +58,8 @@ public class AutonomousCommand extends CommandGroup {
     				back.getVelocity().getAngle()));
     	}
     	*/
-    	addSequential(new TimedDrive("Push RC to wall", robotDrive, 1.25, 0.5, 0.0)); 
-    	//addSequential(new TimedLift("Pick up RC", lift, 1, 0.5)); 
-    	//addSequential(new TimedDrive("Backup to auto zone", robotDrive, 2.5, -0.5, 0.0)); 
+    	//addSequential(new TimedDrive("Push RC to wall", robotDrive, 1.25, 0.5, 0.0)); 
+    	addSequential(new TimedLift("Pick up RC", lift, 1, 0.5)); 
+    	addSequential(new TimedDrive("Backup to auto zone", robotDrive, 1.25, -0.5, 0.0)); 
     }
 }
