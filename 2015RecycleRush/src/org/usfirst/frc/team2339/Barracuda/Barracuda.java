@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.tables.TableKeyNotDefinedException;
 
 
 /**
@@ -48,11 +49,19 @@ public class Barracuda extends IterativeRobot {
         oi = new OI();
 
         // Autonomous dashboard values
-        SmartDashboard.putNumber("Auto lift time ", 1);
-        SmartDashboard.putNumber("Auto lift speed ", 0.5);
-        SmartDashboard.putNumber("Auto drive time ", 2.25);
-        SmartDashboard.putNumber("Auto drive speed ", 0.5);
-        SmartDashboard.putNumber("Auto drive direction ", 90);
+        try {
+            SmartDashboard.getNumber("Auto lift time ");
+            SmartDashboard.getNumber("Auto lift speed ");
+            SmartDashboard.getNumber("Auto drive time ");
+            SmartDashboard.getNumber("Auto drive speed ");
+            SmartDashboard.getNumber("Auto drive direction ");
+        } catch (TableKeyNotDefinedException e) {
+            SmartDashboard.putNumber("Auto lift time ", 1);
+            SmartDashboard.putNumber("Auto lift speed ", 0.5);
+            SmartDashboard.putNumber("Auto drive time ", 2.25);
+            SmartDashboard.putNumber("Auto drive speed ", 0.5);
+            SmartDashboard.putNumber("Auto drive direction ", 90);
+        }
         
     }
     
