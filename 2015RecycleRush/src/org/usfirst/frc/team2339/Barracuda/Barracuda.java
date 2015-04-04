@@ -114,6 +114,7 @@ public class Barracuda extends IterativeRobot {
     	RobotMap.Subsystem.robotDrive.enableSteering(true);
         oi.getTeleopDrive().start();
         oi.getTeleopLift().start();
+        oi.getSwervePivotCommand().start();
     }
 
  

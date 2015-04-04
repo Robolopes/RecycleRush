@@ -15,26 +15,9 @@ public class SetSwervePivotPoint extends Command {
 	
 	private boolean isFinished;
 	private final SwerveDrive robotDrive;
-	private final RectangularCoordinates pivot;
 	private final SwerveJoystick driveStick;
 	private final double pivotYMin;
 	private final double pivotYMax;
-
-	/**
-	 * Contruct to set pivot to fixed point
-	 * @param name
-	 * @param robotDrive
-	 * @param pivot
-	 */
-    public SetSwervePivotPoint(String name, SwerveDrive robotDrive, RectangularCoordinates pivot) {
-		super(name);
-    	isFinished = false;
-    	this.robotDrive = robotDrive;
-    	this.pivot = pivot;
-    	this.driveStick = null;
-    	this.pivotYMin = 0;
-    	this.pivotYMax = 0;
-    }
 
     /**
      * Contruct to get pivot from drive stick Z
@@ -48,7 +31,6 @@ public class SetSwervePivotPoint extends Command {
     		double pivotYMin, double pivotYMax) {
 		super(name);
     	isFinished = false;
-    	this.pivot = new RectangularCoordinates(0, 0);
     	this.robotDrive = robotDrive;
     	this.driveStick = driveStick;
     	this.pivotYMin = pivotYMin;
@@ -62,21 +44,17 @@ public class SetSwervePivotPoint extends Command {
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
     	RectangularCoordinates newPivot;
-    	if (driveStick != null) {
+    	if (driveStick.getPivotOutFront()) {
     		// Set pivot from joystick
 	    	double pivotY = pivotYMin + (pivotYMax - pivotYMin) * (driveStick.getPivot() * 0.5 + 0.5);
 	    	newPivot = new RectangularCoordinates(0, pivotY);
     	} else {
     		// Set pivot to fixed value
-    		newPivot = this.pivot;
+    		newPivot = new RectangularCoordinates(0, 0);
     	}
     	SmartDashboard.putNumber("Drive pivot y ", newPivot.y);
     	SmartDashboard.putNumber("Drive pivot front ", newPivot.y - 0.5 * RobotMap.Constants.WHEEL_BASE_LENGTH);
     	robotDrive.setPivot(newPivot);
-    	if (driveStick == null) {
-    		// Fixed pivot so no need to repeat
-    		//isFinished = true;
-    	}
     }
 
     // Make this return true when this Command no longer needs to run execute()

@@ -54,6 +54,10 @@ public class SwerveJoystick extends Joystick {
 	public boolean getSpeedShift() {
 		return getRawButton(OI.DRIVE_BUTTON_SPEED_SHIFT);
 	}
+	
+	public boolean getPivotOutFront() {
+		return getRawButton(OI.DRIVE_BUTTON_ROTATE_AROUND_CONTAINER);
+	}
 
 	public boolean getGyro() {
 		return getRawButton(OI.DRIVE_BUTTON_ABSOLUTE_GYRO_MODE);
