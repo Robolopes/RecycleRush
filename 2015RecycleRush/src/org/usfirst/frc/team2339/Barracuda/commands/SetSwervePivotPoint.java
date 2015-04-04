@@ -73,7 +73,10 @@ public class SetSwervePivotPoint extends Command {
     	SmartDashboard.putNumber("Drive pivot y ", newPivot.y);
     	SmartDashboard.putNumber("Drive pivot front ", newPivot.y - 0.5 * RobotMap.Constants.WHEEL_BASE_LENGTH);
     	robotDrive.setPivot(newPivot);
-    	isFinished = true;
+    	if (driveStick == null) {
+    		// Fixed pivot so no need to repeat
+    		isFinished = true;
+    	}
     }
 
     // Make this return true when this Command no longer needs to run execute()
