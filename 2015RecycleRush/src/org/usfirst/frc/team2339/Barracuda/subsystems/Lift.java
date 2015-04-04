@@ -31,10 +31,11 @@ public class Lift extends Subsystem {
      * @param value motor speed
      */
     public void setLiftMotor(double value) {
-        SmartDashboard.putNumber("Lift motor value ", value);
-        if (lowerLimitSwitch.get() && value < 0.0) {
+        if (!lowerLimitSwitch.get() && value < 0.0) {
+            SmartDashboard.putNumber("Lift motor value ", 0);
         	liftMotor.set(0.0);
         } else {
+            SmartDashboard.putNumber("Lift motor value ", value);
         	liftMotor.set(value);
         }
     }
