@@ -9,6 +9,7 @@ import org.usfirst.frc.team2339.Barracuda.swervemath.SwerveWheel.VelocityPolar;
 import edu.wpi.first.wpilibj.MotorSafety;
 import edu.wpi.first.wpilibj.MotorSafetyHelper;
 import edu.wpi.first.wpilibj.SpeedController;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  * Class to provide swerve drive control to one wheel.
@@ -113,6 +114,7 @@ public class SwerveWheelDrive implements MotorSafety {
     }
     
     public void setSteeringAngle(double angle) {
+		SmartDashboard.putNumber("Wheel " + wheelNumber + " set angle ", angle);
         steeringController.setSetpoint(angle);
         setCurrentAngle(angle);
     }
