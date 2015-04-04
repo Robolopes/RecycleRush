@@ -2,12 +2,16 @@
 package org.usfirst.frc.team2339.Barracuda;
 
 import org.usfirst.frc.team2339.Barracuda.commands.AutonomousCommand;
+import org.usfirst.frc.team2339.Barracuda.commands.AutonomousStrafeLeftCommand;
+import org.usfirst.frc.team2339.Barracuda.commands.AutonomousStrafeRightCommand;
 import org.usfirst.frc.team2339.Barracuda.smartdashboard.AutoSettings;
 import org.usfirst.frc.team2339.Barracuda.swervemath.SwerveWheel.VelocityPolar;
 
 import edu.wpi.first.wpilibj.IterativeRobot;
+import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 
 
 /**
@@ -27,8 +31,8 @@ public class Barracuda extends IterativeRobot {
     public static OI oi;
 
     // Commands
-    private AutoSettings autoSettings;
-    private AutonomousCommand autonomousCommand;
+    private SendableChooser autoChooser;
+    private Command autonomousCommand;
     
       
     /**
@@ -49,10 +53,11 @@ public class Barracuda extends IterativeRobot {
         oi = new OI();
 
         // Autonomous command
-        //autoSettings = new AutoSettings();
-        autoSettings = null;
-        autonomousCommand = new AutonomousCommand(autoSettings, 
-        		RobotMap.Subsystem.robotDrive, RobotMap.Subsystem.lift);
+        autoChooser = new SendableChooser();
+        autoChooser.addDefault("Strafe Left", new AutonomousStrafeLeftCommand( 
+        		RobotMap.Subsystem.robotDrive, RobotMap.Subsystem.lift));
+        autoChooser.addObject("Strafe Left", new AutonomousStrafeRightCommand( 
+        		RobotMap.Subsystem.robotDrive, RobotMap.Subsystem.lift));
         
     }
     
@@ -79,6 +84,7 @@ public class Barracuda extends IterativeRobot {
        	RobotMap.Subsystem.robotDrive.enableSteering(true);
         
         // schedule the autonomous command (example)
+        autonomousCommand = (Command)autoChooser.getSelected();
         if (autonomousCommand != null) autonomousCommand.start();
     }
 
