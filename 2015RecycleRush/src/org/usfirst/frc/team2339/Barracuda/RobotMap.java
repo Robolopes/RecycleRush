@@ -19,7 +19,7 @@ public class RobotMap {
 		public static final double WHEEL_BASE_LENGTH = 28.5;
 		public static final double WHEEL_BASE_WIDTH = 25.0;
 		// Distance of center of container in front of front wheels. (Negative if behind front wheel line.)
-		public static final double CONTAINER_CENTER_DISTANCE_FORWARD = 2.0;
+		public static final double CONTAINER_CENTER_DISTANCE_FORWARD = 18.0;
 		
 		/*
 		 * AndyMark Gearmotor am-2971. See http://www.andymark.com/product-p/am-2971.htm
