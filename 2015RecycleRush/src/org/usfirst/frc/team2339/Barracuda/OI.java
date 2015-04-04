@@ -46,10 +46,10 @@ public class OI {
         setTeleopLift(new TeleopLift("Teleop lift", RobotMap.Subsystem.lift, getJoystickOperator()));
         
         containerPivotButton = new JoystickButton(getJoystickDrive(), DRIVE_BUTTON_ROTATE_AROUND_CONTAINER);
-        containerPivotButton.whenPressed(new SetSwervePivotPoint("Container Pivot", RobotMap.Subsystem.robotDrive, 
-        		new RectangularCoordinates(0.0, 
-        				RobotMap.Constants.CONTAINER_CENTER_DISTANCE_FORWARD + 
-        				0.5 * RobotMap.Constants.WHEEL_BASE_LENGTH)));
+        double frontWheelDistInFrontOfCenter = 0.5 * RobotMap.Constants.WHEEL_BASE_LENGTH;
+        containerPivotButton.whenPressed(new SetSwervePivotPoint("Container Pivot", RobotMap.Subsystem.robotDrive, getJoystickDrive(), 
+        		frontWheelDistInFrontOfCenter + RobotMap.Constants.PIVOT_DISTANCE_FRONT_MIN, 
+        		frontWheelDistInFrontOfCenter + RobotMap.Constants.PIVOT_DISTANCE_FRONT_MAX));
         containerPivotButton.whenReleased(new SetSwervePivotPoint("Container Pivot", RobotMap.Subsystem.robotDrive, 
         		new RectangularCoordinates(0.0, 0.0)));
         

@@ -41,6 +41,10 @@ public class SwerveJoystick extends Joystick {
 		return -getRawAxis(3);
 	}
 
+	public double getPivot() {
+		return getRawAxis(2);
+	}
+
 	public boolean isInDeadband() {
 		return  Math.abs(getStrafe()) < OI.DRIVE_STICK_DEAD_BAND && 
     			Math.abs(getFrontBack()) < OI.DRIVE_STICK_DEAD_BAND && 
