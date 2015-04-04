@@ -58,7 +58,7 @@ public class Barracuda extends IterativeRobot {
         } catch (TableKeyNotDefinedException e) {
             SmartDashboard.putNumber("Auto lift time ", 1);
             SmartDashboard.putNumber("Auto lift speed ", 0.5);
-            SmartDashboard.putNumber("Auto drive time ", 2.25);
+            SmartDashboard.putNumber("Auto drive time ", 0.0);
             SmartDashboard.putNumber("Auto drive speed ", 0.5);
             SmartDashboard.putNumber("Auto drive direction ", 90);
         }
