@@ -2,12 +2,12 @@
 package org.usfirst.frc.team2339.Barracuda;
 
 import org.usfirst.frc.team2339.Barracuda.commands.AutonomousCommand;
-import org.usfirst.frc.team2339.Barracuda.smartdashboard.AutoSettings;
 import org.usfirst.frc.team2339.Barracuda.swervemath.SwerveWheel.VelocityPolar;
 
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 
 /**
@@ -27,7 +27,6 @@ public class Barracuda extends IterativeRobot {
     public static OI oi;
 
     // Commands
-    private AutoSettings autoSettings;
     private AutonomousCommand autonomousCommand;
     
       
@@ -48,11 +47,12 @@ public class Barracuda extends IterativeRobot {
         // pointers. Bad news. Don't move it.
         oi = new OI();
 
-        // Autonomous command
-        //autoSettings = new AutoSettings();
-        autoSettings = null;
-        autonomousCommand = new AutonomousCommand(autoSettings, 
-        		RobotMap.Subsystem.robotDrive, RobotMap.Subsystem.lift);
+        // Autonomous dashboard values
+        SmartDashboard.putNumber("Auto lift time ", 1);
+        SmartDashboard.putNumber("Auto lift speed ", 0.5);
+        SmartDashboard.putNumber("Auto drive time ", 2.25);
+        SmartDashboard.putNumber("Auto drive speed ", 0.5);
+        SmartDashboard.putNumber("Auto drive direction ", 90);
         
     }
     
@@ -78,7 +78,8 @@ public class Barracuda extends IterativeRobot {
        	//RobotMap.Subsystem.robotDrive.resetSteering();
        	RobotMap.Subsystem.robotDrive.enableSteering(true);
         
-        // schedule the autonomous command (example)
+        // Autonomous command
+        autonomousCommand = new AutonomousCommand(RobotMap.Subsystem.robotDrive, RobotMap.Subsystem.lift);
         if (autonomousCommand != null) autonomousCommand.start();
     }
 
