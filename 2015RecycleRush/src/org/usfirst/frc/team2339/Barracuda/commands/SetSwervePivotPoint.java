@@ -75,7 +75,7 @@ public class SetSwervePivotPoint extends Command {
     	robotDrive.setPivot(newPivot);
     	if (driveStick == null) {
     		// Fixed pivot so no need to repeat
-    		isFinished = true;
+    		//isFinished = true;
     	}
     }
 
