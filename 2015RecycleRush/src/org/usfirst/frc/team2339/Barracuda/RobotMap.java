@@ -66,6 +66,7 @@ public class RobotMap {
 		 */
 		public static final int STEERING_ENCODERS_A[] = {2, 0, 4, 6};
 		public static final int STEERING_ENCODERS_B[] = {3, 1, 5, 7};
+		public static final int LIFT_LOWER_LIMIT_SWITCH = 8;
 	};
 	
 	public static class Subsystem {
@@ -134,7 +135,7 @@ public class RobotMap {
         /*
          * Initialize lift subsystem
          */
-        Subsystem.lift = new Lift(RobotMap.PWM.LIFT_WINCH);
+        Subsystem.lift = new Lift(PWM.LIFT_WINCH, DIO.LIFT_LOWER_LIMIT_SWITCH);
         
     }
 
